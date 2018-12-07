@@ -68,6 +68,10 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             let vc = segue.destination as? ResultViewController
             dataDelegate = vc
             dataDelegate?.passResult(user: currentUser)
+        }else if segue.destination is ViewController {
+            let vc = segue.destination as? ViewController
+            vc?.cUser = currentUser
+            
         }
     }
 
@@ -189,13 +193,14 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     }
     
     func goQuestionView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "questionView") as! ViewController
-        self.present(vc, animated: true)
-        
-        //pass currentUser to vc
-        userDelegate = vc
-        userDelegate?.userReady(name: currentUser)
+        performSegue(withIdentifier: "toVC", sender: self)
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc = storyboard.instantiateViewController(withIdentifier: "questionView") as! ViewController
+//        self.present(vc, animated: true)
+//
+//        //pass currentUser to vc
+//        userDelegate = vc
+//        userDelegate?.userReady(name: currentUser)
         }
     
     
@@ -241,10 +246,12 @@ extension UserViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         currentUser = usersArray[row]
+        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
         self.dataDelegate?.passResult(user: currentUser)
         return usersArray[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         currentUser = usersArray[row]
+        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
     }
 }
