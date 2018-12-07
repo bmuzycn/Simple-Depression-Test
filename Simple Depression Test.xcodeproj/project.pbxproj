@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E60CBAFB216D903E00AC715B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E60CBAFA216D903E00AC715B /* Default-568h@2x.png */; };
 		E60CBB04216D933C00AC715B /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E60CBB03216D931100AC715B /* Charts.framework */; };
-		E621EC2221B1284800725BAC /* Support files in Resources */ = {isa = PBXBuildFile; fileRef = E621EC2121B1284800725BAC /* Support files */; };
+		E621EC2721B1953000725BAC /* SwipeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E621EC2621B1953000725BAC /* SwipeSegue.swift */; };
 		E62E0DBB211CEDE000688DA8 /* QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DBA211CEDE000688DA8 /* QuestionBank.swift */; };
 		E62E0DE42125D14F00688DA8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DE32125D14F00688DA8 /* User.swift */; };
 		E62E0DE62125D19F00688DA8 /* DataStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DE52125D19F00688DA8 /* DataStored.swift */; };
@@ -52,7 +52,7 @@
 		E60CBAFA216D903E00AC715B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		E60CBAFC216D91DD00AC715B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E60CBAFE216D931100AC715B /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../../Charts-3.1 copy.1/Charts.xcodeproj"; sourceTree = "<group>"; };
-		E621EC2121B1284800725BAC /* Support files */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Support files"; path = "Simple Depression Test/Support files"; sourceTree = "<group>"; };
+		E621EC2621B1953000725BAC /* SwipeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeSegue.swift; sourceTree = "<group>"; };
 		E62E0DBA211CEDE000688DA8 /* QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBank.swift; sourceTree = "<group>"; };
 		E62E0DE32125D14F00688DA8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E62E0DE52125D19F00688DA8 /* DataStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStored.swift; sourceTree = "<group>"; };
@@ -131,12 +131,13 @@
 		E62E0DE22125C30500688DA8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				E66A7728208C441D00DC86DB /* ViewController.swift */,
-				E62E0DE721261B0100688DA8 /* UserViewController.swift */,
 				E66A7726208C441D00DC86DB /* AppDelegate.swift */,
+				E62E0DE721261B0100688DA8 /* UserViewController.swift */,
+				E66A7728208C441D00DC86DB /* ViewController.swift */,
 				E62E0E03212B64C100688DA8 /* ResultViewController.swift */,
 				E6C856D82142C2BA00F95BE4 /* ReportVC.swift */,
 				E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */,
+				E621EC2621B1953000725BAC /* SwipeSegue.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -153,7 +154,6 @@
 			isa = PBXGroup;
 			children = (
 				E60CBAFC216D91DD00AC715B /* Info.plist */,
-				E621EC2121B1284800725BAC /* Support files */,
 				E60CBAFA216D903E00AC715B /* Default-568h@2x.png */,
 				E66A7725208C441D00DC86DB /* Simple Depression Test */,
 				E66A7724208C441D00DC86DB /* Products */,
@@ -295,7 +295,6 @@
 				E66A7731208C442800DC86DB /* Assets.xcassets in Resources */,
 				E66A772C208C441D00DC86DB /* Main.storyboard in Resources */,
 				E6C856D22142BF2A00F95BE4 /* report.html in Resources */,
-				E621EC2221B1284800725BAC /* Support files in Resources */,
 				E60CBAFB216D903E00AC715B /* Default-568h@2x.png in Resources */,
 				E6B8F7AC2135F992004A4AEF /* InfoPlist.strings in Resources */,
 			);
@@ -318,6 +317,7 @@
 				E6B8F7A82135EB2E004A4AEF /* .String.swift in Sources */,
 				E6C856DF2146B09F00F95BE4 /* PrintPageRenderer.swift in Sources */,
 				E66A7727208C441D00DC86DB /* AppDelegate.swift in Sources */,
+				E621EC2721B1953000725BAC /* SwipeSegue.swift in Sources */,
 				E6C856D92142C2BA00F95BE4 /* ReportComposer.swift in Sources */,
 				E6C856DA2142C2BA00F95BE4 /* ReportVC.swift in Sources */,
 				E62E0E04212B64C100688DA8 /* ResultViewController.swift in Sources */,
@@ -508,7 +508,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuzhang.simpledepression;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuzhang.depression;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -528,7 +528,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuzhang.simpledepression;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuzhang.depression;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
