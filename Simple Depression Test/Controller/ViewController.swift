@@ -32,11 +32,26 @@ class ViewController: UIViewController, UserDelegate {
     @IBOutlet weak var qNum: UILabel!
     @IBOutlet weak var userName: UILabel!
     
+    var observer: NSObjectProtocol?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: .main) { (notification) in
+            let userVC = notification.object as! UserViewController
+            self.cUser = userVC.currentUser
+            self.userName.text = self.cUser
+            
+        }
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setQuestionNum()
-        startOver()
-
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeLeft.direction = .left
@@ -45,12 +60,16 @@ class ViewController: UIViewController, UserDelegate {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
+
+
         
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        userName.text = cUser
+        super.viewDidAppear(animated)
+        startOver()
         alertNote()
+
     }
 
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
@@ -181,7 +200,7 @@ class ViewController: UIViewController, UserDelegate {
             setQuestionNum()
 
         } else {
-            let alert = UIAlertController(title: "Warning⚠️".localized, message: "Your result will be lost. Still want to quit? ".localized, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Warning⚠️".localized, message: "Your result will be lost. Still want to quit?".localized, preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: { (UIAlertAction) in self.dismiss(animated: true, completion: nil)}))
             alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
@@ -228,13 +247,20 @@ class ViewController: UIViewController, UserDelegate {
     }
     
     func alertNote() {
+        
         print("alert note!")
         let note = UIAlertController(title: "Hi, ".localized+"\(cUser)"+" , Note!".localized, message: "Since the questionnaire relies on patient self-report, all responses should be verified by the clinician, and a definitive diagnosis is made on clinical grounds taking into account how well the patient understood the questionnaire, as well as other relevant information from the patient. Diagnoses of Major Depressive Disorder or Other Depressive Disorder also require impairment of social, occupational, or other important areas of functioning (Question #10) and ruling out normal bereavement, a history of a Manic Episode (Bipolar Disorder), and a physical disorder, medication, or other drug as the biological cause of the depressive symptoms.".localized , preferredStyle: .alert)
         
         note.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: nil))
-//        note.addAction(UIAlertAction(title: "Exit", style: .default, handler: { (UIAlertAction) in exit(0)}))
-        self.present(note,animated: true, completion: nil)
+
+        if let presented = self.presentedViewController {
+            presented.removeFromParent()
+        }
+        if presentedViewController == nil {
+        self.present(note, animated: true, completion: nil)
+        }
     }
+    
     
     func changeTitle() {
         UIView.setAnimationsEnabled(false)
