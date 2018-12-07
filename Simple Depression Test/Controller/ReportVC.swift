@@ -69,14 +69,14 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.destination is ResultViewController
-        {
-            let vc = segue.destination as? ResultViewController
-            self.dataDelegate = vc
-            self.dataDelegate?.passResult(user: user)
+//        if segue.destination is ResultViewController
+//        {
+//            let vc = segue.destination as? ResultViewController
+//            self.dataDelegate = vc
+//            self.dataDelegate?.passResult(user: user)
             FileManager.default.clearTmpDirectory()
 
-        }
+//        }
     }
     
     @IBAction func backButton(_ sender: UIBarButtonItem) {
