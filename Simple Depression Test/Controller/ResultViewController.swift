@@ -36,11 +36,31 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBOutlet weak var radarView: RadarChartView!
     @IBOutlet weak var barView: BarChartView!
     
+    var observer: NSObjectProtocol?
+    
     weak var reportDelegate: ReportDelegate?
     let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Social".localized]
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //add receiver to NotificationCenter
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: .main) { (notification) in
+            let userVC = notification.object as! UserViewController
+            self.currentUser = userVC.currentUser
+            print(self.currentUser)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
