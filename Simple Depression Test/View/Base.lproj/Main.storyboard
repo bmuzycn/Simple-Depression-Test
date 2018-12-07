@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="k4F-Sl-4Pi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="r7H-rM-SDR">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--User View Controller-->
+        <!--Users-->
         <scene sceneID="2uk-kf-cRo">
             <objects>
                 <viewController storyboardIdentifier="userView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="k4F-Sl-4Pi" customClass="UserViewController" customModule="Simple_Depression_Test" customModuleProvider="target" sceneMemberID="viewController">
@@ -124,7 +124,7 @@
                                 <viewLayoutGuide key="safeArea" id="TZv-jg-2EE"/>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="MxB-7I-Tug" userLabel="Stack View4">
-                                <rect key="frame" x="59" y="644" width="296" height="72"/>
+                                <rect key="frame" x="59" y="595" width="296" height="72"/>
                                 <subviews>
                                     <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcV-30-g55">
                                         <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
@@ -136,7 +136,7 @@
                                         <color key="tintColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" image="UsersIcon"/>
                                     </button>
-                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="INN-70-M9c">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="INN-70-M9c">
                                         <rect key="frame" x="112" y="0.0" width="72" height="72"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="72" id="Ebn-BZ-mUb"/>
@@ -144,10 +144,10 @@
                                         </constraints>
                                         <state key="normal" image="Charts"/>
                                         <connections>
-                                            <segue destination="Peb-yT-pKh" kind="show" identifier="toChart" id="jbv-sX-Tbo"/>
+                                            <segue destination="Peb-yT-pKh" kind="show" identifier="toChart" customClass="SegueFromLeft" customModule="Simple_Depression_Test" customModuleProvider="target" id="jbv-sX-Tbo"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Nw-bg-ipO">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Nw-bg-ipO">
                                         <rect key="frame" x="224" y="0.0" width="72" height="72"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="72" id="0hO-o9-hht"/>
@@ -155,7 +155,7 @@
                                         </constraints>
                                         <state key="normal" image="report"/>
                                         <connections>
-                                            <segue destination="nCM-ru-er2" kind="show" identifier="toReport" id="xPf-Fp-Uaw"/>
+                                            <segue destination="nCM-ru-er2" kind="show" identifier="toReport" customClass="SegueFromRight" customModule="Simple_Depression_Test" customModuleProvider="target" id="xPf-Fp-Uaw"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -192,16 +192,18 @@
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Users" image="UsersIcon" landscapeImage="UsersIcon" selectedImage="UsersIcon" id="VH7-ax-MLY"/>
                     <connections>
                         <outlet property="userID" destination="bqn-9u-FEK" id="OdN-wW-NeX"/>
                         <outlet property="usersView" destination="cPm-tF-Fer" id="ZJP-YO-dfi"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="toVC" customClass="SegueFromRight" customModule="Simple_Depression_Test" customModuleProvider="target" id="AGb-ZI-Z8V"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VMQ-h2-Erh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-47.200000000000003" y="40.64039408866995"/>
+            <point key="canvasLocation" x="859.4202898550725" y="39.945652173913047"/>
         </scene>
-        <!--View Controller-->
+        <!--Test-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="questionView" id="BYZ-38-t0r" customClass="ViewController" customModule="Simple_Depression_Test" customModuleProvider="target" sceneMemberID="viewController">
@@ -222,7 +224,7 @@
                                 </variation>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hwu-zb-Vwv">
-                                <rect key="frame" x="20" y="537" width="181.66666666666666" height="61"/>
+                                <rect key="frame" x="20" y="488" width="181.66666666666666" height="61"/>
                                 <color key="backgroundColor" red="0.38823529411764707" green="0.85490196078431369" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="uwZ-qU-4up"/>
@@ -239,7 +241,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="BIR-nE-FLV">
-                                <rect key="frame" x="212.66666666666663" y="537" width="181.33333333333337" height="61"/>
+                                <rect key="frame" x="212.66666666666663" y="488" width="181.33333333333337" height="61"/>
                                 <color key="backgroundColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Several days">
@@ -253,7 +255,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="2u5-8L-vDL">
-                                <rect key="frame" x="20" y="625" width="181.66666666666666" height="61"/>
+                                <rect key="frame" x="20" y="576" width="181.66666666666666" height="61"/>
                                 <color key="backgroundColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="3Gc-mg-aeT"/>
@@ -270,7 +272,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="8tz-Mc-7UT">
-                                <rect key="frame" x="212.66666666666663" y="625" width="181.33333333333337" height="61"/>
+                                <rect key="frame" x="212.66666666666663" y="576" width="181.33333333333337" height="61"/>
                                 <color key="backgroundColor" name="systemPurpleColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Nearly every day">
@@ -298,7 +300,7 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eU6-xA-tmc">
-                                <rect key="frame" x="20" y="706" width="374" height="10"/>
+                                <rect key="frame" x="20" y="657" width="374" height="10"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="CyQ-Bs-aMs"/>
                                 </constraints>
@@ -306,7 +308,7 @@
                                 <color key="trackTintColor" name="selectedTextBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </progressView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o8T-iv-oaE">
-                                <rect key="frame" x="20" y="228" width="374" height="264"/>
+                                <rect key="frame" x="20" y="228" width="374" height="215"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="H8e-qF-Dz9"/>
@@ -440,6 +442,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Test" image="Test" landscapeImage="Test" selectedImage="Test" id="eFq-4M-UV3"/>
                     <connections>
                         <outlet property="button1" destination="hwu-zb-Vwv" id="gyC-pX-1Ni"/>
                         <outlet property="button2" destination="BIR-nE-FLV" id="Rxu-wk-Ccc"/>
@@ -450,14 +453,14 @@
                         <outlet property="questionLabel" destination="o8T-iv-oaE" id="rqV-Nw-Low"/>
                         <outlet property="titleLabel" destination="jk7-f3-aeS" id="BTl-TU-DZP"/>
                         <outlet property="userName" destination="M9U-OX-a7G" id="YpO-5m-r23"/>
-                        <segue destination="Peb-yT-pKh" kind="show" identifier="toResultView" id="G2c-V5-ikA"/>
+                        <segue destination="Peb-yT-pKh" kind="show" identifier="toResultView" customClass="SegueFromRight" customModule="Simple_Depression_Test" customModuleProvider="target" id="G2c-V5-ikA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-47" y="720"/>
+            <point key="canvasLocation" x="859.4202898550725" y="719.83695652173924"/>
         </scene>
-        <!--Result View Controller-->
+        <!--Charts-->
         <scene sceneID="Yjm-CT-jUW">
             <objects>
                 <viewController storyboardIdentifier="resultView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Peb-yT-pKh" customClass="ResultViewController" customModule="Simple_Depression_Test" customModuleProvider="target" sceneMemberID="viewController">
@@ -466,10 +469,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OG3-HZ-Zhc" customClass="RadarChartView" customModule="Charts">
-                                <rect key="frame" x="20" y="62" width="374" height="298"/>
+                                <rect key="frame" x="20" y="62" width="374" height="273.66666666666669"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="Fgi-ub-QYT">
-                                        <rect key="frame" x="105" y="268" width="164" height="30"/>
+                                        <rect key="frame" x="105" y="243.66666666666669" width="164" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xt8-2C-eaR">
                                                 <rect key="frame" x="0.0" y="0.0" width="53" height="30"/>
@@ -497,10 +500,10 @@
                                 <viewLayoutGuide key="safeArea" id="VW8-au-jbz"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uAJ-kf-tPh" userLabel="BarChartView" customClass="BarChartView" customModule="Charts">
-                                <rect key="frame" x="20" y="398" width="374" height="298"/>
+                                <rect key="frame" x="20" y="373.66666666666674" width="374" height="273.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-FI-1vA">
-                                        <rect key="frame" x="144.66666666666666" y="260" width="85" height="30"/>
+                                        <rect key="frame" x="144.66666666666666" y="235.33333333333331" width="85" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-nC-QJz" userLabel="last25">
                                                 <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -526,11 +529,11 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zL2-eq-idk" userLabel="LineView" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="20" y="398" width="374" height="298"/>
+                                <rect key="frame" x="20" y="373.66666666666674" width="374" height="273.33333333333326"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dqv-ER-SeV">
-                                <rect key="frame" x="129.66666666666666" y="698" width="154.99999999999997" height="29"/>
+                                <rect key="frame" x="129.66666666666666" y="649" width="154.99999999999997" height="29"/>
                                 <segments>
                                     <segment title="Bar Chart"/>
                                     <segment title="Line Chart"/>
@@ -569,7 +572,7 @@
                                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                         <state key="normal" title="Report"/>
                                         <connections>
-                                            <segue destination="nCM-ru-er2" kind="show" identifier="toReport" id="w80-Ra-cNv"/>
+                                            <segue destination="nCM-ru-er2" kind="show" identifier="toReport" customClass="SegueFromRight" customModule="Simple_Depression_Test" customModuleProvider="target" id="w80-Ra-cNv"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nSh-r5-spV" userLabel="Save to CSV">
@@ -764,6 +767,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Charts" image="Charts" landscapeImage="Charts" selectedImage="Charts" id="RGZ-X2-0bj"/>
                     <connections>
                         <outlet property="barView" destination="uAJ-kf-tPh" id="imi-r8-oUQ"/>
                         <outlet property="dateLabel" destination="QTG-VO-6z0" id="pT2-Ld-ASy"/>
@@ -779,9 +783,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ld-qs-sux" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="952.79999999999995" y="719.70443349753702"/>
+            <point key="canvasLocation" x="1859.4202898550725" y="719.02173913043487"/>
         </scene>
-        <!--ReportVC-->
+        <!--Report-->
         <scene sceneID="Eva-fi-aQ4">
             <objects>
                 <viewController storyboardIdentifier="ReportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nCM-ru-er2" customClass="ReportVC" customModule="Simple_Depression_Test" sceneMemberID="viewController">
@@ -808,28 +812,28 @@
                                 </items>
                             </navigationBar>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dcN-8T-Jay">
-                                <rect key="frame" x="0.0" y="64" width="414" height="628"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="579"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wzg-cM-y8A">
-                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="643" width="414" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="03C-ei-i5y"/>
                                     <barButtonItem title="User" image="UsersIcon" id="RT0-GK-U6V" userLabel="User">
                                         <connections>
-                                            <segue destination="HWq-ax-WDv" kind="unwind" unwindAction="unwindSegueToUserViewWithUnwindSegue:" id="K3M-kg-9V5"/>
+                                            <segue destination="HWq-ax-WDv" kind="unwind" unwindAction="unwindSegueToUserViewWithUnwindSegue:" id="UZa-fg-dlP"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Fpe-94-men"/>
                                     <barButtonItem title="Charts" image="Charts" id="3t5-3z-fCN">
                                         <connections>
-                                            <segue destination="HWq-ax-WDv" kind="unwind" unwindAction="unwindSegueToResultViewWithUnwindSegue:" id="0jo-Cf-yTL"/>
+                                            <segue destination="HWq-ax-WDv" kind="unwind" unwindAction="unwindSegueToResultViewWithUnwindSegue:" id="AOv-ON-Myz"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Pld-xA-IX2"/>
                                     <barButtonItem style="plain" id="Uqk-VF-jEK">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" id="WQM-dZ-XZ9" userLabel="InfoButton">
-                                            <rect key="frame" x="269.66666666666669" y="11" width="22" height="22"/>
+                                            <rect key="frame" x="278.66666666666669" y="11" width="22" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <connections>
                                                 <action selector="infoButton:" destination="nCM-ru-er2" eventType="touchUpInside" id="eUj-bV-5QE"/>
@@ -855,6 +859,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="H7F-Kd-smu"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Report" image="report" landscapeImage="report" selectedImage="report" id="Cv4-Zf-PMS"/>
                     <connections>
                         <outlet property="webViewContainer" destination="dcN-8T-Jay" id="NqQ-uq-mT5"/>
                     </connections>
@@ -862,17 +867,39 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cYw-c9-qkq" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="HWq-ax-WDv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="952.79999999999995" y="40.929535232383813"/>
+            <point key="canvasLocation" x="1859.4202898550725" y="40.760869565217398"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="5QO-jj-q1F">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="r7H-rM-SDR" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Fso-JU-KZg">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="k4F-Sl-4Pi" kind="relationship" relationship="viewControllers" id="gSK-ge-eXp"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="Jtx-RO-ZxW"/>
+                        <segue destination="Peb-yT-pKh" kind="relationship" relationship="viewControllers" id="OMp-gp-HFA"/>
+                        <segue destination="nCM-ru-er2" kind="relationship" relationship="viewControllers" id="H9R-YK-Ueq"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8IY-om-l6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-47.826086956521742" y="379.89130434782612"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Charts" width="24" height="24"/>
+        <image name="Charts" width="33" height="33"/>
         <image name="Menu" width="24" height="24"/>
-        <image name="UsersIcon" width="24" height="24"/>
+        <image name="Test" width="33" height="33"/>
+        <image name="UsersIcon" width="33" height="33"/>
         <image name="report" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="w80-Ra-cNv"/>
-        <segue reference="jbv-sX-Tbo"/>
+        <segue reference="H9R-YK-Ueq"/>
+        <segue reference="OMp-gp-HFA"/>
+        <segue reference="Jtx-RO-ZxW"/>
     </inferredMetricsTieBreakers>
 </document>
