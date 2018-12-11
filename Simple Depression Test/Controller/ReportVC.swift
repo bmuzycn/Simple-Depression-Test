@@ -27,27 +27,66 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
     var reportComposer: ReportComposer!
     var htmlReport = ""
     
+    @IBAction func unwindSegueToReport(unwindSegue: UIStoryboardSegue) {
+        print("Welcome to report")
+
+            
+    }
+    
+    func receiveData() {
+        let navVC = tabBarController?.viewControllers?[2] as! UINavigationController
+        let chartVC = navVC.viewControllers[0] as! ResultViewController
+        if !chartVC.scores.isEmpty {
+        chartVC.saveImage()
+        self.user = chartVC.currentUser
+        self.date = chartVC.dateArray[chartVC.scoreArrayNum]
+        self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
+        self.total = chartVC.scores[chartVC.scoreArrayNum]
+        self.result = chartVC.results[chartVC.scoreArrayNum]
+        print("notification passed to reportVC")
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        removeCache()
+        receiveData()
 
         reportComposer = ReportComposer()
         htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
-        
+
         let path = Bundle.main.bundlePath
         let url = URL(fileURLWithPath: path)
         reportView.loadHTMLString(htmlReport, baseURL: url)
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        receiveData()
+//        self.view.setNeedsDisplay()
+        //add notification receiver
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("passData"), object: nil, queue: nil) { (notifitcation) in
+            let chartVC = notifitcation.object as! ResultViewController
+            chartVC.saveImage()
+            self.user = chartVC.currentUser
+            self.date = chartVC.dateArray[chartVC.scoreArrayNum]
+            self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
+            self.total = chartVC.scores[chartVC.scoreArrayNum]
+            self.result = chartVC.results[chartVC.scoreArrayNum]
+            print("notification passed to reportVC")
+            
+        }
         //add swipe gesture
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
         
         //load reportView
+//        let webConfiguration = WKWebViewConfiguration()
         let webConfiguration = WKWebViewConfiguration()
+
+        removeCache()
         let customFrame = CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: 0.0, height: self.webViewContainer.frame.size.height))
         self.reportView = WKWebView (frame: customFrame , configuration: webConfiguration)
         reportView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,30 +97,77 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
         reportView.bottomAnchor.constraint(equalTo: webViewContainer.bottomAnchor).isActive = true
         reportView.heightAnchor.constraint(equalTo: webViewContainer.heightAnchor).isActive = true
 //        reportView.uiDelegate = self
+        
+//        reportComposer = ReportComposer()
+//        htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
+//
+//        let path = Bundle.main.bundlePath
+//        let url = URL(fileURLWithPath: path)
+//        reportView.loadHTMLString(htmlReport, baseURL: url)
     }
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == UISwipeGestureRecognizer.Direction.right {
             print("Swipe Right")
-            dismiss(animated: true, completion: nil)
+            performSegue(withIdentifier: "unwindToResultView", sender: self)
+//            dismiss(animated: true, completion: nil)
         }
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        // Remove all cache
+    func removeCache() {
+        if #available(iOS 9.0, *)
+        {
+            let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
+            let date = NSDate(timeIntervalSince1970: 0)
+            
+            WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date as Date, completionHandler:{ })
+        }
+        else
+        {
+            var libraryPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, false).first!
+            libraryPath += "/Cookies"
+            
+            do {
+                try FileManager.default.removeItem(atPath: libraryPath)
+            } catch {
+                print("error")
+            }
+            URLCache.shared.removeAllCachedResponses()
+        }
+//        URLCache.shared.removeAllCachedResponses()
+//        URLCache.shared.diskCapacity = 0
+//        URLCache.shared.memoryCapacity = 0
+//
+//        // Delete any associated cookies
+//        if let cookies = HTTPCookieStorage.shared.cookies {
+//            for cookie in cookies {
+//                HTTPCookieStorage.shared.deleteCookie(cookie)
+//            }
+//        }
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-//        if segue.destination is ResultViewController
-//        {
+        if segue.destination is ResultViewController
+        {
 //            let vc = segue.destination as? ResultViewController
 //            self.dataDelegate = vc
 //            self.dataDelegate?.passResult(user: user)
             FileManager.default.clearTmpDirectory()
-
-//        }
+            removeCache()
+        }
     }
     
     @IBAction func backButton(_ sender: UIBarButtonItem) {
-        FileManager.default.clearTmpDirectory()
-        dismiss(animated: true, completion: nil)
+        performSegue(withIdentifier: "unwindToResultView", sender: self)
+//        dismiss(animated: true, completion: nil)
     }
     @IBAction func saveToPDF(_ sender: Any) {
         reportComposer.createPDF(html: htmlReport, filename: "reportPHQ-9", formatter: reportView.viewPrintFormatter())
