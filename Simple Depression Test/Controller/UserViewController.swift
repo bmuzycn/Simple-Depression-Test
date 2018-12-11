@@ -14,7 +14,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     var name: String?
     var users = [String]()
     var usersArray: [String] = ["default".localized]
-    weak var userDelegate: UserDelegate?
+//    weak var userDelegate: UserDelegate?
     weak var dataDelegate: DataDelegate?
     var isNewUser = false
     
@@ -52,7 +52,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == UISwipeGestureRecognizer.Direction.right {
             print("Swipe Right")
-            performSegue(withIdentifier: "toChart", sender: nil)
+            performSegue(withIdentifier: "unwindSegueToResultView", sender: nil)
         }
         else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
             print("Swipe Left")
@@ -70,8 +70,8 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             dataDelegate?.passResult(user: currentUser)
         }else if segue.destination is ViewController {
             let vc = segue.destination as? ViewController
-            vc?.cUser = currentUser
-            
+            dataDelegate = vc
+            dataDelegate?.passResult(user: currentUser)
         }
     }
 
@@ -82,7 +82,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     
     @IBAction func newUserButton(_ sender: UIButton) {
         let alert = UIAlertController(title: "New User".localized, message: "Enter a name".localized, preferredStyle: .alert)
-        alert.addTextField { (userID) in
+        alert.addTextField { userID in
             userID.text = "New User".localized
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [unowned self,unowned alert] (_) in
@@ -90,6 +90,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             self.userID.text = textField.text
             self.saveNewUser()
             if self.isNewUser {
+                self.viewDidLoad()
                 self.goQuestionView()
             }
             }))
@@ -105,20 +106,22 @@ class UserViewController: UIViewController, UITextFieldDelegate{
  
     @IBAction func addUser(_ sender: UIButton) {
         saveNewUser()
-//        viewDidLoad()
         fetchUsers()
         if !users.isEmpty{
             usersArray = users
         }
 //        usersView.dataSource = self
 //        usersView.delegate = self
-        usersView.reloadAllComponents()
+//        usersView.reloadAllComponents()
+        viewDidLoad()
+
     }
     
     func saveNewUser() {
         for name in users {
             if name == userID.text {
                 userID.text = ""
+                isNewUser = false
                 let alert = UIAlertController(title: "Note".localized, message: "User exists!".localized, preferredStyle: .alert)
                 if let presented = self.presentedViewController {
                     presented.removeFromParent()
@@ -137,6 +140,8 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             let newUser = User(context: context)
             newUser.fetchUser(user: currentUser)
             if newUser.userflag == true {
+                isNewUser = false
+
                 let alert = UIAlertController(title: "Note".localized, message: "User exists!".localized, preferredStyle: .alert)
                 if let presented = self.presentedViewController {
                     presented.removeFromParent()
@@ -166,12 +171,14 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             if presentedViewController == nil {
                 self.present(alert, animated: true, completion: nil)
             }
-            
+            isNewUser = false
+
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler:nil))
         }
     }
     
     @IBAction func selectButton(_ sender: Any) {
+        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
         goQuestionView()
     }
 
@@ -193,7 +200,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     }
     
     func goQuestionView() {
-        performSegue(withIdentifier: "toVC", sender: self)
+        performSegue(withIdentifier: "unwindToTest", sender: self)
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //        let vc = storyboard.instantiateViewController(withIdentifier: "questionView") as! ViewController
 //        self.present(vc, animated: true)
@@ -246,12 +253,15 @@ extension UserViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         currentUser = usersArray[row]
-        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
-        self.dataDelegate?.passResult(user: currentUser)
+        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
+
+//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
+//        self.dataDelegate?.passResult(user: currentUser)
         return usersArray[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         currentUser = usersArray[row]
-        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
+//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
+        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
     }
 }
