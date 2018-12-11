@@ -11,7 +11,8 @@ import Charts
 
 class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
-    var currentUser = ""
+    var currentUser: String = ""
+    
     var scores = [Int]() //for total scores
     var result = ""
     var results = Array<String>()
@@ -36,47 +37,21 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBOutlet weak var radarView: RadarChartView!
     @IBOutlet weak var barView: BarChartView!
     
-    var observer: NSObjectProtocol?
     
     weak var reportDelegate: ReportDelegate?
     let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Social".localized]
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //add receiver to NotificationCenter
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: .main) { (notification) in
-            let userVC = notification.object as! UserViewController
-            self.currentUser = userVC.currentUser
-            print(self.currentUser)
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if let observer = observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        
-        //add swipe gestures
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-        swipeLeft.direction = .left
-        self.view.addGestureRecognizer(swipeLeft)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-        swipeRight.direction = .right
-        self.view.addGestureRecognizer(swipeRight)
-        
         //create a interactive chart delegate
         self.barView.delegate = self
         self.radarView.delegate = self
         
         menuView.isHidden = true
         //create a instance of dataStored and fetch data from coredata
+        print("cuser@:\(self.currentUser)")
+        
         let context = AppDelegate.viewContext
         let data = DataStored(context: context)
         data.fetchData(currentUser,numberOfFetch)
@@ -92,41 +67,73 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             //set line chart
             lineView.clear()
         }else {
-        
-        //set vars for receiving data
+            
+            //set vars for receiving data
             scores = data.totalArray
             dateArray = data.dateArray
             scoreArray = data.scoresArray
             results = data.resultArray
-
-        //set radar chart
-        scoreArrayNum = scoreArray.count - 1
-        dateLabel.text = " Your Score:".localized + String(scores[scoreArrayNum])
-        radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
-
-
-        //set bar chart
-        barView.setBarChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
-        lineView.isHidden = true
+            
+            //set radar chart
+            scoreArrayNum = scoreArray.count - 1
+            dateLabel.text = " Your Score:".localized + String(scores[scoreArrayNum])
+            radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
+            
+            
+            //set bar chart
+            barView.setBarChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
+            lineView.isHidden = true
             //long press gesture
             let longPressgesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressDetected(gesture:)))
             longPressgesture.allowableMovement = 50
             barView.addGestureRecognizer(longPressgesture)
             
-        //set line chart
-        lineView.setLineChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
+            //set line chart
+            lineView.setLineChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+            NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
+        currentUser = userVC.currentUser
+        
+        //add receiver to NotificationCenter
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
+            self.currentUser = notification.userInfo?["user"] as? String ?? ""
+            print("user@:\(self.currentUser)")
+        }
+        
+
+        //add swipe gestures
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
+        swipeLeft.direction = .left
+        self.view.addGestureRecognizer(swipeLeft)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
+        swipeRight.direction = .right
+        self.view.addGestureRecognizer(swipeRight)
+        
+        
         
     }
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == UISwipeGestureRecognizer.Direction.right {
             print("Swipe Right")
-            dismiss(animated: true, completion: nil)
+//            dismiss(animated: true, completion: nil)
+            performSegue(withIdentifier: "unwindSegueToUserView", sender: self)
         }
         else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
             print("Swipe Left")
-            performSegue(withIdentifier: "toReport", sender: nil)
+            saveImage()
+
+            performSegue(withIdentifier: "toReport", sender: self)
 
             
         }
@@ -141,31 +148,56 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             if scoreArray.count > 0 {
             self.reportDelegate?.passResult(user: currentUser, scores: scoreArray[scoreArrayNum], total: scores[scoreArrayNum], result: results[scoreArrayNum], date: dateArray[scoreArrayNum])
             
-                if lineView.isHidden == true{
-                    let _ = barView.save(to: "\(NSTemporaryDirectory())/image002.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
-                    
-                }else{
-                      let _ = lineView.save(to: "\(NSTemporaryDirectory())/image002.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)             }
+            FileManager.default.clearTmpDirectory()
+            print("directory was cleared")
+            saveImage()
                 
-            let _ = radarView.save(to: "\(NSTemporaryDirectory())/image001.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
+            //add notificationCenter
+            NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
                 
             }
         }
     }
+    //MARK: save images
+    func saveImage() {
+        if !scores.isEmpty {
+        if lineView.isHidden == true{
+            let _ = barView.save(to: "\(NSTemporaryDirectory())/image002.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
+            print("barchart was saved")
+        }else{
+            let _ = lineView.save(to: "\(NSTemporaryDirectory())/image002.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
+            print("linechart was saved")
+
+        }
+        
+        let _ = radarView.save(to: "\(NSTemporaryDirectory())/image001.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
+        }
+    }
     
     @IBAction func backButton(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        performSegue(withIdentifier: "unwindSegueToTest", sender: self)
+//        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func showMenu(_ sender: Any) {
-        menuView.isHidden = false
+        menuView.isHidden = !menuView.isHidden
     }
     
     @IBAction func dismissMenu(_ sender: Any) {
         menuView.isHidden = true
     }
-    //save to csv file
     
+    //Go to reportView
+    @IBAction func goToReportView(_ sender: Any) {
+        performSegue(withIdentifier: "toReport", sender: self)
+//        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
+//        saveImage()
+//        tabBarController?.selectedIndex = 3
+
+    }
+    
+    
+    //save to csv file
     @IBAction func saveCsv(_ sender: Any) {
         saveCsv()
     }
@@ -293,7 +325,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         default:
             break;
         }
-        
+        saveImage()
     }
     
     // add long press gesture
@@ -333,7 +365,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         scoreArrayNum = Int(entry.x)
         radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
         dateLabel.text = "\(dateArray[scoreArrayNum])"+" Your Score:".localized+"\(scores[scoreArrayNum])"
-
+        
+        //add notificationCenter
+        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
+        saveImage()
+            
     }
 
 }
@@ -464,7 +500,7 @@ extension BarChartView {
         let yAxis = YAxis()
         yAxis.granularityEnabled = true
         yAxis.granularity = 1.0
-        yAxis.axisMinimum = 1.0
+        yAxis.axisMinimum = 0.0
         yAxis.axisMaximum = 27
         yAxis.axisRange = 27
         let format = NumberFormatter()
@@ -472,11 +508,11 @@ extension BarChartView {
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
         //set barView
-        self.setVisibleYRangeMaximum(Double(27), axis: .left)
-        self.setVisibleYRangeMinimum(Double(0), axis: .left)
-        self.setVisibleYRange(minYRange: 1, maxYRange: 27, axis: .left)
+//        self.setVisibleYRangeMaximum(Double(27), axis: .left)
+//        self.setVisibleYRangeMinimum(Double(0), axis: .left)
+//        self.setVisibleYRange(minYRange: 1, maxYRange: 27, axis: .left)
         self.chartDescription?.text = ""
-        self.animate(xAxisDuration: 5, yAxisDuration: 1)
+        self.animate(xAxisDuration: 2, yAxisDuration: 0.5)
         self.data = chartData
         self.setVisibleXRangeMinimum(5.0)
         self.xAxis.granularityEnabled = true
@@ -561,7 +597,7 @@ extension RadarChartView {
         self.yAxis.granularity = 1
         self.legend.enabled = false
         self.yAxis.gridAntialiasEnabled = true
-        self.animate(xAxisDuration: 2, yAxisDuration: 2)
+        self.animate(xAxisDuration: 1, yAxisDuration: 0.2)
         self.data = chartData
     }
 }
