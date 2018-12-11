@@ -7,10 +7,14 @@
 //
 
 import UIKit
-protocol UserDelegate: AnyObject {
-    func userReady(name: String)
-}
-class ViewController: UIViewController, UserDelegate {
+//protocol UserDelegate: AnyObject {
+//    func userReady(name: String)
+//}
+class ViewController: UIViewController, DataDelegate {
+    func passResult(user: String) {
+        cUser = user
+    }
+    
     //set 10 questions into array
     let allquestions = QuestionBank()
     var scores = Array(repeating: 0, count: 10) //a parallel array stores scores
@@ -32,25 +36,30 @@ class ViewController: UIViewController, UserDelegate {
     @IBOutlet weak var qNum: UILabel!
     @IBOutlet weak var userName: UILabel!
     
-    var observer: NSObjectProtocol?
+    @IBAction func unwindSegueToTest(unwindSegue: UIStoryboardSegue){
+        print("welcome to testView")
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: .main) { (notification) in
-            let userVC = notification.object as! UserViewController
-            self.cUser = userVC.currentUser
-            self.userName.text = self.cUser
-            
-        }
+
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let observer = observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
+            NotificationCenter.default.removeObserver(self)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
+        cUser = userVC.currentUser
+        userName.text = userVC.currentUser
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
+            let userVC = notification.object as! UserViewController
+            self.cUser = userVC.currentUser
+            self.userName.text = self.cUser
+
+        }
         setQuestionNum()
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -62,14 +71,13 @@ class ViewController: UIViewController, UserDelegate {
         self.view.addGestureRecognizer(swipeRight)
 
 
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startOver()
         alertNote()
-
+        self.view.layoutIfNeeded()
     }
 
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
@@ -202,17 +210,16 @@ class ViewController: UIViewController, UserDelegate {
         } else {
             let alert = UIAlertController(title: "Warning⚠️".localized, message: "Your result will be lost. Still want to quit?".localized, preferredStyle: .alert)
             
-            alert.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: { (UIAlertAction) in self.dismiss(animated: true, completion: nil)}))
+            alert.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: { (UIAlertAction) in
+                self.performSegue(withIdentifier: "unwindSegueToUserView", sender: self) 
+//                self.dismiss(animated: true, completion: nil)
+                
+            }))
             alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
             
             present(alert,animated: true, completion: nil)
             
-            
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let controller = storyboard.instantiateViewController(withIdentifier: "userView") as! UserViewController
-//            controller.userDelegate = self
-//            self.present(controller, animated: true, completion: nil)
-//
+
 
         }
     }
@@ -242,7 +249,7 @@ class ViewController: UIViewController, UserDelegate {
         }
     }
     func goResultView() {
-        performSegue(withIdentifier: "toResultView",
+        performSegue(withIdentifier: "unwindToResultView",
                      sender: self)
     }
     
@@ -253,9 +260,9 @@ class ViewController: UIViewController, UserDelegate {
         
         note.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: nil))
 
-        if let presented = self.presentedViewController {
-            presented.removeFromParent()
-        }
+//        if let presented = self.presentedViewController {
+//            presented.removeFromParent()
+//        }
         if presentedViewController == nil {
         self.present(note, animated: true, completion: nil)
         }
@@ -319,9 +326,9 @@ class ViewController: UIViewController, UserDelegate {
     }
     
     
-    //receive data from user delegate
-    func userReady(name: String) {
-        cUser = name
-    }
+//    //receive data from user delegate
+//    func userReady(name: String) {
+//        cUser = name
+//    }
 }
 
