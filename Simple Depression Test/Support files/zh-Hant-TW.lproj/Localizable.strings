@@ -1,0 +1,170 @@
+/*
+ Localizable.strings
+ Simple Depression Test
+ 
+ Created by Yu Zhang on 8/28/18.
+ Copyright © 2018 Yu Zhang. All rights reserved.
+ */
+"Over the last 2 weeks, how often have you been bothered by any of the following problems?" = "在過去兩個星期，有多少時候您會被以下任何問題所困擾?";
+
+"Little interest or pleasure in doing things" = "做事時提不起勁或沒有樂趣";
+
+"Feeling down, depressed, or hopeless" = "感到心情低落、沮喪或絕望";
+
+"Trouble falling or staying asleep, or sleeping too much" = "難以入睡；睡不安穩（半夜會醒），或相反，睡眠過多";
+
+"Feeling tired or having little energy" = "總是感覺疲倦或沒有活力";
+
+"Poor appetite or overeating" = "食慾不振（沒有胃口）或吃的太多（暴飲暴食）";
+
+"Feeling bad about yourself or that you are a failure or have let yourself or your family down" = "覺得自己很糟，或覺得自己很失敗，或讓自己或家人失望";
+
+"Trouble concentrating on things, such as reading the newspaper or watching television" = "對事物專注有困難，例如閱讀報紙或看電視時";
+
+"Moving or speaking so slowly that other people could have noticed. Or the opposite being so figety or restless that you have been moving around a lot more than usual" = "動作或說話速度緩慢到別人已經察覺， 或正好相反——煩躁或坐立不安、動來動去的情況更勝於平常";
+
+"Thoughts that you would be better off dead, or of hurting yourself" = "想到自己最好去死或者自殘（有自殺的念頭或傷害自己的想法）";
+
+"If you checked off any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?" = "如果您存在上述問題（根據您之前選過的問題），這些問題對您的工作、處理家中事務（照料家務）或與其他人相處時會造成多大困難?";
+
+"Major Depressive Disorder" = "重性抑鬱障礙（抑鬱症）";
+
+"other Depressive Disorder" = "其他抑鬱障礙";
+
+"depressive symptoms but have no effect on your daily life and normal functioning" = "抑鬱症狀但對日常生活及正常功能沒有影響";
+
+"no depression" = "沒有抑鬱";
+
+"depressed mood but cannot be confirmed as depressive disorder at this point" = "具有抑鬱情緒但目前無法確診為抑鬱癥";
+
+"(For initial patient with suicidal or self-injury risk, you need to see a doctor as soon as possible)" = "（對於初始病人，因為您具有自殺或自殘風險，請立即與您的醫生聯絡）";
+
+"Zero point" = "無症狀";
+
+"Minimal depression" = "極輕度的抑鬱";
+
+"Mild depression" = "輕度抑鬱";
+
+"Moderate depression" = "中度抑鬱";
+
+"Moderate severe depression" = "中重度抑鬱";
+
+"Severe depression" = "嚴重抑鬱";
+
+"Result" = "結果";
+
+"Your probably have " = "您可能有";
+
+" with severity score of " = " 根據PHQ-9量表評分 ";
+
+"as " = "屬於";
+
+"Restart" = "重新開始";
+
+"Save" = "保存";
+
+"Since the questionnaire relies on patient self-report, all responses should be verified by the clinician, and a definitive diagnosis is made on clinical grounds taking into account how well the patient understood the questionnaire, as well as other relevant information from the patient. Diagnoses of Major Depressive Disorder or Other Depressive Disorder also require impairment of social, occupational, or other important areas of functioning (Question #10) and ruling out normal bereavement, a history of a Manic Episode (Bipolar Disorder), and a physical disorder, medication, or other drug as the biological cause of the depressive symptoms." = "由於此調查問卷依賴患者的自我報告，所有回答需要臨床醫生的確認，而且需要結合臨床和患者對問題的理解以及其他相關信息綜合考量以給出確定性的診斷。抑鬱症和其他抑鬱障礙的診斷還需要滿足社交、職業工作或或其他功能性損害（問題10），並且除外喪失親友引起的悲痛、躁狂發作（雙向障礙）病史以及軀體、藥物、其他毒品引發的生物源性的抑鬱症狀";
+
+"Continue" = "繼續";
+
+"Not difficult at all" = "完全沒有困難";
+
+"Somewhat difficult" = "有些困難";
+
+"Very difficult" = "非常困難";
+
+"Extremely difficult" = "極度困難";
+
+"Not at all" = "完全沒有";
+
+"Several days" = "少數幾天";
+
+"More than half the days" = "超過半數日子";
+
+"Nearly every day" = "幾乎每天";
+
+"question: " = "題目: ";
+
+"Anhedonia" = "快感缺乏";
+
+"Low Mood" = "情緒低落";
+
+"Insomnia" = "失眠";
+
+"Fatigue" = "疲倦";
+
+"Appetite" = "食慾";
+
+"Worthlessness" = "價值感";
+
+"Concentration" = "注意力";
+
+"Movement" = "運動";
+
+"Suicide" = "自殺";
+
+"Social" = "社交";
+
+"⭕️" = "✅";
+
+"Delete Data" = "刪除數據";
+
+"Delete" = "刪除";
+
+"Warning! Data cannot be recoverd after delete." = "警告！數據刪除後將無法恢復";
+
+"Cancel" = "取消";
+
+"Delete User" = "刪除用戶";
+
+"Warning! All the records under this user will be deleted." = "警告！所有該用戶下的紀錄獎杯刪除";
+
+"Hi, " = "您好！";
+
+" , Note!" = "，請注意：";
+
+" Your Score:" = " 您的評分為：";
+
+"New User" = "新用戶";
+
+"Enter a name" = "請输入您的名字";
+
+"Note" = "注意";
+
+"Please input a user name" = "請輸入用戶名";
+
+"User exists!" = "用戶名已存在！";
+
+"Depression Severity Reference:" = "分級標準：";
+
+"Severe 21-27\nModerate severe 16-20\nMild moderate 10-15\nMild 5-9\nMinimal 1-4" = "重度 21-27\n中度 16-20\n輕中度 10-15\n輕度 5-9\n極輕度 1-4";
+
+"Warning⚠️" = "警告⚠️";
+
+"Your result will be lost. Still want to quit?" = "您的結果將會丟失，仍然要退出嗎？";
+
+"Hi!" = "嗨！";
+
+"Your report has been successfully printed to a PDF file.\n\nWhat do you want to do now?" = "您的PDF報告已經生成";
+
+"Save pdf" = "保存PDF";
+
+"Send by Email" = "發送電郵";
+
+"Nothing" = "取消";
+
+"g1" = "gcn1";
+
+"g2" = "gcn2";
+
+"g3" = "gcn3";
+
+"minimal" = "極輕微/無";
+
+"mild" = "輕度";
+
+"moderate" = "中度";
+
+"moderate severe" = "中重度";
+
+"severe" = "重度";

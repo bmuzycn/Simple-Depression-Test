@@ -17,8 +17,10 @@ class ReportComposer: NSObject {
 //    var result: String?
 //    var htmlCode = ""
     let nameRS = "id=name"
+//    let nameRS = "<INPUT TYPE=\"text\" style=\"font-size:14pt\" id=name>"
     let dateRS = "<input type=date style=font-size:14pt id=date>"
     let totalRS = "max=27"
+//    let resultRS = "<textarea name=\"result\" cols=\"40\" rows=\"3\">"
     
     override init() {
         super.init()
@@ -28,7 +30,9 @@ class ReportComposer: NSObject {
         if let reportTemplate = Bundle.main.path(forResource: "report",ofType:"html") {
         do {
             var htmlStr = try String(contentsOfFile: reportTemplate)
-            htmlStr = htmlStr.replacingOccurrences(of:nameRS, with: nameRS+" value = \(name)")
+            htmlStr = htmlStr.replacingOccurrences(of:nameRS, with: nameRS+" value = \"\(name)\"")
+//            htmlStr = htmlStr.replacingOccurrences(of:nameRS, with:name)
+
             if date != "" {
             htmlStr = htmlStr.replacingOccurrences(of:dateRS, with: date)
             }

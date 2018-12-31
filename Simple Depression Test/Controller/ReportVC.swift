@@ -14,13 +14,14 @@ import MessageUI
 protocol ReportDelegate: AnyObject {
     func passResult(user: String, scores: [Int], total: Int, result: String, date: String)
     }
-class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
+class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControllerDelegate{
     var scores = [Int]()
     var total = 0
     var date = ""
     var result = ""
     var str = ""
     var user = ""
+    @IBOutlet weak var loadSpinner: UIActivityIndicatorView!
     @IBOutlet weak var webViewContainer: UIView!
     var reportView: WKWebView!
     weak var dataDelegate: DataDelegate?
@@ -31,6 +32,15 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
         print("Welcome to report")
 
             
+    }
+    // show indicator
+    func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
+        loadSpinner.startAnimating()
+    }
+    // hide indicator
+    func webView(_ reportView: WKWebView, didFinish navigation: WKNavigation!) {
+        loadSpinner.stopAnimating()
+        loadSpinner.hidesWhenStopped = true
     }
     
     func receiveData() {
@@ -49,8 +59,13 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        removeCache()
+//        removeCache()
+        
+        reportView.navigationDelegate = self
+        
+
         receiveData()
+        print("user:\(user)")
 
         reportComposer = ReportComposer()
         htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
@@ -60,15 +75,25 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
         reportView.loadHTMLString(htmlReport, baseURL: url)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+        FileManager.default.clearTmpDirectory()
+
+        removeCache()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadSpinner.style = .whiteLarge
+        loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
+
         receiveData()
 //        self.view.setNeedsDisplay()
         //add notification receiver
         NotificationCenter.default.addObserver(forName: NSNotification.Name("passData"), object: nil, queue: nil) { (notifitcation) in
             let chartVC = notifitcation.object as! ResultViewController
-            chartVC.saveImage()
+//            chartVC.saveImage()
             self.user = chartVC.currentUser
             self.date = chartVC.dateArray[chartVC.scoreArrayNum]
             self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
@@ -86,7 +111,7 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
 //        let webConfiguration = WKWebViewConfiguration()
         let webConfiguration = WKWebViewConfiguration()
 
-        removeCache()
+//        removeCache()
         let customFrame = CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: 0.0, height: self.webViewContainer.frame.size.height))
         self.reportView = WKWebView (frame: customFrame , configuration: webConfiguration)
         reportView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,12 +123,7 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
         reportView.heightAnchor.constraint(equalTo: webViewContainer.heightAnchor).isActive = true
 //        reportView.uiDelegate = self
         
-//        reportComposer = ReportComposer()
-//        htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
-//
-//        let path = Bundle.main.bundlePath
-//        let url = URL(fileURLWithPath: path)
-//        reportView.loadHTMLString(htmlReport, baseURL: url)
+
     }
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
@@ -114,13 +134,11 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
 
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        // Remove all cache
+
     func removeCache() {
         if #available(iOS 9.0, *)
         {
@@ -141,16 +159,7 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
             }
             URLCache.shared.removeAllCachedResponses()
         }
-//        URLCache.shared.removeAllCachedResponses()
-//        URLCache.shared.diskCapacity = 0
-//        URLCache.shared.memoryCapacity = 0
-//
-//        // Delete any associated cookies
-//        if let cookies = HTTPCookieStorage.shared.cookies {
-//            for cookie in cookies {
-//                HTTPCookieStorage.shared.deleteCookie(cookie)
-//            }
-//        }
+
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -160,12 +169,13 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
 //            let vc = segue.destination as? ResultViewController
 //            self.dataDelegate = vc
 //            self.dataDelegate?.passResult(user: user)
-            FileManager.default.clearTmpDirectory()
             removeCache()
         }
     }
     
     @IBAction func backButton(_ sender: UIBarButtonItem) {
+        FileManager.default.clearTmpDirectory()
+
         performSegue(withIdentifier: "unwindToResultView", sender: self)
 //        dismiss(animated: true, completion: nil)
     }
@@ -175,9 +185,9 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func showOptionsAlert() {
-        let alertController = UIAlertController(title: "Hi!", message: "Your report has been successfully printed to a PDF file.\n\nWhat do you want to do now?", preferredStyle: UIAlertController.Style.alert)
+        let alertController = UIAlertController(title: "Hi!".localized, message: "Your report has been successfully printed to a PDF file.\n\nWhat do you want to do now?".localized, preferredStyle: UIAlertController.Style.alert)
         
-        let actionSave = UIAlertAction(title: "Save pdf", style: UIAlertAction.Style.default) { (action) in
+        let actionSave = UIAlertAction(title: "Save pdf".localized, style: UIAlertAction.Style.default) { (action) in
             if let filename = self.reportComposer.pdfFilename{
                 print(filename)
                 
@@ -203,13 +213,13 @@ class ReportVC: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         
-        let actionEmail = UIAlertAction(title: "Send by Email", style: UIAlertAction.Style.default) { (action) in
+        let actionEmail = UIAlertAction(title: "Send by Email".localized, style: UIAlertAction.Style.default) { (action) in
             DispatchQueue.main.async {
                 self.sendEmail()
             }
         }
         
-        let actionNothing = UIAlertAction(title: "Nothing", style: UIAlertAction.Style.default) { (action) in
+        let actionNothing = UIAlertAction(title: "Nothing".localized, style: UIAlertAction.Style.default) { (action) in
             
         }
         

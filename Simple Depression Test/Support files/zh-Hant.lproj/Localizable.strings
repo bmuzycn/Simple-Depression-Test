@@ -142,3 +142,29 @@
 "Warning⚠️" = "警告⚠️";
 
 "Your result will be lost. Still want to quit?" = "您的結果將會丟失，仍然要退出嗎？";
+
+"Hi!" = "嗨！";
+
+"Your report has been successfully printed to a PDF file.\n\nWhat do you want to do now?" = "您的PDF報告已經生成";
+
+"Save pdf" = "保存PDF";
+
+"Send by Email" = "發送電郵";
+
+"Nothing" = "取消";
+
+"g1" = "gcn1";
+
+"g2" = "gcn2";
+
+"g3" = "gcn3";
+
+"minimal" = "極輕微/無";
+
+"mild" = "輕度";
+
+"mild moderate" = "中度";
+
+"moderate severe" = "中重度";
+
+"severe" = "重度";

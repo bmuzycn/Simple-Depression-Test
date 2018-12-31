@@ -24,20 +24,23 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         print("Welcome back to userView")
     }
 
-    
+
+
+    @IBOutlet weak var gestureImage: UIImageView!
     @IBOutlet weak var userID: UITextField!
     @IBOutlet weak var usersView: UIPickerView! 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //fetch data from CoreData
-        fetchUsers()
-        if !users.isEmpty{
-            usersArray = users
-        }
-        //load pickerView
-        usersView.dataSource = self
-        usersView.delegate = self
-        userID.delegate = self
+        
+//        //fetch data from CoreData
+//        fetchUsers()
+//        if !users.isEmpty{
+//            usersArray = users
+//        }
+//        //load pickerView
+//        usersView.dataSource = self
+//        usersView.delegate = self
+//        userID.delegate = self
 
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -49,10 +52,35 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         self.view.addGestureRecognizer(swipeRight)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        dataUpdate()
+    }
+    func dataUpdate() {
+        //fetch data from CoreData
+        fetchUsers()
+        if !users.isEmpty{
+            usersArray = users
+        }
+        //load pickerView
+        usersView.dataSource = self
+        usersView.delegate = self
+        userID.delegate = self
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startAnimation()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(stopAnimation))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    //add swipe gestures
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == UISwipeGestureRecognizer.Direction.right {
             print("Swipe Right")
-            performSegue(withIdentifier: "unwindSegueToResultView", sender: nil)
+            goChartView()
+//            performSegue(withIdentifier: "unwindSegueToResultView", sender: nil)
         }
         else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
             print("Swipe Left")
@@ -60,6 +88,32 @@ class UserViewController: UIViewController, UITextFieldDelegate{
 
         }
     }
+    
+    //add start animation for gesture guide
+    private func startAnimation() {
+        var times: Int?
+        let timesToDisapear = 5
+        let userKey = "timeOfUse"
+        UserDefaults.standard.object(forKey: userKey)
+        times = UserDefaults.standard.integer(forKey: userKey)
+        if times == nil || times! < timesToDisapear {
+            gestureImage.image = UIImage(named: "swipe")
+            UIView.transition(with: gestureImage, duration: 0.5, options: [.repeat, .autoreverse, .curveEaseInOut], animations: {
+                self.gestureImage.alpha = 0.1
+            })
+            if times == nil {times = 1} else {times = times! + 1}
+            UserDefaults.standard.setValue(times!, forKey: userKey)
+            print("time of use \(UserDefaults.standard.integer(forKey: userKey))")
+        } else {
+            self.gestureImage.isHidden = true
+        }
+    }
+    
+    //stop animation
+    @objc func stopAnimation() {
+        self.gestureImage.isHidden = true
+    }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
@@ -90,7 +144,8 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             self.userID.text = textField.text
             self.saveNewUser()
             if self.isNewUser {
-                self.viewDidLoad()
+//                self.viewDidLoad()
+//                NotificationCenter.default.post(name: NSNotification.Name("newUser"), object: self, userInfo: ["newUser" : self.currentUser])
                 self.goQuestionView()
             }
             }))
@@ -113,7 +168,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
 //        usersView.dataSource = self
 //        usersView.delegate = self
 //        usersView.reloadAllComponents()
-        viewDidLoad()
+        dataUpdate()
 
     }
     
@@ -153,6 +208,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             }else {
             isNewUser = true
             newUser.userID = currentUser
+
             do{
                 try context.save()
                 print("\(currentUser) saved")
@@ -196,11 +252,40 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         let user = User(context: context)
         user.deleteUsers(currentUser, context)
         print("deleted")
-        viewDidLoad()
+        dataUpdate()
+    }
+    
+    func goChartView() {
+        let toView = tabBarController?.viewControllers?[2] as! UINavigationController
+        view.superview?.insertSubview(toView.view, at: 1)
+        toView.view.transform = CGAffineTransform(translationX: -view.frame.width, y: 0)
+        UIView.animate(withDuration: 0.25, delay: TimeInterval(0.0), options: [.curveEaseOut, .preferredFramesPerSecond60], animations: {
+            toView.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: { finished in
+            if finished {
+                
+                self.tabBarController?.selectedIndex = 2
+            }
+        })
     }
     
     func goQuestionView() {
-        performSegue(withIdentifier: "unwindToTest", sender: self)
+        let toView = tabBarController?.viewControllers?[1] as! ViewController
+        print("toView.user:\(toView.cUser)")
+        view.superview?.insertSubview(toView.view, at: 1)
+        toView.view.transform = CGAffineTransform(translationX: self.view.frame.width, y: 0)
+        UIView.animate(withDuration: 0.25, delay: TimeInterval(0.0), options: [.curveEaseOut, .preferredFramesPerSecond60], animations: {
+            toView.view.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion:
+            { finished in
+            if finished {
+                toView.view.removeFromSuperview()
+                self.tabBarController?.selectedIndex = 1
+            }
+        }
+        )
+        
+//        performSegue(withIdentifier: "unwindToTest", sender: self)
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //        let vc = storyboard.instantiateViewController(withIdentifier: "questionView") as! ViewController
 //        self.present(vc, animated: true)
@@ -231,6 +316,40 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             print(error.description)
         }
     }
+
+    var keyboardHeight: CGFloat = 0.0
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = keyboardRectangle.height
+        }
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        animateViewMoving(up: true, moveValue: 120)
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        animateViewMoving(up: false, moveValue: 120)
+    }
+    
+    func animateViewMoving (up:Bool, moveValue :CGFloat){
+        let movementDuration:TimeInterval = 0.3
+        let movement:CGFloat = ( up ? -moveValue : moveValue)
+        UIView.beginAnimations( "animateView", context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        UIView.setAnimationDuration(movementDuration)
+//        self.view.frame.offsetBy(dx:0, dy:movement)
+        self.view.frame = self.view.frame.offsetBy(dx:0, dy:movement)
+        UIView.commitAnimations()
+    }
+    
+ 
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)

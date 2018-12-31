@@ -43,23 +43,20 @@ class ViewController: UIViewController, DataDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
+        cUser = userVC.currentUser
+        userName.text = cUser
+        print("questionView.cUser:\(cUser)")
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
             NotificationCenter.default.removeObserver(self)
+            cUser = ""
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
-        cUser = userVC.currentUser
-        userName.text = userVC.currentUser
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
-            let userVC = notification.object as! UserViewController
-            self.cUser = userVC.currentUser
-            self.userName.text = self.cUser
 
-        }
         setQuestionNum()
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -69,7 +66,6 @@ class ViewController: UIViewController, DataDelegate {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
-
 
     }
 
@@ -97,7 +93,7 @@ class ViewController: UIViewController, DataDelegate {
         UIView.performWithoutAnimation {
             sender.setTitle(sender.currentTitle!+"⭕️".localized, for: .normal)
         }
-        UIView.animate(withDuration: 0.3, delay: 0.3, options: .allowAnimatedContent, animations: {
+        UIView.animate(withDuration: 0.1, delay: 0.3, options: .allowAnimatedContent, animations: {
             sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             self.view.layoutIfNeeded()
         }) { finished in

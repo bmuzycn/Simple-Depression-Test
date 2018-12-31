@@ -44,10 +44,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        //create a interactive chart delegate
-        self.barView.delegate = self
-        self.radarView.delegate = self
-        
+
         menuView.isHidden = true
         //create a instance of dataStored and fetch data from coredata
         print("cuser@:\(self.currentUser)")
@@ -66,6 +63,8 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             lineView.isHidden = true
             //set line chart
             lineView.clear()
+            dateLabel.text = ""
+            
         }else {
             
             //set vars for receiving data
@@ -83,13 +82,20 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             //set bar chart
             barView.setBarChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
             lineView.isHidden = true
+            barView.isHidden = false
+            
             //long press gesture
             let longPressgesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressDetected(gesture:)))
-            longPressgesture.allowableMovement = 50
+            longPressgesture.allowableMovement = 20
             barView.addGestureRecognizer(longPressgesture)
             
             //set line chart
             lineView.setLineChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
+            
+            //create a interactive chart delegate
+            self.barView.delegate = self
+            self.radarView.delegate = self
+            
         }
     }
 
@@ -132,8 +138,8 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
             print("Swipe Left")
             saveImage()
-
-            performSegue(withIdentifier: "toReport", sender: self)
+            tabBarController?.selectedIndex = 3
+//            performSegue(withIdentifier: "toReport", sender: self)
 
             
         }
@@ -189,10 +195,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     //Go to reportView
     @IBAction func goToReportView(_ sender: Any) {
-        performSegue(withIdentifier: "toReport", sender: self)
+//        performSegue(withIdentifier: "toReport", sender: self)
 //        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
 //        saveImage()
-//        tabBarController?.selectedIndex = 3
+        tabBarController?.selectedIndex = 3
 
     }
     
@@ -295,7 +301,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             next25.isHidden = false
         } else {
             numberOfFetch += 1
-            viewDidLoad()
+            viewWillAppear(true)
             next25.isHidden = false
         }
     }
@@ -303,7 +309,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBAction func nextViewButton(_ sender: UIButton) {
         if numberOfFetch >= 1 {
             numberOfFetch -= 1
-            viewDidLoad()
+            viewWillAppear(true)
             last25.isHidden = false
         }
         else {
@@ -342,7 +348,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                     let data = DataStored(context: context)
                     let alert = UIAlertController(title: "⚠️"+"Delete Data".localized, message: "Warning! Data cannot be recoverd after delete.".localized, preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch, Int(xVal))
-                            self.viewDidLoad()
+                            self.viewWillAppear(true)
                         } ))
                         alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
                         self.present(alert, animated: true, completion: nil)
@@ -433,11 +439,25 @@ extension LineChartView {
         xAxis.valueFormatter = chartFormatter
         self.xAxis.valueFormatter = xAxis.valueFormatter
         //to format yAxis
+        let yAxis = self.leftAxis
+        yAxis.granularityEnabled = true
+        yAxis.granularity = 1
+        yAxis.axisMinimum = 0
+        yAxis.axisMaximum = 29
+        //        yAxis.axisRange = 30
+        yAxis.valueFormatter = MyCustomAxisValueFormatter()
+        self.rightAxis.enabled = false
         let format = NumberFormatter()
         format.numberStyle = .none
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
-        self.chartDescription?.text = "Severe 21-27\nModerate severe 16-20\nMild moderate 10-15\nMild 5-9\nMinimal 1-4".localized
+        self.chartDescription?.text = ""
+        let entry0 = LegendEntry.init(label: "minimal", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .green)
+        let entry1 = LegendEntry.init(label: "mild", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .yellow)
+        let entry2 = LegendEntry.init(label: "moderate", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .orange)
+        let entry3 = LegendEntry.init(label: "moderately severe", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .red)
+        let entry4 = LegendEntry.init(label: "severe", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .purple)
+        legend.setCustom(entries: [entry0,entry1,entry2,entry3,entry4])
         self.data = chartData
     }
 }
@@ -497,22 +517,38 @@ extension BarChartView {
         xAxis.valueFormatter = chartFormatter
         self.xAxis.valueFormatter = xAxis.valueFormatter
         //to format yAxis
-        let yAxis = YAxis()
+        let yAxis = self.leftAxis
         yAxis.granularityEnabled = true
-        yAxis.granularity = 1.0
-        yAxis.axisMinimum = 0.0
-        yAxis.axisMaximum = 27
-        yAxis.axisRange = 27
+        yAxis.granularity = 1
+        yAxis.axisMinimum = 0
+        yAxis.axisMaximum = 29
+//        yAxis.axisRange = 30
+        yAxis.valueFormatter = MyCustomAxisValueFormatter()
+        self.rightAxis.enabled = false
+//        let lAxis = self.leftAxis
+        
         let format = NumberFormatter()
         format.numberStyle = .none
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
+        
+        let entry0 = LegendEntry.init(label: "minimal", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .green)
+        let entry1 = LegendEntry.init(label: "mild", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .yellow)
+        let entry2 = LegendEntry.init(label: "moderate", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .orange)
+        let entry3 = LegendEntry.init(label: "moderately severe", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .red)
+        let entry4 = LegendEntry.init(label: "severe", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .purple)
+        legend.setCustom(entries: [entry0,entry1,entry2,entry3,entry4])
+        legend.drawInside = true
+        legend.verticalAlignment = .bottom
+        legend.horizontalAlignment = .right
+        legend.orientation = .vertical
+        legend.textColor = UIColor(white: 0.1, alpha: 0.5)
         //set barView
 //        self.setVisibleYRangeMaximum(Double(27), axis: .left)
 //        self.setVisibleYRangeMinimum(Double(0), axis: .left)
 //        self.setVisibleYRange(minYRange: 1, maxYRange: 27, axis: .left)
         self.chartDescription?.text = ""
-        self.animate(xAxisDuration: 2, yAxisDuration: 0.5)
+        self.animate(xAxisDuration: 1, yAxisDuration: 0.1)
         self.data = chartData
         self.setVisibleXRangeMinimum(5.0)
         self.xAxis.granularityEnabled = true
@@ -590,9 +626,12 @@ extension RadarChartView {
         self.xAxis.valueFormatter = xAxis.valueFormatter
         self.chartDescription?.text = ""
         self.yAxis.axisMinimum = 0
+//        self.yAxis.resetCustomAxisMax()
         self.yAxis.axisMaximum = 2
-        self.yAxis.axisRange = 3
-        self.yAxis.axisMaxLabels = 4
+
+//        self.yAxis.axisRange = 3
+//        self.yAxis.axisMaxLabels = 4
+//        self.yAxis.axisMinLabels = 4
         self.yAxis.granularityEnabled = true
         self.yAxis.granularity = 1
         self.legend.enabled = false
