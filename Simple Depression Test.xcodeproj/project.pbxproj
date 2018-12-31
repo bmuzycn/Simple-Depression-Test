@@ -30,7 +30,6 @@
 		E6C856DA2142C2BA00F95BE4 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C856D82142C2BA00F95BE4 /* ReportVC.swift */; };
 		E6C856DF2146B09F00F95BE4 /* PrintPageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */; };
 		E6F1DC9F21C0444000B6BB42 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */; };
-		E6F1DCA321C1E5BC00B6BB42 /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = E6F1DCA221C1E5BC00B6BB42 /* test.html */; };
 		E6FBB70621C6173000952C6E /* GuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70321C6172F00952C6E /* GuideCell.swift */; };
 		E6FBB70721C6173000952C6E /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70521C6173000952C6E /* GuideViewController.swift */; };
 		E6FBB70921C618F500952C6E /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70821C618F500952C6E /* TabViewController.swift */; };
@@ -89,7 +88,6 @@
 		E6C856D82142C2BA00F95BE4 /* ReportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintPageRenderer.swift; sourceTree = "<group>"; };
 		E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
-		E6F1DCA221C1E5BC00B6BB42 /* test.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		E6FBB70321C6172F00952C6E /* GuideCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideCell.swift; sourceTree = "<group>"; };
 		E6FBB70521C6173000952C6E /* GuideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
 		E6FBB70821C618F500952C6E /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 				E62E0DE12125BEBC00688DA8 /* View */,
 				E62E0DB7211CEBD600688DA8 /* Model */,
 				E6B8F77621358650004A4AEF /* Support files */,
-				E6F1DCA221C1E5BC00B6BB42 /* test.html */,
 			);
 			path = "Simple Depression Test";
 			sourceTree = "<group>";
@@ -323,7 +320,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F1DCA321C1E5BC00B6BB42 /* test.html in Resources */,
 				E66A7734208C442800DC86DB /* LaunchScreen.storyboard in Resources */,
 				E6B8F77721358671004A4AEF /* Localizable.strings in Resources */,
 				E66A7731208C442800DC86DB /* Assets.xcassets in Resources */,

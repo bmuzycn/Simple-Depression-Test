@@ -21,11 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func buildKeyWindow() {
-        window = UIWindow(frame: ScreenBounds)
+        window = UIWindow()
         window!.makeKeyAndVisible()
         let isFristOpen = UserDefaults.standard.object(forKey: "isFristOpenApp")
         if isFristOpen == nil {
-            window?.rootViewController = GuideViewController()
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .horizontal
+            let gv = GuideViewController(collectionViewLayout: layout)
+            window?.rootViewController = gv
             UserDefaults.standard.set("isFristOpenApp", forKey: "isFristOpenApp")
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
