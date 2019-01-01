@@ -77,12 +77,17 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             scoreArrayNum = scoreArray.count - 1
             dateLabel.text = " Your Score:".localized + String(scores[scoreArrayNum])
             radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
-            
+
             
             //set bar chart
             barView.setBarChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
             lineView.isHidden = true
             barView.isHidden = false
+            if data.count > 3 {
+                barView.legend.enabled = false
+            } else {
+                barView.legend.enabled = true
+            }
             
             //long press gesture
             let longPressgesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressDetected(gesture:)))
@@ -543,6 +548,7 @@ extension BarChartView {
         legend.horizontalAlignment = .right
         legend.orientation = .vertical
         legend.textColor = UIColor(white: 0.1, alpha: 0.5)
+
         //set barView
 //        self.setVisibleYRangeMaximum(Double(27), axis: .left)
 //        self.setVisibleYRangeMinimum(Double(0), axis: .left)
