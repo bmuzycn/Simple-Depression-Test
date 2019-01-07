@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		E60CBB04216D933C00AC715B /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E60CBB03216D931100AC715B /* Charts.framework */; };
+		E61CE09921DC0B08003B0661 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE09821DC0B08003B0661 /* MenuViewController.swift */; };
+		E61CE09D21DD6FD9003B0661 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE09C21DD6FD9003B0661 /* Interactor.swift */; };
+		E61CE09F21DD7029003B0661 /* MenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE09E21DD7029003B0661 /* MenuHelper.swift */; };
+		E61CE0A121DD7106003B0661 /* PresentMenuAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE0A021DD7106003B0661 /* PresentMenuAnimator.swift */; };
+		E61CE0A321DD7118003B0661 /* DismissMenuAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE0A221DD7118003B0661 /* DismissMenuAnimator.swift */; };
 		E621EC2721B1953000725BAC /* SwipeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E621EC2621B1953000725BAC /* SwipeSegue.swift */; };
 		E62E0DBB211CEDE000688DA8 /* QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DBA211CEDE000688DA8 /* QuestionBank.swift */; };
 		E62E0DE42125D14F00688DA8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DE32125D14F00688DA8 /* User.swift */; };
@@ -55,6 +60,11 @@
 /* Begin PBXFileReference section */
 		E60CBAFC216D91DD00AC715B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E60CBAFE216D931100AC715B /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../../Charts-3.1 copy.1/Charts.xcodeproj"; sourceTree = "<group>"; };
+		E61CE09821DC0B08003B0661 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		E61CE09C21DD6FD9003B0661 /* Interactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
+		E61CE09E21DD7029003B0661 /* MenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuHelper.swift; sourceTree = "<group>"; };
+		E61CE0A021DD7106003B0661 /* PresentMenuAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentMenuAnimator.swift; sourceTree = "<group>"; };
+		E61CE0A221DD7118003B0661 /* DismissMenuAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissMenuAnimator.swift; sourceTree = "<group>"; };
 		E621EC2621B1953000725BAC /* SwipeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeSegue.swift; sourceTree = "<group>"; };
 		E62E0DBA211CEDE000688DA8 /* QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBank.swift; sourceTree = "<group>"; };
 		E62E0DE32125D14F00688DA8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -164,9 +174,9 @@
 				E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */,
 				E621EC2621B1953000725BAC /* SwipeSegue.swift */,
 				E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */,
-				E6FBB70321C6172F00952C6E /* GuideCell.swift */,
-				E6FBB70521C6173000952C6E /* GuideViewController.swift */,
+				E6D83D4E21DFE8FD00DF39B2 /* Guide */,
 				E6FBB70821C618F500952C6E /* TabViewController.swift */,
+				E6D83D4C21DFE8B700DF39B2 /* Menu */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -225,6 +235,27 @@
 				E60CBAFE216D931100AC715B /* Charts.xcodeproj */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6D83D4C21DFE8B700DF39B2 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				E61CE09821DC0B08003B0661 /* MenuViewController.swift */,
+				E61CE09C21DD6FD9003B0661 /* Interactor.swift */,
+				E61CE09E21DD7029003B0661 /* MenuHelper.swift */,
+				E61CE0A021DD7106003B0661 /* PresentMenuAnimator.swift */,
+				E61CE0A221DD7118003B0661 /* DismissMenuAnimator.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		E6D83D4E21DFE8FD00DF39B2 /* Guide */ = {
+			isa = PBXGroup;
+			children = (
+				E6FBB70321C6172F00952C6E /* GuideCell.swift */,
+				E6FBB70521C6173000952C6E /* GuideViewController.swift */,
+			);
+			path = Guide;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,6 +367,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61CE0A321DD7118003B0661 /* DismissMenuAnimator.swift in Sources */,
 				E66A7729208C441D00DC86DB /* ViewController.swift in Sources */,
 				E62E0DE821261B0100688DA8 /* UserViewController.swift in Sources */,
 				E62E0DF8212884E400688DA8 /* DataDelegate.swift in Sources */,
@@ -343,15 +375,19 @@
 				E6F1DC9F21C0444000B6BB42 /* InfoViewController.swift in Sources */,
 				E62E0DE42125D14F00688DA8 /* User.swift in Sources */,
 				E6FBB70921C618F500952C6E /* TabViewController.swift in Sources */,
+				E61CE09921DC0B08003B0661 /* MenuViewController.swift in Sources */,
 				E62E0DE62125D19F00688DA8 /* DataStored.swift in Sources */,
 				E62E0DBB211CEDE000688DA8 /* QuestionBank.swift in Sources */,
 				E6FBB70621C6173000952C6E /* GuideCell.swift in Sources */,
 				E6B3917521D3418E0057E86F /* MyCustomAxisValueFormatter.swift in Sources */,
+				E61CE09D21DD6FD9003B0661 /* Interactor.swift in Sources */,
 				E6B8F7A82135EB2E004A4AEF /* LocalString.swift in Sources */,
+				E61CE0A121DD7106003B0661 /* PresentMenuAnimator.swift in Sources */,
 				E6FBB70721C6173000952C6E /* GuideViewController.swift in Sources */,
 				E6C856DF2146B09F00F95BE4 /* PrintPageRenderer.swift in Sources */,
 				E66A7727208C441D00DC86DB /* AppDelegate.swift in Sources */,
 				E621EC2721B1953000725BAC /* SwipeSegue.swift in Sources */,
+				E61CE09F21DD7029003B0661 /* MenuHelper.swift in Sources */,
 				E6C856D92142C2BA00F95BE4 /* ReportComposer.swift in Sources */,
 				E6C856DA2142C2BA00F95BE4 /* ReportVC.swift in Sources */,
 				E62E0E04212B64C100688DA8 /* ResultViewController.swift in Sources */,

@@ -23,7 +23,7 @@ class InfoViewController: UITabBarController {
         alert()
     }
     func alert() {
-        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.6 \n By Yu Zhang\n\n\nLast updated on 12/11/2018:\n- Add an achives management function.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
+        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.7 \n By Yu Zhang\n\n\nLast updated on 1/3/2019:\n- Add a slide-out menu for achives management.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
         infoNote.addAction(UIAlertAction(title: "OK", style: .default, handler:{ (alert) in
             self.performSegue(withIdentifier: "unwindToUserView", sender: self)
         }))

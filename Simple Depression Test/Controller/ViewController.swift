@@ -51,7 +51,7 @@ class ViewController: UIViewController, DataDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-            NotificationCenter.default.removeObserver(self)
+//            NotificationCenter.default.removeObserver(self)
             cUser = ""
     }
     override func viewDidLoad() {
@@ -184,7 +184,7 @@ class ViewController: UIViewController, DataDelegate {
             progressBar.progress += 0.1
 
             checkScores()
-            let alert = UIAlertController(title: "Result".localized, message: "Your probably have ".localized + result.localized + " with severity score of ".localized + "\(totalScore)/27 " + "as ".localized + severity + "\n\n"+"Depression Severity Reference:".localized+"\n" + "Severe 21-27\nModerate severe 16-20\nMild moderate 10-15\nMild 5-9\nMinimal 1-4".localized, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Result".localized, message: "Your probably have ".localized + result.localized + " with severity score of ".localized + "\(totalScore)/27 " + "as ".localized + severity + "\n\n"+"Depression Severity Reference:".localized+"\n" + "Severe 21-27\nModerate severe 16-20\nMild moderate 10-15\nMild 5-9\nMinimal or None 0-4".localized, preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Restart".localized, style: .default, handler: { (UIAlertAction) in self.startOver()}))
             alert.addAction(UIAlertAction(title: "Save".localized, style: .default, handler: { (UIAlertAction) in self.goResultView()}))

@@ -46,14 +46,24 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     func receiveData() {
         let navVC = tabBarController?.viewControllers?[2] as! UINavigationController
         let chartVC = navVC.viewControllers[0] as! ResultViewController
-        if !chartVC.scores.isEmpty {
-        chartVC.saveImage()
-        self.user = chartVC.currentUser
-        self.date = chartVC.dateArray[chartVC.scoreArrayNum]
-        self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
-        self.total = chartVC.scores[chartVC.scoreArrayNum]
-        self.result = chartVC.results[chartVC.scoreArrayNum]
-        print("notification passed to reportVC")
+        if !chartVC.dateArray.isEmpty {
+            if chartVC.isDataSentFromRecordsMenu{
+                chartVC.saveImage()
+                self.user = chartVC.currentUser
+                self.date = chartVC.date
+                self.scores = chartVC.scores
+                self.total = chartVC.totalScore
+                self.result = chartVC.result
+                print("data passed from menuView to reportVC")
+            } else {
+                chartVC.saveImage()
+                self.user = chartVC.currentUser
+                self.date = chartVC.dateArray[chartVC.scoreArrayNum]
+                self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
+                self.total = chartVC.totalScores[chartVC.scoreArrayNum]
+                self.result = chartVC.results[chartVC.scoreArrayNum]
+                print("data passed from chartView to reportVC")
+            }
         }
     }
     
@@ -77,7 +87,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+//        NotificationCenter.default.removeObserver(self)
         FileManager.default.clearTmpDirectory()
 
         removeCache()
@@ -88,20 +98,19 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         loadSpinner.style = .whiteLarge
         loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
 
-        receiveData()
-//        self.view.setNeedsDisplay()
-        //add notification receiver
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("passData"), object: nil, queue: nil) { (notifitcation) in
-            let chartVC = notifitcation.object as! ResultViewController
-//            chartVC.saveImage()
-            self.user = chartVC.currentUser
-            self.date = chartVC.dateArray[chartVC.scoreArrayNum]
-            self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
-            self.total = chartVC.scores[chartVC.scoreArrayNum]
-            self.result = chartVC.results[chartVC.scoreArrayNum]
-            print("notification passed to reportVC")
-            
-        }
+//        receiveData()
+        
+//        //add notification receiver
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name("passData"), object: nil, queue: nil) { (notifitcation) in
+//            let chartVC = notifitcation.object as! ResultViewController
+//            self.user = chartVC.currentUser
+//            self.date = chartVC.dateArray[chartVC.scoreArrayNum]
+//            self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
+//            self.total = chartVC.scores[chartVC.scoreArrayNum]
+//            self.result = chartVC.results[chartVC.scoreArrayNum]
+//            print("notification passed to reportVC")
+//        }
+        
         //add swipe gesture
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
@@ -245,11 +254,11 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         controller.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func infoButton(_ sender: Any) {
-        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.2 \n By Yu Zhang\n\n\nLast updated on 11/29/2018:\n- New button animation was added.\n- Swipe gestures were enabled.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
-        infoNote.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(infoNote, animated: true, completion: nil)
-    }
+//    @IBAction func infoButton(_ sender: Any) {
+//        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.2 \n By Yu Zhang\n\n\nLast updated on 11/29/2018:\n- New button animation was added.\n- Swipe gestures were enabled.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
+//        infoNote.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//        present(infoNote, animated: true, completion: nil)
+//    }
 }
 
 extension ReportVC: ReportDelegate {

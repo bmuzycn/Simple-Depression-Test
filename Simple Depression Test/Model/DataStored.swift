@@ -14,7 +14,7 @@ class DataStored: NSManagedObject {
     var resultArray = [String]()
     var dateArray = [String]()
     var totalArray = [Int]()
-    var flag = Bool()
+    var flag = Bool() //to see if the data size >25
     var userflag = false
     var count = Int()
     
@@ -82,9 +82,9 @@ class DataStored: NSManagedObject {
             let data = try context.fetch(request)
             self.count = data.count
             if self.count != 0 {
-                if data.count - 25*n <= 0 {
+                if data.count - 25*n == 0 {
                     startNum = 0
-                    endNum = data.count - 25*(n-1) - 1
+                    endNum = 24
                     flag = false
                 }
                 else if (data.count - 25*n) > 0 && (data.count - 25*n) <= 25  {

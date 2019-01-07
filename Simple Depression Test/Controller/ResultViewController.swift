@@ -11,17 +11,26 @@ import Charts
 
 class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
+    let interactor = Interactor()
+
     var currentUser: String = ""
-    
-    var scores = [Int]() //for total scores
+    var totalScore = 0
+    var totalScores = [Int]() //for total scores
+    var scores = [Int]() //receive from menuVC and pass to reportVC
     var result = ""
     var results = Array<String>()
     var dateArray = [String]()
     var date = ""
     var scoreArray = [[Int]]() //for scores of each question
     var scoreArrayNum = 0
-    var numberOfFetch = 0
-    var flag = true
+    var numberOfFetch : Int?
+    var flag = true //if the dataSet > 25
+    var isDataSentFromRecordsMenu = false
+//    var dateSelected = ""
+//    var resultSelected = ""
+//    var scoresSelected = [Int]()
+//    var totalScoreSeleceted = 0
+    
     @IBAction func unwindSegueToResultView(unwindSegue: UIStoryboardSegue) {
         print("Welcome back to resultView")
     }
@@ -39,7 +48,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     
     weak var reportDelegate: ReportDelegate?
-    let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Social".localized]
+    let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Function impairment".localized]
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -51,10 +60,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         
         let context = AppDelegate.viewContext
         let data = DataStored(context: context)
-        data.fetchData(currentUser,numberOfFetch)
+        data.fetchData(currentUser,numberOfFetch ?? 0)
         flag = data.flag
         if data.count == 0 {
-            scores.removeAll()
+            totalScores.removeAll()
             dateArray.removeAll()
             scoreArray.removeAll()
             radarView.clear()
@@ -68,19 +77,20 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         }else {
             
             //set vars for receiving data
-            scores = data.totalArray
+            totalScores = data.totalArray
             dateArray = data.dateArray
             scoreArray = data.scoresArray
             results = data.resultArray
+            scoreArrayNum = scoreArray.count - 1
             
             //set radar chart
-            scoreArrayNum = scoreArray.count - 1
-            dateLabel.text = " Your Score:".localized + String(scores[scoreArrayNum])
-            radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
-
-            
+            if isDataSentFromRecordsMenu == false {
+                numberOfFetch = 0
+                dateLabel.text = " Your Score:".localized + String(totalScores[scoreArrayNum])
+                radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
+            }
             //set bar chart
-            barView.setBarChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
+            barView.setBarChartData(xValues: dateArray, yValues: totalScores, label: "Scores Records")
             lineView.isHidden = true
             barView.isHidden = false
             if data.count > 3 {
@@ -88,14 +98,14 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             } else {
                 barView.legend.enabled = true
             }
-            
+
             //long press gesture
             let longPressgesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressDetected(gesture:)))
             longPressgesture.allowableMovement = 20
             barView.addGestureRecognizer(longPressgesture)
             
             //set line chart
-            lineView.setLineChartData(xValues: dateArray, yValues: scores, label: "Scores Records")
+            lineView.setLineChartData(xValues: dateArray, yValues: totalScores, label: "Scores Records")
             
             //create a interactive chart delegate
             self.barView.delegate = self
@@ -106,7 +116,8 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-            NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
+        isDataSentFromRecordsMenu = false
     }
     
     override func viewDidLoad() {
@@ -121,57 +132,60 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         }
         
 
-        //add swipe gestures
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-        swipeLeft.direction = .left
-        self.view.addGestureRecognizer(swipeLeft)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-        swipeRight.direction = .right
-        self.view.addGestureRecognizer(swipeRight)
+//        //add swipe gestures
+//        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
+//        swipeLeft.direction = .left
+//        self.view.addGestureRecognizer(swipeLeft)
+//
+//        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
+//        swipeRight.direction = .right
+//        self.view.addGestureRecognizer(swipeRight)
         
         
         
     }
     
-    @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
-        if gesture.direction == UISwipeGestureRecognizer.Direction.right {
-            print("Swipe Right")
-//            dismiss(animated: true, completion: nil)
-            performSegue(withIdentifier: "unwindSegueToUserView", sender: self)
-        }
-        else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
-            print("Swipe Left")
-            saveImage()
-            tabBarController?.selectedIndex = 3
-//            performSegue(withIdentifier: "toReport", sender: self)
-
-            
-        }
-    }
+//    @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
+//        if gesture.direction == UISwipeGestureRecognizer.Direction.right {
+//            print("Swipe Right")
+//            performSegue(withIdentifier: "unwindSegueToUserView", sender: self)
+//        }
+//        else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
+//            print("Swipe Left")
+//            saveImage()
+//            tabBarController?.selectedIndex = 3
+//            
+//        }
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.destination is ReportVC
-        {
-            let vc = segue.destination as? ReportVC
-            self.reportDelegate = vc
-            if scoreArray.count > 0 {
-            self.reportDelegate?.passResult(user: currentUser, scores: scoreArray[scoreArrayNum], total: scores[scoreArrayNum], result: results[scoreArrayNum], date: dateArray[scoreArrayNum])
-            
-            FileManager.default.clearTmpDirectory()
-            print("directory was cleared")
-            saveImage()
-                
-            //add notificationCenter
-            NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
-                
-            }
+//        if segue.destination is ReportVC
+//        {
+//            let vc = segue.destination as? ReportVC
+//            self.reportDelegate = vc
+//            if scoreArray.count > 0 {
+//            self.reportDelegate?.passResult(user: currentUser, scores: scoreArray[scoreArrayNum], total: totalScores[scoreArrayNum], result: results[scoreArrayNum], date: dateArray[scoreArrayNum])
+//
+//            FileManager.default.clearTmpDirectory()
+//            print("directory was cleared")
+//            saveImage()
+//
+//            //add notificationCenter
+//            NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
+//
+//            }
+//        }
+        if let destinationViewController = segue.destination as? MenuViewController {
+            destinationViewController.transitioningDelegate = self
+            destinationViewController.interactor = interactor
+            destinationViewController.menuActionDelegate = self
+            destinationViewController.currentUser = currentUser
         }
     }
     //MARK: save images
     func saveImage() {
-        if !scores.isEmpty {
+        if !dateArray.isEmpty {
         if lineView.isHidden == true{
             let _ = barView.save(to: "\(NSTemporaryDirectory())/image002.png", format: ChartViewBase.ImageFormat.png, compressionQuality: 1.0)
             print("barchart was saved")
@@ -185,24 +199,20 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         }
     }
     
-    @IBAction func backButton(_ sender: UIButton) {
+    @IBAction func backButton(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "unwindSegueToTest", sender: self)
-//        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func showMenu(_ sender: Any) {
         menuView.isHidden = !menuView.isHidden
     }
     
-    @IBAction func dismissMenu(_ sender: Any) {
-        menuView.isHidden = true
-    }
+//    @IBAction func dismissMenu(_ sender: Any) {
+//        menuView.isHidden = true
+//    }
     
     //Go to reportView
     @IBAction func goToReportView(_ sender: Any) {
-//        performSegue(withIdentifier: "toReport", sender: self)
-//        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
-//        saveImage()
         tabBarController?.selectedIndex = 3
 
     }
@@ -219,10 +229,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateString = formatter.string(from: dateSave)
         var str = ""
-        print(scores.count)
+        print(totalScores.count)
         
         //load data to string
-        for i in 0..<scores.count {
+        for i in 0..<totalScores.count {
             let date = dateArray[i]
 
             str.append("name: \(currentUser),date:\(date)\n")
@@ -231,7 +241,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                 str.append("question\(n+1),\(score)\n")
                 n = n + 1
             }
-            str.append("total,\(scores[i])\n\n")
+            str.append("total,\(totalScores[i])\n\n")
         }
         
         let fileName = "\(dateString).csv"
@@ -270,11 +280,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
    //buttons for radarchart
     @IBAction func prevButton(_ sender: UIButton) {
-        if scoreArrayNum > 0 {
+        if scoreArrayNum > 0 && scoreArrayNum < dateArray.count{
             scoreArrayNum -= 1
             radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
             nextButton.isHidden = false
-            dateLabel.text = "\(dateArray[scoreArrayNum])" + " Score:" + "\(scores[scoreArrayNum])"
+            dateLabel.text = "\(dateArray[scoreArrayNum])" + " Score:" + "\(totalScores[scoreArrayNum])"
 
         }else{
             prevButton.isHidden = true
@@ -289,7 +299,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             scoreArrayNum += 1
             radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
             prevButton.isHidden = false
-            dateLabel.text = "\(dateArray[scoreArrayNum]) Score:\(scores[scoreArrayNum])"
+            dateLabel.text = "\(dateArray[scoreArrayNum]) Score:\(totalScores[scoreArrayNum])"
         }
         else {
             nextButton.isHidden = true
@@ -305,15 +315,15 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             last25.isHidden = true
             next25.isHidden = false
         } else {
-            numberOfFetch += 1
+            numberOfFetch! += 1
             viewWillAppear(true)
             next25.isHidden = false
         }
     }
     
     @IBAction func nextViewButton(_ sender: UIButton) {
-        if numberOfFetch >= 1 {
-            numberOfFetch -= 1
+        if numberOfFetch! >= 1 {
+            numberOfFetch! -= 1
             viewWillAppear(true)
             last25.isHidden = false
         }
@@ -352,7 +362,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                     let context = AppDelegate.viewContext
                     let data = DataStored(context: context)
                     let alert = UIAlertController(title: "⚠️"+"Delete Data".localized, message: "Warning! Data cannot be recoverd after delete.".localized, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch, Int(xVal))
+                alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch!, Int(xVal))
                             self.viewWillAppear(true)
                         } ))
                         alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
@@ -374,8 +384,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         print("chartValueSelected y=\(entry.y) x=\(entry.x)")
 
         scoreArrayNum = Int(entry.x)
-        radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
-        dateLabel.text = "\(dateArray[scoreArrayNum])"+" Your Score:".localized+"\(scores[scoreArrayNum])"
+        scores = scoreArray[scoreArrayNum]
+        radarView.setRadarData(phqArray, scores, "PHQ-9")
+        date = dateArray[scoreArrayNum]
+        totalScore = totalScores[scoreArrayNum]
+        dateLabel.text = "\(date)"+" Your Score:".localized+"\(totalScore)"
         
         //add notificationCenter
         NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
@@ -644,5 +657,62 @@ extension RadarChartView {
         self.yAxis.gridAntialiasEnabled = true
         self.animate(xAxisDuration: 1, yAxisDuration: 0.2)
         self.data = chartData
+    }
+}
+
+protocol MenuActionDelegate {
+    func openSegue(_ segueName: String, sender: AnyObject?)
+    
+    func reopenMenu()
+}
+
+extension ResultViewController {
+    
+    @IBAction func openMenu(_ sender: AnyObject) {
+        performSegue(withIdentifier: "openMenu", sender: nil)
+    }
+    
+    @IBAction func edgePanGesture(_ sender: UIScreenEdgePanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        
+        let progress = MenuHelper.calculateProgress(translation, viewBounds: view.bounds, direction: .right)
+        
+        MenuHelper.mapGestureStateToInteractor(
+            sender.state,
+            progress: progress,
+            interactor: interactor){
+                self.performSegue(withIdentifier: "openMenu", sender: nil)
+        }
+    }
+    
+    
+}
+
+extension ResultViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PresentMenuAnimator()
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DismissMenuAnimator()
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor.hasStarted ? interactor : nil
+    }
+    
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor.hasStarted ? interactor : nil
+    }
+}
+
+extension ResultViewController : MenuActionDelegate {
+    func openSegue(_ segueName: String, sender: AnyObject?) {
+        dismiss(animated: true){
+            self.performSegue(withIdentifier: segueName, sender: sender)
+        }
+    }
+    func reopenMenu(){
+        performSegue(withIdentifier: "openMenu", sender: nil)
     }
 }
