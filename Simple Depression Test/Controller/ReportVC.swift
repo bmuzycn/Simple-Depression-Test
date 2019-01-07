@@ -89,7 +89,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         super.viewDidDisappear(animated)
 //        NotificationCenter.default.removeObserver(self)
         FileManager.default.clearTmpDirectory()
-
+        clearArrays()
         removeCache()
     }
     
@@ -97,19 +97,6 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         super.viewDidLoad()
         loadSpinner.style = .whiteLarge
         loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-
-//        receiveData()
-        
-//        //add notification receiver
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("passData"), object: nil, queue: nil) { (notifitcation) in
-//            let chartVC = notifitcation.object as! ResultViewController
-//            self.user = chartVC.currentUser
-//            self.date = chartVC.dateArray[chartVC.scoreArrayNum]
-//            self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
-//            self.total = chartVC.scores[chartVC.scoreArrayNum]
-//            self.result = chartVC.results[chartVC.scoreArrayNum]
-//            print("notification passed to reportVC")
-//        }
         
         //add swipe gesture
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -117,10 +104,8 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         self.view.addGestureRecognizer(swipeRight)
         
         //load reportView
-//        let webConfiguration = WKWebViewConfiguration()
         let webConfiguration = WKWebViewConfiguration()
 
-//        removeCache()
         let customFrame = CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: 0.0, height: self.webViewContainer.frame.size.height))
         self.reportView = WKWebView (frame: customFrame , configuration: webConfiguration)
         reportView.translatesAutoresizingMaskIntoConstraints = false
@@ -139,7 +124,6 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         if gesture.direction == UISwipeGestureRecognizer.Direction.right {
             print("Swipe Right")
             performSegue(withIdentifier: "unwindToResultView", sender: self)
-//            dismiss(animated: true, completion: nil)
         }
     }
 
@@ -147,6 +131,14 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
 //        NotificationCenter.default.removeObserver(self)
 //    }
 
+    func clearArrays() {
+        scores.removeAll()
+        total = 0
+        date = ""
+        result = ""
+        str = ""
+        user = ""
+    }
 
     func removeCache() {
         if #available(iOS 9.0, *)
@@ -175,18 +167,13 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     {
         if segue.destination is ResultViewController
         {
-//            let vc = segue.destination as? ResultViewController
-//            self.dataDelegate = vc
-//            self.dataDelegate?.passResult(user: user)
             removeCache()
         }
     }
     
     @IBAction func backButton(_ sender: UIBarButtonItem) {
         FileManager.default.clearTmpDirectory()
-
         performSegue(withIdentifier: "unwindToResultView", sender: self)
-//        dismiss(animated: true, completion: nil)
     }
     @IBAction func saveToPDF(_ sender: Any) {
         reportComposer.createPDF(html: htmlReport, filename: "reportPHQ-9", formatter: reportView.viewPrintFormatter())
