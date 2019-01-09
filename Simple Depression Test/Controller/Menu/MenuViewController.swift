@@ -21,7 +21,7 @@ struct Expandabe {
 
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    
+    let fetchLimit = DataStored.fetchLimit
     var interactor:Interactor? = nil
     var menuActionDelegate:MenuActionDelegate? = nil
     var scoresArray = [[Int]]()
@@ -99,7 +99,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         tbView.delegate = self
         tbView.dataSource = self
-        view.backgroundColor = #colorLiteral(red: 0.7517050505, green: 0.9403105378, blue: 0.7917734981, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+        tbView.backgroundColor = #colorLiteral(red: 0.004859850742, green: 0.09608627111, blue: 0.5749928951, alpha: 0.8)
 
     }
     
@@ -201,7 +202,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     var dateSelected = ""
     var resultSelected = ""
     var indexForFetch = 0
-    
+
     // MARK: - Table view delegate
     
     //Todo: Method after a row is selected
@@ -249,9 +250,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             let alert = UIAlertController(title: "⚠️"+"Delete Data".localized, message: "Warning! Data cannot be recoverd after delete.".localized, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in
                 self.expandableRecords[indexPath.section].records.remove(at: indexPath.row)
+
                 self.deleteData(self.currentUser, indexSelected)
                 self.fetchData(self.currentUser)
                 self.sortData()
+                if self.expandableRecords.indices.contains(indexPath.section){
+                self.expandableRecords[indexPath.section].isExpanded = true
+                }
                 tableView.reloadData()
 
             } ))
@@ -268,11 +273,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         formatter.dateFormat = "'@' h:mm a"
         let timeRecord = formatter.string(from: timeStamp)
         let scoreColor = setColor(totalScore)
-        let bgColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        let bgColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         let yourScore = NSMutableAttributedString(string: "Your score: \(totalScore) ")
         yourScore.addAttributes([NSAttributedString.Key.foregroundColor: scoreColor, NSAttributedString.Key.backgroundColor: bgColor], range: NSRange(location: 12, length: 2))
         cell.textLabel?.attributedText = yourScore
         cell.detailTextLabel?.text = timeRecord
+        cell.backgroundColor = bgColor
         return cell
     }
 
@@ -286,6 +292,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             dateFormatter.dateFormat = "EEEE, MMMM d, yyyy"
             let dateString = dateFormatter.string(from: record.dateTime)
             button.setTitle(dateString, for: .normal)
+            button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         }
         
         return button
@@ -322,7 +329,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let isExpanded = expandableRecords[section].isExpanded
         expandableRecords[section].isExpanded = !isExpanded
         
-        button.backgroundColor = isExpanded ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        button.backgroundColor = isExpanded ? tbView.backgroundColor : #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 0.5)
         
         if isExpanded {
             tbView.deleteRows(at: indexPaths, with: .fade)
@@ -347,8 +354,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             chartVC.result = resultSelected
             chartVC.scores = scoresSelected
             chartVC.totalScore = totalScore
-            chartVC.numberOfFetch = max(Int(floor(Float(indexForFetch/25))) , 0)
-
+            chartVC.numberOfFetch = max(Int(floor(Float(indexForFetch/fetchLimit))) , 0)
+            let xValue = (records.count - fetchLimit*chartVC.numberOfFetch!) < fetchLimit ? Double(records.count - indexForFetch - 1) : Double(fetchLimit - (indexForFetch - fetchLimit*chartVC.numberOfFetch!) - 1)
+            chartVC.barView.highlightValue(x: xValue, dataSetIndex: 0, stackIndex: 0)
+            
         }
     }
 

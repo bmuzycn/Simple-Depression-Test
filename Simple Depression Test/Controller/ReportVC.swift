@@ -76,6 +76,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
 
         receiveData()
         print("user:\(user)")
+        print(date)
 
         reportComposer = ReportComposer()
         htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
@@ -85,8 +86,8 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         reportView.loadHTMLString(htmlReport, baseURL: url)
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 //        NotificationCenter.default.removeObserver(self)
         FileManager.default.clearTmpDirectory()
         clearArrays()
@@ -138,6 +139,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         result = ""
         str = ""
         user = ""
+        print("data was cleared")
     }
 
     func removeCache() {

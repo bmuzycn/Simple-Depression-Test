@@ -234,7 +234,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     }
     
     @IBAction func selectButton(_ sender: Any) {
-        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
+//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
         goQuestionView()
     }
 
@@ -367,20 +367,41 @@ extension UserViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in usersView: UIPickerView) -> Int {
         return 1
     }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        currentUser = usersArray[row]
+        var color: UIColor!
+        if pickerView.selectedRow(inComponent: component) == row {
+            color = UIColor.blue
+        } else {
+            color = UIColor.gray
+        }
+        
+        let attributes: [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)
+        ]
+        return NSAttributedString(string: currentUser, attributes: attributes)
+    }
+    
+
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 44
+    }
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return usersArray.count
     }
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        currentUser = usersArray[row]
-        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
-
-//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
-//        self.dataDelegate?.passResult(user: currentUser)
-        return usersArray[row]
-    }
+    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        currentUser = usersArray[row]
+//
+//        return usersArray[row]
+//    }
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         currentUser = usersArray[row]
-//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self)
-        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
+        pickerView.reloadAllComponents()
     }
 }

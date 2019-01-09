@@ -24,25 +24,28 @@ extension PresentMenuAnimator : UIViewControllerAnimatedTransitioning {
                 return
         }
         let containerView = transitionContext.containerView
-        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        
+        containerView.insertSubview(toVC.view, aboveSubview: fromVC.view)
+        toVC.view.center.x = -UIScreen.main.bounds.width/2
+        toVC.view.layer.shadowOpacity = 0.7
         // replace main view with snapshot
         if let snapshot = fromVC.view.snapshotView(afterScreenUpdates: false) {
             snapshot.tag = MenuHelper.snapshotNumber
             snapshot.isUserInteractionEnabled = false
             snapshot.layer.shadowOpacity = 0.1
             
-            containerView.insertSubview(snapshot, aboveSubview: toVC.view)
+            containerView.insertSubview(snapshot, belowSubview: toVC.view)
             fromVC.view.isHidden = true
             
             UIView.animate(
                 withDuration: transitionDuration(using: transitionContext),
                 animations: {
-                    if UIDevice.current.orientation.isPortrait == true {
-                    snapshot.center.x += UIScreen.main.bounds.width * MenuHelper.menuWidth
-                    } else {
-                        snapshot.center.x += UIScreen.main.bounds.width * 0.55
-                    }
+                    toVC.view.center.x = UIScreen.main.bounds.width/2
+
+//                    if UIDevice.current.orientation.isPortrait == true {
+//                    snapshot.center.x += UIScreen.main.bounds.width * MenuHelper.menuWidth
+//                    } else {
+//                        snapshot.center.x += UIScreen.main.bounds.width * 0.55
+//                    }
             },
                 completion: { _ in
                     fromVC.view.isHidden = false

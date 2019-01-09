@@ -24,12 +24,8 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     var scoreArray = [[Int]]() //for scores of each question
     var scoreArrayNum = 0
     var numberOfFetch : Int?
-    var flag = true //if the dataSet > 25
+    var flag = true //if the dataSet > fetchLimit
     var isDataSentFromRecordsMenu = false
-//    var dateSelected = ""
-//    var resultSelected = ""
-//    var scoresSelected = [Int]()
-//    var totalScoreSeleceted = 0
     
     @IBAction func unwindSegueToResultView(unwindSegue: UIStoryboardSegue) {
         print("Welcome back to resultView")
@@ -45,21 +41,17 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBOutlet weak var lineView: LineChartView!
     @IBOutlet weak var radarView: RadarChartView!
     @IBOutlet weak var barView: BarChartView!
+    @IBOutlet weak var stepper: UIStepper!
     
     
     weak var reportDelegate: ReportDelegate?
     let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Function impairment".localized]
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-
-        menuView.isHidden = true
-        //create a instance of dataStored and fetch data from coredata
-        print("cuser@:\(self.currentUser)")
-        
+    //Mark: data prepare
+    fileprivate func dataSetting() {
         let context = AppDelegate.viewContext
         let data = DataStored(context: context)
+        numberOfFetch = numberOfFetch ?? 0
         data.fetchData(currentUser,numberOfFetch ?? 0)
         flag = data.flag
         if data.count == 0 {
@@ -85,7 +77,6 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             
             //set radar chart
             if isDataSentFromRecordsMenu == false {
-                numberOfFetch = 0
                 dateLabel.text = " Your Score:".localized + String(totalScores[scoreArrayNum])
                 radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
             }
@@ -98,7 +89,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             } else {
                 barView.legend.enabled = true
             }
-
+            
             //long press gesture
             let longPressgesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressDetected(gesture:)))
             longPressgesture.allowableMovement = 20
@@ -113,69 +104,60 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
+        currentUser = userVC.currentUser
+
+        menuView.isHidden = true
+        //create a instance of dataStored and fetch data from coredata
+        dataSetting()
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
         isDataSentFromRecordsMenu = false
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let userVC = tabBarController?.viewControllers?[0] as! UserViewController
-        currentUser = userVC.currentUser
-        
-        //add receiver to NotificationCenter
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
-            self.currentUser = notification.userInfo?["user"] as? String ?? ""
-            print("user@:\(self.currentUser)")
-        }
-        
+        stepper.isHidden = true
+        pageNum.text = Int(DataStored.fetchLimit).description
+//        //add receiver to NotificationCenter
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
+//            self.currentUser = notification.userInfo?["user"] as? String ?? ""
+//            print("user@:\(self.currentUser)")
+//        }
+//
 
-//        //add swipe gestures
-//        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-//        swipeLeft.direction = .left
-//        self.view.addGestureRecognizer(swipeLeft)
+        //Mark:add swipe gestures
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
+        swipeLeft.direction = .left
+        self.view.addGestureRecognizer(swipeLeft)
 //
 //        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
 //        swipeRight.direction = .right
 //        self.view.addGestureRecognizer(swipeRight)
         
-        
-        
     }
     
-//    @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
+    @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
 //        if gesture.direction == UISwipeGestureRecognizer.Direction.right {
 //            print("Swipe Right")
 //            performSegue(withIdentifier: "unwindSegueToUserView", sender: self)
 //        }
-//        else if gesture.direction == UISwipeGestureRecognizer.Direction.left {
-//            print("Swipe Left")
-//            saveImage()
-//            tabBarController?.selectedIndex = 3
-//            
-//        }
-//    }
+        if gesture.direction == UISwipeGestureRecognizer.Direction.left {
+            print("Swipe Left")
+            saveImage()
+            tabBarController?.selectedIndex = 3
+        }
+    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-//        if segue.destination is ReportVC
-//        {
-//            let vc = segue.destination as? ReportVC
-//            self.reportDelegate = vc
-//            if scoreArray.count > 0 {
-//            self.reportDelegate?.passResult(user: currentUser, scores: scoreArray[scoreArrayNum], total: totalScores[scoreArrayNum], result: results[scoreArrayNum], date: dateArray[scoreArrayNum])
-//
-//            FileManager.default.clearTmpDirectory()
-//            print("directory was cleared")
-//            saveImage()
-//
-//            //add notificationCenter
-//            NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
-//
-//            }
-//        }
+    //Mark: prepare segue for menuView
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationViewController = segue.destination as? MenuViewController {
             destinationViewController.transitioningDelegate = self
             destinationViewController.interactor = interactor
@@ -183,7 +165,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             destinationViewController.currentUser = currentUser
         }
     }
-    //MARK: save images
+    //MARK: save images for reportVC
     func saveImage() {
         if !dateArray.isEmpty {
         if lineView.isHidden == true{
@@ -207,9 +189,6 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         menuView.isHidden = !menuView.isHidden
     }
     
-//    @IBAction func dismissMenu(_ sender: Any) {
-//        menuView.isHidden = true
-//    }
     
     //Go to reportView
     @IBAction func goToReportView(_ sender: Any) {
@@ -218,7 +197,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     }
     
     
-    //save to csv file
+    //Mark: save to csv file
     @IBAction func saveCsv(_ sender: Any) {
         saveCsv()
     }
@@ -278,7 +257,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     }
     
     
-   //buttons for radarchart
+    //Mark: buttons for radarchart
     @IBAction func prevButton(_ sender: UIButton) {
         if scoreArrayNum > 0 && scoreArrayNum < dateArray.count{
             scoreArrayNum -= 1
@@ -310,13 +289,13 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     //buttons for barchart
     @IBAction func lastViewButton(_ sender: UIButton) {
-
+        // if data.count < 25
         if flag == false {
             last25.isHidden = true
             next25.isHidden = false
         } else {
             numberOfFetch! += 1
-            viewWillAppear(true)
+            dataSetting()
             next25.isHidden = false
         }
     }
@@ -324,10 +303,12 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBAction func nextViewButton(_ sender: UIButton) {
         if numberOfFetch! >= 1 {
             numberOfFetch! -= 1
-            viewWillAppear(true)
             last25.isHidden = false
+            next25.isHidden = false
+            dataSetting()
         }
         else {
+//            dataSetting()
             next25.isHidden = true
             last25.isHidden = false
         }
@@ -349,6 +330,17 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         saveImage()
     }
     
+    @IBAction func numControlHidden(_ sender: UIButton) {
+        stepper.isHidden = !stepper.isHidden
+    }
+    @IBOutlet weak var pageNum: UILabel!
+    @IBAction func numberControl(_ sender: UIStepper) {
+        pageNum.text = Int(sender.value).description
+        DataStored.fetchLimit = Int(sender.value)
+        dataSetting()
+    }
+    
+    
     // add long press gesture
 @objc func longPressDetected(gesture: UILongPressGestureRecognizer) {
         
@@ -356,7 +348,6 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             let point = gesture.location(in: self.barView)
             let h = self.barView.getHighlightByTouchPoint(point)
             self.barView.highlightValue(x: (h?.x)!, dataSetIndex: (h?.dataSetIndex)!, stackIndex: (h?.stackIndex)!)
-//            print("gesture detected \(h?.x)")
             if let xVal = h?.x {
             //create a instance of dataStored and fetch data from coredata
                     let context = AppDelegate.viewContext
@@ -367,12 +358,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                         } ))
                         alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
                         self.present(alert, animated: true, completion: nil)
-            
+                
+            }
     }
-    }
-    }
-
-    
+}
     
     // User delegate
     func passResult(user :String) {
@@ -393,10 +382,9 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         //add notificationCenter
         NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
         saveImage()
-            
     }
-
 }
+
 extension LineChartView {
 
     private class LineChartFormatter: NSObject, IAxisValueFormatter {
@@ -449,7 +437,6 @@ extension LineChartView {
         chartDataSet.circleHoleRadius = 0
         chartDataSet.circleRadius = 6
         chartDataSet.circleColors = colorArray
-//        chartDataSet.colors = colorArray
         let chartData = LineChartData(dataSet: chartDataSet)
         //to format xAxis
         let chartFormatter = LineChartFormatter(labels: xValues)
@@ -462,7 +449,6 @@ extension LineChartView {
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
         yAxis.axisMaximum = 29
-        //        yAxis.axisRange = 30
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
         let format = NumberFormatter()
@@ -540,10 +526,8 @@ extension BarChartView {
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
         yAxis.axisMaximum = 29
-//        yAxis.axisRange = 30
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
-//        let lAxis = self.leftAxis
         
         let format = NumberFormatter()
         format.numberStyle = .none
@@ -563,9 +547,6 @@ extension BarChartView {
         legend.textColor = UIColor(white: 0.1, alpha: 0.5)
 
         //set barView
-//        self.setVisibleYRangeMaximum(Double(27), axis: .left)
-//        self.setVisibleYRangeMinimum(Double(0), axis: .left)
-//        self.setVisibleYRange(minYRange: 1, maxYRange: 27, axis: .left)
         self.chartDescription?.text = ""
         self.animate(xAxisDuration: 1, yAxisDuration: 0.1)
         self.data = chartData
@@ -645,12 +626,7 @@ extension RadarChartView {
         self.xAxis.valueFormatter = xAxis.valueFormatter
         self.chartDescription?.text = ""
         self.yAxis.axisMinimum = 0
-//        self.yAxis.resetCustomAxisMax()
         self.yAxis.axisMaximum = 2
-
-//        self.yAxis.axisRange = 3
-//        self.yAxis.axisMaxLabels = 4
-//        self.yAxis.axisMinLabels = 4
         self.yAxis.granularityEnabled = true
         self.yAxis.granularity = 1
         self.legend.enabled = false

@@ -27,6 +27,7 @@ class InfoViewController: UITabBarController {
         infoNote.addAction(UIAlertAction(title: "OK", style: .default, handler:{ (alert) in
             self.performSegue(withIdentifier: "unwindToUserView", sender: self)
         }))
+        
         present(infoNote, animated: true, completion: nil)
     }
 

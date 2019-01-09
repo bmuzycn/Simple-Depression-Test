@@ -14,10 +14,10 @@ class DataStored: NSManagedObject {
     var resultArray = [String]()
     var dateArray = [String]()
     var totalArray = [Int]()
-    var flag = Bool() //to see if the data size >25
+    var flag = Bool() //to see if the data size >fetchLimit
     var userflag = false
     var count = Int()
-    
+    static var fetchLimit = 15
 
     
     func saveData(_ totalScore: Int, _ scores: [Int],_ result: String,_ user: String){
@@ -71,7 +71,7 @@ class DataStored: NSManagedObject {
 //
 //        }
     }
-    //return last 25 records
+    //return last fetchLimit records
     func fetchData(_ user: String,_ n: Int ) {
         let context = AppDelegate.viewContext
         let request = NSFetchRequest<DataStored>(entityName: "DataStored")
@@ -82,18 +82,18 @@ class DataStored: NSManagedObject {
             let data = try context.fetch(request)
             self.count = data.count
             if self.count != 0 {
-                if data.count - 25*n == 0 {
+                if data.count - DataStored.fetchLimit*n == 0 {
                     startNum = 0
-                    endNum = 24
+                    endNum = DataStored.fetchLimit - 1
                     flag = false
                 }
-                else if (data.count - 25*n) > 0 && (data.count - 25*n) <= 25  {
+                else if (data.count - DataStored.fetchLimit*n) > 0 && (data.count - DataStored.fetchLimit*n) <= DataStored.fetchLimit  {
                     startNum = 0
-                    endNum = data.count - 25*n - 1
+                    endNum = data.count - DataStored.fetchLimit*n - 1
                     flag = false
-                }else if (data.count - 25*n) > 25 {
-                    startNum = data.count - 25*(n+1)
-                    endNum = data.count - 25*n - 1
+                }else if (data.count - DataStored.fetchLimit*n) > DataStored.fetchLimit {
+                    startNum = data.count - DataStored.fetchLimit*(n+1)
+                    endNum = data.count - DataStored.fetchLimit*n - 1
                     flag = true
                 }
                 else {
@@ -132,13 +132,13 @@ class DataStored: NSManagedObject {
             let data = try context.fetch(request)
             if data.count == 0 {
                 self.count = 0
-            } else if data.count - 25*n < 25 {
+            } else if data.count - DataStored.fetchLimit*n < DataStored.fetchLimit {
                 print("data\(x) will be deleted")
                 context.delete(data[x])
             }else {
-                print("data\(data.count-25*(n+1)+x) will be deleted")
+                print("data\(data.count-DataStored.fetchLimit*(n+1)+x) will be deleted")
 
-                context.delete(data[data.count-25*(n+1)+x])
+                context.delete(data[data.count-DataStored.fetchLimit*(n+1)+x])
             }
             try context.save()
             
