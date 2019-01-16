@@ -48,7 +48,7 @@
 "RGZ-X2-0bj.title" = "圖表";
 
 /* Class = "UITabBarItem"; title = "Info"; ObjectID = "VCt-qU-IDE"; */
-"VCt-qU-IDE.title" = "訊息";
+"VCt-qU-IDE.title" = "設置";
 
 /* Class = "UITabBarItem"; title = "Users"; ObjectID = "VH7-ax-MLY"; */
 "VH7-ax-MLY.title" = "用戶";
@@ -98,4 +98,24 @@
 /* Class = "UIButton"; normalTitle = "<<Prev."; ObjectID = "xt8-2C-eaR"; */
 "xt8-2C-eaR.normalTitle" = "<<之前";
 
+"qUL-yU-bL0.text" = "主題";
 
+"Jnu-B2-oUu.normalTitle" = "簡約";
+
+"wCv-uS-4GL.normalTitle" = "休閒";
+
+"DLQ-ij-aOl.normalTitle" = "復古";
+
+"Klx-MK-y9P.normalTitle" = "春天";
+
+"xuQ-mu-Jq4.normalTitle" = "溫暖";
+
+"Slh-eB-Es9.normalTitle" = "粉色";
+
+"OIO-bM-ae2.text" = "字體顏色";
+
+"k1x-Da-IgV.text" = "背景顏色";
+
+"6Xh-jT-bWb.text" = "字體大小";
+
+"AGH-kp-ZnU.text" = "文字";

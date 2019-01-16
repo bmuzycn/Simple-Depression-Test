@@ -67,23 +67,62 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         }
     }
     
+    fileprivate func setBackGroundImage() {
+        if let bgImageView = view.viewWithTag(100) {
+            bgImageView.removeFromSuperview()
+            print("remove success")
+        }
+        if let backGroundImage = Settings.bgImage {
+            let bgImageView = UIImageView(frame: view.frame)
+            bgImageView.tag = 100
+            bgImageView.image = backGroundImage
+            bgImageView.contentMode = .scaleAspectFill
+            view.addSubview(bgImageView)
+            bgImageView.translatesAutoresizingMaskIntoConstraints = false
+            let views = ["view": bgImageView]
+            let hConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[view]-0-|", metrics: nil, views: views)
+            let vConstraint = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[view]-0-|", metrics: nil, views: views)
+            let allConstraints = hConstraint + vConstraint
+            NSLayoutConstraint.activate(allConstraints)
+            view.sendSubviewToBack(bgImageView)
+        }
+    }
+    
+    fileprivate func setupReportView() {
+        //load reportView
+        let webConfiguration = WKWebViewConfiguration()
+        
+        let customFrame = CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: 0.0, height: self.webViewContainer.frame.size.height))
+        self.reportView = WKWebView (frame: customFrame , configuration: webConfiguration)
+        reportView.translatesAutoresizingMaskIntoConstraints = false
+        self.webViewContainer.addSubview(reportView)
+        reportView.topAnchor.constraint(equalTo: webViewContainer.topAnchor).isActive = true
+        reportView.rightAnchor.constraint(equalTo: webViewContainer.rightAnchor).isActive = true
+        reportView.leftAnchor.constraint(equalTo: webViewContainer.leftAnchor).isActive = true
+        reportView.bottomAnchor.constraint(equalTo: webViewContainer.bottomAnchor).isActive = true
+        reportView.heightAnchor.constraint(equalTo: webViewContainer.heightAnchor).isActive = true
+        reportComposer = ReportComposer()
+        htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
+        
+        let path = Bundle.main.path(forResource: AppLanguage.currentAppleLanguageFull(), ofType: "lproj")
+        let url = URL(fileURLWithPath: path ?? Bundle.main.path(forResource: "Base", ofType: "lproj")!)
+        reportView.loadHTMLString(htmlReport, baseURL: url)
+        reportView.navigationDelegate = self
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        removeCache()
+        loadSpinner.style = .whiteLarge
+        loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
         
-        reportView.navigationDelegate = self
-        
-
+        setBackGroundImage()
         receiveData()
         print("user:\(user)")
         print(date)
 
-        reportComposer = ReportComposer()
-        htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
+        setupReportView()
 
-        let path = Bundle.main.bundlePath
-        let url = URL(fileURLWithPath: path)
-        reportView.loadHTMLString(htmlReport, baseURL: url)
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,26 +135,14 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSpinner.style = .whiteLarge
-        loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
+
         
         //add swipe gesture
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
         
-        //load reportView
-        let webConfiguration = WKWebViewConfiguration()
 
-        let customFrame = CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: 0.0, height: self.webViewContainer.frame.size.height))
-        self.reportView = WKWebView (frame: customFrame , configuration: webConfiguration)
-        reportView.translatesAutoresizingMaskIntoConstraints = false
-        self.webViewContainer.addSubview(reportView)
-        reportView.topAnchor.constraint(equalTo: webViewContainer.topAnchor).isActive = true
-        reportView.rightAnchor.constraint(equalTo: webViewContainer.rightAnchor).isActive = true
-        reportView.leftAnchor.constraint(equalTo: webViewContainer.leftAnchor).isActive = true
-        reportView.bottomAnchor.constraint(equalTo: webViewContainer.bottomAnchor).isActive = true
-        reportView.heightAnchor.constraint(equalTo: webViewContainer.heightAnchor).isActive = true
 //        reportView.uiDelegate = self
         
 

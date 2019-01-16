@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E608C96221E9659300E06312 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96121E9659300E06312 /* AppLanguage.swift */; };
+		E608C96421E965A700E06312 /* Localizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96321E965A700E06312 /* Localizer.swift */; };
+		E608C96621E965BF00E06312 /* MirroringLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96521E965BF00E06312 /* MirroringLabel.swift */; };
+		E608C96821E96C8300E06312 /* LangSwitchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96721E96C8300E06312 /* LangSwitchViewController.swift */; };
+		E608C96A21E9ACB700E06312 /* MirrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96921E9ACB700E06312 /* MirrorViewController.swift */; };
+		E608C96C21ECE13600E06312 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96B21ECE13600E06312 /* Settings.swift */; };
+		E608C96E21ED746100E06312 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E608C96D21ED746100E06312 /* SettingViewController.swift */; };
 		E60CBB04216D933C00AC715B /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E60CBB03216D931100AC715B /* Charts.framework */; };
 		E61CE09921DC0B08003B0661 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE09821DC0B08003B0661 /* MenuViewController.swift */; };
 		E61CE09D21DD6FD9003B0661 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61CE09C21DD6FD9003B0661 /* Interactor.swift */; };
@@ -21,7 +28,7 @@
 		E62E0DF8212884E400688DA8 /* DataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DF7212884E400688DA8 /* DataDelegate.swift */; };
 		E62E0E04212B64C100688DA8 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0E03212B64C100688DA8 /* ResultViewController.swift */; };
 		E66A7727208C441D00DC86DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66A7726208C441D00DC86DB /* AppDelegate.swift */; };
-		E66A7729208C441D00DC86DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66A7728208C441D00DC86DB /* ViewController.swift */; };
+		E66A7729208C441D00DC86DB /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66A7728208C441D00DC86DB /* QuestionViewController.swift */; };
 		E66A772C208C441D00DC86DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66A772A208C441D00DC86DB /* Main.storyboard */; };
 		E66A772F208C441D00DC86DB /* Simple_Depression_Test.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E66A772D208C441D00DC86DB /* Simple_Depression_Test.xcdatamodeld */; };
 		E66A7731208C442800DC86DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E66A7730208C442800DC86DB /* Assets.xcassets */; };
@@ -34,7 +41,6 @@
 		E6C856D92142C2BA00F95BE4 /* ReportComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C856D72142C2BA00F95BE4 /* ReportComposer.swift */; };
 		E6C856DA2142C2BA00F95BE4 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C856D82142C2BA00F95BE4 /* ReportVC.swift */; };
 		E6C856DF2146B09F00F95BE4 /* PrintPageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */; };
-		E6F1DC9F21C0444000B6BB42 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */; };
 		E6FBB70621C6173000952C6E /* GuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70321C6172F00952C6E /* GuideCell.swift */; };
 		E6FBB70721C6173000952C6E /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70521C6173000952C6E /* GuideViewController.swift */; };
 		E6FBB70921C618F500952C6E /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB70821C618F500952C6E /* TabViewController.swift */; };
@@ -58,6 +64,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E608C96121E9659300E06312 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		E608C96321E965A700E06312 /* Localizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizer.swift; sourceTree = "<group>"; };
+		E608C96521E965BF00E06312 /* MirroringLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirroringLabel.swift; sourceTree = "<group>"; };
+		E608C96721E96C8300E06312 /* LangSwitchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LangSwitchViewController.swift; sourceTree = "<group>"; };
+		E608C96921E9ACB700E06312 /* MirrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorViewController.swift; sourceTree = "<group>"; };
+		E608C96B21ECE13600E06312 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		E608C96D21ED746100E06312 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		E60CBAFC216D91DD00AC715B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E60CBAFE216D931100AC715B /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../../Charts-3.1 copy.1/Charts.xcodeproj"; sourceTree = "<group>"; };
 		E61CE09821DC0B08003B0661 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -75,7 +88,7 @@
 		E62E0E212130A80400688DA8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../../../Downloads/IOS Development/Charts-3.1.1/Charts.xcodeproj"; sourceTree = "<group>"; };
 		E66A7723208C441D00DC86DB /* Simple Depression Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Depression Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E66A7726208C441D00DC86DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E66A7728208C441D00DC86DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E66A7728208C441D00DC86DB /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		E66A772B208C441D00DC86DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E66A772E208C441D00DC86DB /* Simple_Depression_Test.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Simple_Depression_Test.xcdatamodel; sourceTree = "<group>"; };
 		E66A7730208C442800DC86DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -97,7 +110,6 @@
 		E6C856D72142C2BA00F95BE4 /* ReportComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportComposer.swift; sourceTree = "<group>"; };
 		E6C856D82142C2BA00F95BE4 /* ReportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintPageRenderer.swift; sourceTree = "<group>"; };
-		E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		E6FBB70321C6172F00952C6E /* GuideCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideCell.swift; sourceTree = "<group>"; };
 		E6FBB70521C6173000952C6E /* GuideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
 		E6FBB70821C618F500952C6E /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +142,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E608C96021E9655300E06312 /* Localizition */ = {
+			isa = PBXGroup;
+			children = (
+				E608C96121E9659300E06312 /* AppLanguage.swift */,
+				E608C96321E965A700E06312 /* Localizer.swift */,
+				E608C96521E965BF00E06312 /* MirroringLabel.swift */,
+				E608C96721E96C8300E06312 /* LangSwitchViewController.swift */,
+				E608C96921E9ACB700E06312 /* MirrorViewController.swift */,
+			);
+			path = Localizition;
+			sourceTree = "<group>";
+		};
 		E60CBAFF216D931100AC715B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,12 +192,12 @@
 			children = (
 				E66A7726208C441D00DC86DB /* AppDelegate.swift */,
 				E62E0DE721261B0100688DA8 /* UserViewController.swift */,
-				E66A7728208C441D00DC86DB /* ViewController.swift */,
+				E66A7728208C441D00DC86DB /* QuestionViewController.swift */,
 				E62E0E03212B64C100688DA8 /* ResultViewController.swift */,
 				E6C856D82142C2BA00F95BE4 /* ReportVC.swift */,
 				E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */,
 				E621EC2621B1953000725BAC /* SwipeSegue.swift */,
-				E6F1DC9E21C0444000B6BB42 /* InfoViewController.swift */,
+				E608C96D21ED746100E06312 /* SettingViewController.swift */,
 				E6D83D4E21DFE8FD00DF39B2 /* Guide */,
 				E6FBB70821C618F500952C6E /* TabViewController.swift */,
 				E6D83D4C21DFE8B700DF39B2 /* Menu */,
@@ -211,6 +235,7 @@
 		E66A7725208C441D00DC86DB /* Simple Depression Test */ = {
 			isa = PBXGroup;
 			children = (
+				E608C96021E9655300E06312 /* Localizition */,
 				E6C856D42142BF2A00F95BE4 /* report.html */,
 				E62E0DE22125C30500688DA8 /* Controller */,
 				E62E0DE12125BEBC00688DA8 /* View */,
@@ -225,6 +250,7 @@
 			children = (
 				E6B8F77921358671004A4AEF /* Localizable.strings */,
 				E6B8F7AE2135F992004A4AEF /* InfoPlist.strings */,
+				E608C96B21ECE13600E06312 /* Settings.swift */,
 			);
 			path = "Support files";
 			sourceTree = "<group>";
@@ -368,15 +394,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E61CE0A321DD7118003B0661 /* DismissMenuAnimator.swift in Sources */,
-				E66A7729208C441D00DC86DB /* ViewController.swift in Sources */,
+				E66A7729208C441D00DC86DB /* QuestionViewController.swift in Sources */,
+				E608C96221E9659300E06312 /* AppLanguage.swift in Sources */,
 				E62E0DE821261B0100688DA8 /* UserViewController.swift in Sources */,
 				E62E0DF8212884E400688DA8 /* DataDelegate.swift in Sources */,
 				E66A772F208C441D00DC86DB /* Simple_Depression_Test.xcdatamodeld in Sources */,
-				E6F1DC9F21C0444000B6BB42 /* InfoViewController.swift in Sources */,
 				E62E0DE42125D14F00688DA8 /* User.swift in Sources */,
 				E6FBB70921C618F500952C6E /* TabViewController.swift in Sources */,
 				E61CE09921DC0B08003B0661 /* MenuViewController.swift in Sources */,
 				E62E0DE62125D19F00688DA8 /* DataStored.swift in Sources */,
+				E608C96621E965BF00E06312 /* MirroringLabel.swift in Sources */,
+				E608C96A21E9ACB700E06312 /* MirrorViewController.swift in Sources */,
 				E62E0DBB211CEDE000688DA8 /* QuestionBank.swift in Sources */,
 				E6FBB70621C6173000952C6E /* GuideCell.swift in Sources */,
 				E6B3917521D3418E0057E86F /* MyCustomAxisValueFormatter.swift in Sources */,
@@ -388,9 +416,13 @@
 				E66A7727208C441D00DC86DB /* AppDelegate.swift in Sources */,
 				E621EC2721B1953000725BAC /* SwipeSegue.swift in Sources */,
 				E61CE09F21DD7029003B0661 /* MenuHelper.swift in Sources */,
+				E608C96C21ECE13600E06312 /* Settings.swift in Sources */,
 				E6C856D92142C2BA00F95BE4 /* ReportComposer.swift in Sources */,
+				E608C96E21ED746100E06312 /* SettingViewController.swift in Sources */,
+				E608C96821E96C8300E06312 /* LangSwitchViewController.swift in Sources */,
 				E6C856DA2142C2BA00F95BE4 /* ReportVC.swift in Sources */,
 				E62E0E04212B64C100688DA8 /* ResultViewController.swift in Sources */,
+				E608C96421E965A700E06312 /* Localizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

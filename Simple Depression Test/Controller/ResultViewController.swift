@@ -105,8 +105,30 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         }
     }
     
+    fileprivate func setBackGroundImage() {
+        if let bgImageView = view.viewWithTag(100) {
+            bgImageView.removeFromSuperview()
+            print("remove success")
+        }
+        if let backGroundImage = Settings.bgImage {
+            let bgImageView = UIImageView(frame: view.frame)
+            bgImageView.tag = 100
+            bgImageView.image = backGroundImage
+            bgImageView.contentMode = .scaleAspectFill
+            view.addSubview(bgImageView)
+            bgImageView.translatesAutoresizingMaskIntoConstraints = false
+            let views = ["view": bgImageView]
+            let hConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[view]-0-|", metrics: nil, views: views)
+            let vConstraint = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[view]-0-|", metrics: nil, views: views)
+            let allConstraints = hConstraint + vConstraint
+            NSLayoutConstraint.activate(allConstraints)
+            view.sendSubviewToBack(bgImageView)
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setBackGroundImage()
         let userVC = tabBarController?.viewControllers?[0] as! UserViewController
         currentUser = userVC.currentUser
 

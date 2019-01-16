@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         buildKeyWindow()
+        Localizer.DoTheMagic()
         return true
     }
 
@@ -36,6 +37,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let firstViewController =  storyboard.instantiateViewController(withIdentifier: "TabViewController")
             window?.rootViewController = firstViewController
         }
+    }
+    
+    func loadedNotification(notification: NSNotification) {
+        
+    }
+    private func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

@@ -17,7 +17,6 @@ class UserViewController: UIViewController, UITextFieldDelegate{
 //    weak var userDelegate: UserDelegate?
     weak var dataDelegate: DataDelegate?
     var isNewUser = false
-    
 
     
     @IBAction func unwindSegueToUserView(unwindSegue: UIStoryboardSegue) {
@@ -31,16 +30,6 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var usersView: UIPickerView! 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        //fetch data from CoreData
-//        fetchUsers()
-//        if !users.isEmpty{
-//            usersArray = users
-//        }
-//        //load pickerView
-//        usersView.dataSource = self
-//        usersView.delegate = self
-//        userID.delegate = self
 
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -52,10 +41,35 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         self.view.addGestureRecognizer(swipeRight)
     }
     
+    fileprivate func setBackGroundImage() {
+        if let bgImageView = view.viewWithTag(100) {
+            bgImageView.removeFromSuperview()
+            print("remove success")
+        }
+        if let backGroundImage = Settings.bgImage {
+            let bgImageView = UIImageView(frame: view.frame)
+            bgImageView.image = backGroundImage
+            bgImageView.contentMode = .scaleAspectFill
+            bgImageView.tag = 100
+            view.addSubview(bgImageView)
+            bgImageView.translatesAutoresizingMaskIntoConstraints = false
+            let views = ["view": bgImageView]
+            let hConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[view]-0-|", metrics: nil, views: views)
+            let vConstraint = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[view]-0-|", metrics: nil, views: views)
+            let allConstraints = hConstraint + vConstraint
+            NSLayoutConstraint.activate(allConstraints)
+            view.sendSubviewToBack(bgImageView)
+            bgImageView.setNeedsDisplay()
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        view.backgroundColor = Settings.bgColorForTextField
+        setBackGroundImage()
         dataUpdate()
     }
+    
     func dataUpdate() {
         //fetch data from CoreData
         fetchUsers()
@@ -122,8 +136,8 @@ class UserViewController: UIViewController, UITextFieldDelegate{
             let vc = segue.destination as? ResultViewController
             dataDelegate = vc
             dataDelegate?.passResult(user: currentUser)
-        }else if segue.destination is ViewController {
-            let vc = segue.destination as? ViewController
+        }else if segue.destination is QuestionViewController {
+            let vc = segue.destination as? QuestionViewController
             dataDelegate = vc
             dataDelegate?.passResult(user: currentUser)
         }
@@ -136,17 +150,15 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     
     @IBAction func newUserButton(_ sender: UIButton) {
         let alert = UIAlertController(title: "New User".localized, message: "Enter a name".localized, preferredStyle: .alert)
-        alert.addTextField { userID in
-            userID.text = "New User".localized
+        alert.addTextField { (textField) in
+            textField.placeholder = "Enter a username"
         }
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [unowned self,unowned alert] (_) in
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (finished) in
             let textField = alert.textFields![0]// Force unwrapping because we know it exists.
             self.userID.text = textField.text
             self.saveNewUser()
             if self.isNewUser {
-//                self.viewDidLoad()
-//                NotificationCenter.default.post(name: NSNotification.Name("newUser"), object: self, userInfo: ["newUser" : self.currentUser])
-                self.goQuestionView()
+            self.goQuestionView()
             }
             }))
         if let presented = self.presentedViewController {
@@ -165,16 +177,22 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         if !users.isEmpty{
             usersArray = users
         }
-//        usersView.dataSource = self
-//        usersView.delegate = self
-//        usersView.reloadAllComponents()
         dataUpdate()
-
+        findUserName()
+    }
+    
+    func findUserName() {
+        for index in users.indices {
+            if userID.text == users[index] {
+                usersView.selectRow(index, inComponent: 0, animated: true)
+            }
+            
+        }
     }
     
     func saveNewUser() {
-        for name in users {
-            if name == userID.text {
+        for index in users.indices {
+            if userID.text == users[index] {
                 userID.text = ""
                 isNewUser = false
                 let alert = UIAlertController(title: "Note".localized, message: "User exists!".localized, preferredStyle: .alert)
@@ -185,6 +203,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
                     self.present(alert, animated: true, completion: nil)
                 }
                 alert.addAction(UIAlertAction(title: "Ok", style: .default, handler:nil))
+                usersView.selectRow(index, inComponent: 0, animated: true)
                 break
             }
             
@@ -234,7 +253,6 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     }
     
     @IBAction func selectButton(_ sender: Any) {
-//        NotificationCenter.default.post(name: NSNotification.Name("cUser"), object: self, userInfo: ["user" : currentUser])
         goQuestionView()
     }
 
@@ -270,7 +288,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     }
     
     func goQuestionView() {
-        let toView = tabBarController?.viewControllers?[1] as! ViewController
+        let toView = tabBarController?.viewControllers?[1] as! QuestionViewController
         print("toView.user:\(toView.cUser)")
         view.superview?.insertSubview(toView.view, at: 1)
         toView.view.transform = CGAffineTransform(translationX: self.view.frame.width, y: 0)
@@ -359,6 +377,9 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         userID.resignFirstResponder()
         //or
         //self.view.endEditing(true)
+        saveNewUser()
+        dataUpdate()
+        findUserName()
         return true
     }
 }
@@ -372,9 +393,9 @@ extension UserViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         currentUser = usersArray[row]
         var color: UIColor!
         if pickerView.selectedRow(inComponent: component) == row {
-            color = UIColor.blue
+            color = #colorLiteral(red: 0, green: 0.3225687146, blue: 1, alpha: 1)
         } else {
-            color = UIColor.gray
+            color = UIColor.darkText
         }
         
         let attributes: [NSAttributedString.Key : Any] = [

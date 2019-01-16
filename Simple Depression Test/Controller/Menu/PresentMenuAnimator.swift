@@ -40,7 +40,6 @@ extension PresentMenuAnimator : UIViewControllerAnimatedTransitioning {
                 withDuration: transitionDuration(using: transitionContext),
                 animations: {
                     toVC.view.center.x = UIScreen.main.bounds.width/2
-
 //                    if UIDevice.current.orientation.isPortrait == true {
 //                    snapshot.center.x += UIScreen.main.bounds.width * MenuHelper.menuWidth
 //                    } else {

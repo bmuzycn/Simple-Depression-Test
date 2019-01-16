@@ -100,12 +100,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         tbView.delegate = self
         tbView.dataSource = self
         view.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-        tbView.backgroundColor = #colorLiteral(red: 0.004859850742, green: 0.09608627111, blue: 0.5749928951, alpha: 0.8)
+        tbView.backgroundColor = Settings.bgColorForMenuView
 
     }
     
     func setLabel() {
-        let title = "\(currentUser)"+"'s Records"
+        let title = "\(currentUser)"+"'s Records".localized
         let leftBarButton = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(dismissMenu))
         let rightBarButton = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(dismissMenu))
 
@@ -274,7 +274,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let timeRecord = formatter.string(from: timeStamp)
         let scoreColor = setColor(totalScore)
         let bgColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        let yourScore = NSMutableAttributedString(string: "Your score: \(totalScore) ")
+        let yourScore = NSMutableAttributedString(string: "Your score:".localized + " \(totalScore) ")
         yourScore.addAttributes([NSAttributedString.Key.foregroundColor: scoreColor, NSAttributedString.Key.backgroundColor: bgColor], range: NSRange(location: 12, length: 2))
         cell.textLabel?.attributedText = yourScore
         cell.detailTextLabel?.text = timeRecord
@@ -291,30 +291,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "EEEE, MMMM d, yyyy"
             let dateString = dateFormatter.string(from: record.dateTime)
-            button.setTitle(dateString, for: .normal)
+            let attriTitle = NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)])
+            button.setAttributedTitle(attriTitle, for: .normal)
             button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         }
         
         return button
     }
-    
-//
-//    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
-//                   forSection section: Int) {
-//        guard let header = view as? UITableViewHeaderFooterView else { return }
-//        header.textLabel?.textColor = UIColor.orange
-//        header.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-//        header.textLabel?.frame = header.frame
-//        header.textLabel?.textAlignment = .center
-//
-//        if let record = expandableRecords[section].records.first {
-//            let dateFormatter = DateFormatter()
-//            dateFormatter.dateFormat = "EEEE, MMMM d, yyyy"
-//            let dateString = dateFormatter.string(from: record.dateTime)
-//            header.textLabel?.text = dateString
-//        }
-//
-//    }
     
     @objc func buttonPressed(button: UIButton){
         let section = button.tag

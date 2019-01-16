@@ -17,7 +17,6 @@ class GuideCell: UICollectionViewCell {
     var newImage: UIImage? {
         didSet {
             newImageView.image = newImage
-//            newImageView.clipsToBounds = true
         }
     }
     
@@ -41,13 +40,7 @@ class GuideCell: UICollectionViewCell {
             // Fallback on earlier versions
             margins = contentView.layoutMarginsGuide
         }
-        //        contentView.translatesAutoresizingMaskIntoConstraints = false
-        //        contentView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
-        //        contentView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        //        contentView.topAnchor.constraint(equalTo: margins.topAnchor).isActive = true
-        //        contentView.bottomAnchor.constraint(equalTo: margins.bottomAnchor).isActive = true
-        //
-        
+
         newImageView.translatesAutoresizingMaskIntoConstraints = false
         newImageView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         newImageView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
@@ -57,7 +50,6 @@ class GuideCell: UICollectionViewCell {
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         nextButton.bottomAnchor.constraint(equalTo: newImageView.bottomAnchor, constant: -50).isActive = true
         nextButton.centerXAnchor.constraint(equalTo: newImageView.centerXAnchor).isActive = true
-        
         
         layoutIfNeeded()
     }
@@ -77,15 +69,10 @@ class GuideCell: UICollectionViewCell {
     
     // GuideViewControllerDidFinish
     @objc func nextButtonClick() {
-//        NotificationCenter.default.post(name: NSNotification.Name(GuideViewControllerDidFinish), object: nil)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let firstViewController =  storyboard.instantiateViewController(withIdentifier: "TabViewController")
+        let firstViewController = storyboard.instantiateViewController(withIdentifier: "TabViewController")
         window?.rootViewController = firstViewController
-        
     }
-    
-
 }
 
 

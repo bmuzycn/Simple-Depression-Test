@@ -10,11 +10,10 @@ import UIKit
 //protocol UserDelegate: AnyObject {
 //    func userReady(name: String)
 //}
-class ViewController: UIViewController, DataDelegate {
+class QuestionViewController: UIViewController, DataDelegate {
     func passResult(user: String) {
         cUser = user
     }
-    
     //set 10 questions into array
     let allquestions = QuestionBank()
     var scores = Array(repeating: 0, count: 10) //a parallel array stores scores
@@ -40,12 +39,54 @@ class ViewController: UIViewController, DataDelegate {
         print("welcome to testView")
     }
     
+    fileprivate func setAppearance() {
+        titleLabel.font = Settings.textFont
+        titleLabel.textColor = Settings.textColor
+        titleLabel.backgroundColor = Settings.bgColorForTextField
+        questionLabel.font = Settings.textFont
+        questionLabel.textColor = Settings.textColor
+        questionLabel.backgroundColor = Settings.bgColorForTextField
+        qNum.textColor = Settings.textColor
+        qNum.font = Settings.textFont
+        userName.textColor = Settings.textColor
+        userName.font = Settings.textFont
+        view.backgroundColor = Settings.colorForHeadView
+        
+        button1.titleLabel?.font = Settings.textFont
+        button2.titleLabel?.font = Settings.textFont
+        button3.titleLabel?.font = Settings.textFont
+        button4.titleLabel?.font = Settings.textFont
+
+    }
+    
+    fileprivate func setBackGroundImage() {
+        if let bgImageView = view.viewWithTag(100) {
+            bgImageView.removeFromSuperview()
+            print("remove success")
+        }
+        if let backGroundImage = Settings.bgImage {
+            let bgImageView = UIImageView(frame: view.frame)
+            bgImageView.tag = 100
+            bgImageView.image = backGroundImage
+            bgImageView.contentMode = .scaleAspectFill
+            view.addSubview(bgImageView)
+            bgImageView.translatesAutoresizingMaskIntoConstraints = false
+            let views = ["view": bgImageView]
+            let hConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[view]-0-|", metrics: nil, views: views)
+            let vConstraint = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[view]-0-|", metrics: nil, views: views)
+            let allConstraints = hConstraint + vConstraint
+            NSLayoutConstraint.activate(allConstraints)
+            view.sendSubviewToBack(bgImageView)
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        setBackGroundImage()
         let userVC = tabBarController?.viewControllers?[0] as! UserViewController
         cUser = userVC.currentUser
         userName.text = cUser
+        setAppearance()
         print("questionView.cUser:\(cUser)")
         
     }
@@ -56,7 +97,7 @@ class ViewController: UIViewController, DataDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setQuestionNum()
         //add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
@@ -72,7 +113,11 @@ class ViewController: UIViewController, DataDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startOver()
-        alertNote()
+        let isFirstTimeUser = UserDefaults.standard.value(forKey: cUser)
+        if isFirstTimeUser == nil {
+            alertNote()
+            UserDefaults.standard.set(true, forKey: cUser)
+        }
         self.view.layoutIfNeeded()
     }
 
@@ -89,7 +134,6 @@ class ViewController: UIViewController, DataDelegate {
 
     @IBAction func buttonPressed(_ sender: UIButton) {
         print("\(questionNum): \(sender.tag)")
-//        sender.titleLabel?.text = sender.currentTitle!+"⭕️".localized
         UIView.performWithoutAnimation {
             sender.setTitle(sender.currentTitle!+"⭕️".localized, for: .normal)
         }
@@ -253,12 +297,7 @@ class ViewController: UIViewController, DataDelegate {
         
         print("alert note!")
         let note = UIAlertController(title: "Hi, ".localized+"\(cUser)"+" , Note!".localized, message: "Since the questionnaire relies on patient self-report, all responses should be verified by the clinician, and a definitive diagnosis is made on clinical grounds taking into account how well the patient understood the questionnaire, as well as other relevant information from the patient. Diagnoses of Major Depressive Disorder or Other Depressive Disorder also require impairment of social, occupational, or other important areas of functioning (Question #10) and ruling out normal bereavement, a history of a Manic Episode (Bipolar Disorder), and a physical disorder, medication, or other drug as the biological cause of the depressive symptoms.".localized , preferredStyle: .alert)
-        
         note.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: nil))
-
-//        if let presented = self.presentedViewController {
-//            presented.removeFromParent()
-//        }
         if presentedViewController == nil {
         self.present(note, animated: true, completion: nil)
         }

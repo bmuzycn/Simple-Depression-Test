@@ -27,9 +27,13 @@ class ReportComposer: NSObject {
     }
     
     func renderReport(name: String, date: String, scores: [Int], total: Int, result: String) -> String {
-        if let reportTemplate = Bundle.main.path(forResource: "report",ofType:"html") {
+        let path1 = AppLanguage.currentAppleLanguageFull() + ".lproj"
+        let path2 = "Base.lproj"
+//        let url = URL(fileURLWithPath: path ?? Bundle.main.path(forResource: "Base", ofType: "lproj")!)
+        let reportTemplate = Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path1) ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path2)
+//        if let reportTemplate = Bundle.main.path(forResource: "report",ofType:"html") {
         do {
-            var htmlStr = try String(contentsOfFile: reportTemplate)
+            var htmlStr = try String(contentsOfFile: reportTemplate!)
             htmlStr = htmlStr.replacingOccurrences(of:nameRS, with: nameRS+" value = \"\(name)\"")
 //            htmlStr = htmlStr.replacingOccurrences(of:nameRS, with:name)
 
@@ -60,9 +64,8 @@ class ReportComposer: NSObject {
             print("unable to open the template")
             print(error)
         }
-    }
         return ""
-}
+    }
     
     func createPDF(html: String, filename: String, formatter: UIViewPrintFormatter){
         let render = UIPrintPageRenderer()
