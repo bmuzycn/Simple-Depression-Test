@@ -1,15 +1,16 @@
 //
-//  DataStored.swift
+//  DataStoredGad7.swift
 //  Simple Depression Test
 //
-//  Created by Yu Zhang on 8/16/18.
-//  Copyright © 2018 Yu Zhang. All rights reserved.
+//  Created by Yu Zhang on 1/22/19.
+//  Copyright © 2019 Yu Zhang. All rights reserved.
 //
+
 
 import UIKit
 import CoreData
 
-class DataStored: NSManagedObject {
+class DataStoredGad7: NSManagedObject {
     var scoresArray = [[Int]]()
     var resultArray = [String]()
     var dateArray = [String]()
@@ -18,14 +19,13 @@ class DataStored: NSManagedObject {
     var userflag = false
     var count = Int()
     static var fetchLimit = 15
+    let context = AppDelegate.viewContext
 
-    
     func saveData(_ totalScore: Int, _ scores: [Int],_ result: String,_ user: String){
-        let context = AppDelegate.viewContext
         let request:NSFetchRequest = User.fetchRequest()
         request.predicate = NSPredicate(format: "userID == %@", user)
         var existUser = User(context: context)
-
+        
         do {
             let result = try context.fetch(request)
             for item in result {
@@ -38,14 +38,14 @@ class DataStored: NSManagedObject {
         }catch {
             print(error)
         }
-        let newData = DataStored(context: existUser.managedObjectContext!)
+        let newData = DataStoredGad7(context: existUser.managedObjectContext!)
         newData.totalScore = Int16(totalScore)
         newData.scores = scores
         newData.result = result
         newData.userName = user
         newData.dateTime = Date()
         existUser.userID = user //assign existUser a new userID
-        existUser.addToData(newData)
+        existUser.addToDataGad7(newData)
         do {
             try context.save()
             print("save successively")
@@ -56,8 +56,7 @@ class DataStored: NSManagedObject {
     
     //return last fetchLimit records
     func fetchData(_ user: String,_ n: Int ) {
-        let context = AppDelegate.viewContext
-        let request = NSFetchRequest<DataStored>(entityName: "DataStored")
+        let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStoredGad7")
         request.predicate = NSPredicate(format: "userName = %@", user)
         var startNum = 0
         var endNum = 0
@@ -65,18 +64,18 @@ class DataStored: NSManagedObject {
             let data = try context.fetch(request)
             self.count = data.count
             if self.count != 0 {
-                if data.count - DataStored.fetchLimit*n == 0 {
+                if data.count - DataStoredGad7.fetchLimit*n == 0 {
                     startNum = 0
-                    endNum = DataStored.fetchLimit - 1
+                    endNum = DataStoredGad7.fetchLimit - 1
                     flag = false
                 }
-                else if (data.count - DataStored.fetchLimit*n) > 0 && (data.count - DataStored.fetchLimit*n) <= DataStored.fetchLimit  {
+                else if (data.count - DataStoredGad7.fetchLimit*n) > 0 && (data.count - DataStoredGad7.fetchLimit*n) <= DataStoredGad7.fetchLimit  {
                     startNum = 0
-                    endNum = data.count - DataStored.fetchLimit*n - 1
+                    endNum = data.count - DataStoredGad7.fetchLimit*n - 1
                     flag = false
-                }else if (data.count - DataStored.fetchLimit*n) > DataStored.fetchLimit {
-                    startNum = data.count - DataStored.fetchLimit*(n+1)
-                    endNum = data.count - DataStored.fetchLimit*n - 1
+                }else if (data.count - DataStoredGad7.fetchLimit*n) > DataStored.fetchLimit {
+                    startNum = data.count - DataStoredGad7.fetchLimit*(n+1)
+                    endNum = data.count - DataStoredGad7.fetchLimit*n - 1
                     flag = true
                 }
                 else {
@@ -97,31 +96,30 @@ class DataStored: NSManagedObject {
             } else {
                 print("data is empty!")
                 flag = false
-
+                
             }
             
         }
-            catch let error as NSError {
+        catch let error as NSError {
             // something went wrong, print the error.
             print(error.description)
         }
     }
     
     func deleteData(_ user: String, _ n: Int, _ x: Int) {
-        let context = AppDelegate.viewContext
-        let request = NSFetchRequest<DataStored>(entityName: "DataStored")
+        let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStored")
         request.predicate = NSPredicate(format: "userName = %@", user)
         do {
             let data = try context.fetch(request)
             if data.count == 0 {
                 self.count = 0
-            } else if data.count - DataStored.fetchLimit*n < DataStored.fetchLimit {
+            } else if data.count - DataStoredGad7.fetchLimit*n < DataStoredGad7.fetchLimit {
                 print("data\(x) will be deleted")
                 context.delete(data[x])
             }else {
-                print("data\(data.count-DataStored.fetchLimit*(n+1)+x) will be deleted")
-
-                context.delete(data[data.count-DataStored.fetchLimit*(n+1)+x])
+                print("data\(data.count-DataStoredGad7.fetchLimit*(n+1)+x) will be deleted")
+                
+                context.delete(data[data.count-DataStoredGad7.fetchLimit*(n+1)+x])
             }
             try context.save()
             

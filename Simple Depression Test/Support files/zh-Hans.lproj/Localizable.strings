@@ -113,7 +113,7 @@
 
 "Delete" = "删除";
 
-"Warning! Data cannot be recoverd after delete." = "警告！数据删除后将无法恢复";
+"Warning! Data cannot be recovered after delete." = "警告！数据删除后将无法恢复";
 
 "Cancel" = "取消";
 
@@ -198,3 +198,5 @@
 "Switch language to" = "切换语言为";
 
 "Do you want to continue?" = "要继续吗？";
+
+"Spanish" = "西班牙语";

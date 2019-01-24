@@ -67,9 +67,36 @@
                 -->
                     </style>
                 
+                <script type="text/javascript">
+                    var selectedRow = 0;
+                    var selectedCol = 0;
+                    function calculate(obj){
+                        var sum=0;
+                        for (var i=0; i<10; i++) {
+                            for (var j=0; j<4; j++) {
+                                if (obj.id == "myCheck"+i+j) {
+                                    selectedRow = i;
+                                    selectedCol = j;
+                                }
+                            }
+                        }
+                        for (var j=0; j<4; j++) {
+                            if (j!=selectedCol) {
+                                document.getElementById("myCheck"+selectedRow+j).checked = false;
+                            }
+                        }
+                        for (var i=0;i<9;i++){
+                            for(var j=0; j<4; j++){
+                                sum += document.getElementById("myCheck"+i+j).checked?j:0;
+                            }
+                        }
+                        document.getElementById('total').value = sum;
+                    }
+                </script>
+                
     </head>
     
-    <body lang=EN-US>
+    <body lang=zh-Hans>
         
         <div class=WordSection1>
             
@@ -77,7 +104,7 @@
             
             <p class=MsoNormal>&nbsp;</p>
             
-            <p class=MsoNormal><b>姓名: <INPUT TYPE="text" style="font-size:14pt" id=name>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p class=MsoNormal><b>姓名: <INPUT TYPE="text" style="font-size:14pt" id=name>
                 日期: <input type=date style=font-size:14pt id=date></b></p>
             
             <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
@@ -114,22 +141,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck00></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck00 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck01></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck01 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck02></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck02 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck03></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck03 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -141,22 +168,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck10></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck10 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck11></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck11 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck12></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck12 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck13></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck13 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -168,22 +195,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck20></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck20 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck21></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck21 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck22></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck22 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck23></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck23 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -195,22 +222,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck30></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck30 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck31></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck31 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck32></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck32 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck33></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck33 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -223,22 +250,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck40></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck40 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck41></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck41 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck42></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck42 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck43></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck43 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -250,22 +277,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck50></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck50 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck51></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck51 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck52></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck52 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck53></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck53 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -277,22 +304,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck60></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck60 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck61></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck61 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck62></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck62 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck63></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck63 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -304,22 +331,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck70></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck70 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck71></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck71 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck72></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck72 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck73></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck73 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -331,22 +358,22 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck80></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck80 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck81></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck81 value="1" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck82></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck82 value="2" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         background:#F2F2F2;padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck83></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck83 value="3" onclick="calculate(this)"></p>
                             </td>
                 </tr>
                 <tr>
@@ -390,28 +417,28 @@
                     <td width=16 valign=top style='width:12.1pt;border-top:none;border-left:none;
                         border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck90></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck90 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.35pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck91></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck91 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=66 valign=top style='width:49.45pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck92></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck92 value="0" onclick="calculate(this)"></p>
                             </td>
                     <td width=79 valign=top style='width:59.15pt;border-top:none;border-left:
                         none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt'>
-                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck93></p>
+                        <p class=MsoNormal><INPUT TYPE="checkbox" id=myCheck93 value="0" onclick="calculate(this)"></p>
                             </td>
                 </tr>
             </table>
             
             <p class=MsoNormal>您的评分:<span lang=ZH-CN style='font-family:SimSun'>　</span><span
-                lang=ZH-CN> </span>
+                lang=zh-hans> </span>
             
             <input type=number id=total style="font-size:14pt" size=2 min=0 max=27>
                 

@@ -28,14 +28,12 @@ class ReportComposer: NSObject {
     
     func renderReport(name: String, date: String, scores: [Int], total: Int, result: String) -> String {
         let path1 = AppLanguage.currentAppleLanguageFull() + ".lproj"
-        let path2 = "Base.lproj"
-//        let url = URL(fileURLWithPath: path ?? Bundle.main.path(forResource: "Base", ofType: "lproj")!)
-        let reportTemplate = Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path1) ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path2)
-//        if let reportTemplate = Bundle.main.path(forResource: "report",ofType:"html") {
+        let path2 = AppLanguage.currentAppleLanguage() + ".lproj"
+        let path3 = "Base.lproj"
+        let reportTemplate = Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path1) ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path2)  ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path3)
         do {
-            var htmlStr = try String(contentsOfFile: reportTemplate!)
+            var htmlStr = try String(contentsOfFile: reportTemplate!, encoding: String.Encoding.utf8)
             htmlStr = htmlStr.replacingOccurrences(of:nameRS, with: nameRS+" value = \"\(name)\"")
-//            htmlStr = htmlStr.replacingOccurrences(of:nameRS, with:name)
 
             if date != "" {
             htmlStr = htmlStr.replacingOccurrences(of:dateRS, with: date)
@@ -58,15 +56,12 @@ class ReportComposer: NSObject {
             
             return htmlStr
             }
-                
-                
         catch{
             print("unable to open the template")
             print(error)
         }
         return ""
-    }
-    
+}
     func createPDF(html: String, filename: String, formatter: UIViewPrintFormatter){
         let render = UIPrintPageRenderer()
         render.addPrintFormatter(formatter, startingAtPageAt: 0)
@@ -89,33 +84,5 @@ class ReportComposer: NSObject {
         pdfData.write(toFile: path, atomically: true)
         print(path)
     }
-    
-//
-//    func exportHTMLContentToPDF(HTMLContent: String) {
-//        let printPageRenderer = PrintPageRenderer()
-//
-//        let printFormatter = UIMarkupTextPrintFormatter(markupText: HTMLContent)
-//        printPageRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
-//
-//        let pdfData = drawPDFUsingPrintPageRenderer(printPageRenderer: printPageRenderer)
-//
-//        pdfFilename = "\(AppDelegate.getAppDelegate().getDocDir())/reportPHQ-9.pdf"
-//        pdfData?.write(toFile: pdfFilename!, atomically: true)
-//
-//        print(pdfFilename!)
-//    }
-//
-//    func drawPDFUsingPrintPageRenderer(printPageRenderer: UIPrintPageRenderer) -> NSData! {
-//        let data = NSMutableData()
-//
-//        UIGraphicsBeginPDFContextToData(data, CGRect.zero, nil)
-//
-//        for i in 0..<printPageRenderer.numberOfPages {
-//        UIGraphicsBeginPDFPage()
-//        printPageRenderer.drawPage(at: i, in: UIGraphicsGetPDFContextBounds())
-//        }
-//        UIGraphicsEndPDFContext()
-//
-//        return data
-//    }
+
 }

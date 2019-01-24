@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import Charts
 
 class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
@@ -45,46 +46,75 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     
     weak var reportDelegate: ReportDelegate?
-    let phqArray = ["Anhedonia".localized,"Low Mood".localized,"Insomnia".localized,"Fatigue".localized,"Appetite".localized,"Worthlessness".localized,"Concentration".localized,"Movement".localized,"Suicide".localized,"Function impairment".localized]
+    var radarArray: [String] = []
     
     //Mark: data prepare
+    fileprivate func dataClear() {
+        totalScores.removeAll()
+        dateArray.removeAll()
+        scoreArray.removeAll()
+        radarView.clear()
+        //set bar chart
+        barView.clear()
+        lineView.isHidden = true
+        //set line chart
+        lineView.clear()
+        dateLabel.text = ""
+    }
+    
     fileprivate func dataSetting() {
         let context = AppDelegate.viewContext
-        let data = DataStored(context: context)
-        numberOfFetch = numberOfFetch ?? 0
-        data.fetchData(currentUser,numberOfFetch ?? 0)
-        flag = data.flag
-        if data.count == 0 {
-            totalScores.removeAll()
-            dateArray.removeAll()
-            scoreArray.removeAll()
-            radarView.clear()
-            //set bar chart
-            barView.clear()
-            lineView.isHidden = true
-            //set line chart
-            lineView.clear()
-            dateLabel.text = ""
-            
-        }else {
-            
-            //set vars for receiving data
-            totalScores = data.totalArray
-            dateArray = data.dateArray
-            scoreArray = data.scoresArray
-            results = data.resultArray
+        switch Settings.questionSet {
+        case "phq9":
+            let data = DataStored(context: context)
+            numberOfFetch = numberOfFetch ?? 0
+            data.fetchData(currentUser,numberOfFetch ?? 0)
+            flag = data.flag
+            radarArray = QuestionBank.radarArray
+            if data.count == 0 {
+                dataClear()
+                
+            }else {
+                
+                //set vars for receiving data
+                totalScores = data.totalArray
+                dateArray = data.dateArray
+                scoreArray = data.scoresArray
+                results = data.resultArray
+            }
+        case "gad7":
+            let data = DataStoredGad7(context: context)
+            numberOfFetch = numberOfFetch ?? 0
+            data.fetchData(currentUser,numberOfFetch ?? 0)
+            flag = data.flag
+            radarArray = QuestionBank.radarArray
+            if data.count == 0 {
+                dataClear()
+                
+            }else {
+                
+                //set vars for receiving data
+                totalScores = data.totalArray
+                dateArray = data.dateArray
+                scoreArray = data.scoresArray
+                results = data.resultArray
+            }
+        default:
+            break
+        }
+
             scoreArrayNum = scoreArray.count - 1
             
             //set radar chart
             if isDataSentFromRecordsMenu == false {
                 dateLabel.text = " Your Score:".localized + String(totalScores[scoreArrayNum])
-                radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
+                radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
             }
             //set bar chart
             barView.setBarChartData(xValues: dateArray, yValues: totalScores, label: "Scores Records")
             lineView.isHidden = true
             barView.isHidden = false
-            if data.count > 3 {
+            if totalScores.count > 3 {
                 barView.legend.enabled = false
             } else {
                 barView.legend.enabled = true
@@ -102,7 +132,6 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             self.barView.delegate = self
             self.radarView.delegate = self
             
-        }
     }
     
     fileprivate func setBackGroundImage() {
@@ -148,29 +177,14 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         super.viewDidLoad()
         stepper.isHidden = true
         pageNum.text = Int(DataStored.fetchLimit).description
-//        //add receiver to NotificationCenter
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("cUser"), object: nil, queue: OperationQueue.main) { (notification) in
-//            self.currentUser = notification.userInfo?["user"] as? String ?? ""
-//            print("user@:\(self.currentUser)")
-//        }
-//
-
         //Mark:add swipe gestures
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeLeft.direction = .left
         self.view.addGestureRecognizer(swipeLeft)
-//
-//        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
-//        swipeRight.direction = .right
-//        self.view.addGestureRecognizer(swipeRight)
-        
     }
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
-//        if gesture.direction == UISwipeGestureRecognizer.Direction.right {
-//            print("Swipe Right")
-//            performSegue(withIdentifier: "unwindSegueToUserView", sender: self)
-//        }
+
         if gesture.direction == UISwipeGestureRecognizer.Direction.left {
             print("Swipe Left")
             saveImage()
@@ -223,67 +237,12 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBAction func saveCsv(_ sender: Any) {
         saveCsv()
     }
-    func  saveCsv() {
-        let dateSave = Date()
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let dateString = formatter.string(from: dateSave)
-        var str = ""
-        print(totalScores.count)
-        
-        //load data to string
-        for i in 0..<totalScores.count {
-            let date = dateArray[i]
 
-            str.append("name: \(currentUser),date:\(date)\n")
-            var n = 0
-            for score in scoreArray[i] {
-                str.append("question\(n+1),\(score)\n")
-                n = n + 1
-            }
-            str.append("total,\(totalScores[i])\n\n")
-        }
-        
-        let fileName = "\(dateString).csv"
-        let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-        //write data using string.write
-        
-        do {
-            try str.write(to: path!, atomically: true, encoding: String.Encoding.utf8)
-            let vc = UIActivityViewController(activityItems: [path!], applicationActivities: [])
-            vc.excludedActivityTypes = [
-                UIActivity.ActivityType.assignToContact,
-                UIActivity.ActivityType.saveToCameraRoll,
-                UIActivity.ActivityType.postToFlickr,
-                UIActivity.ActivityType.postToVimeo,
-                UIActivity.ActivityType.postToTencentWeibo,
-                UIActivity.ActivityType.postToTwitter,
-                UIActivity.ActivityType.postToFacebook,
-                UIActivity.ActivityType.openInIBooks
-            ]
-            present(vc, animated: true, completion: nil)
-            if let popOver = vc.popoverPresentationController {
-                popOver.sourceView = self.view
-                //popOver.sourceRect =
-                //popOver.barButtonItem
-            }
-        } catch {
-            print(error)
-            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
-        }
-    }
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    
-    
     //Mark: buttons for radarchart
     @IBAction func prevButton(_ sender: UIButton) {
         if scoreArrayNum > 0 && scoreArrayNum < dateArray.count{
             scoreArrayNum -= 1
-            radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
+            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
             nextButton.isHidden = false
             dateLabel.text = "\(dateArray[scoreArrayNum])" + " Score:" + "\(totalScores[scoreArrayNum])"
 
@@ -298,7 +257,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBAction func nextButton(_ sender: UIButton) {
         if scoreArrayNum < scoreArray.count - 1 {
             scoreArrayNum += 1
-            radarView.setRadarData(phqArray, scoreArray[scoreArrayNum], "PHQ-9")
+            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
             prevButton.isHidden = false
             dateLabel.text = "\(dateArray[scoreArrayNum]) Score:\(totalScores[scoreArrayNum])"
         }
@@ -372,14 +331,25 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             self.barView.highlightValue(x: (h?.x)!, dataSetIndex: (h?.dataSetIndex)!, stackIndex: (h?.stackIndex)!)
             if let xVal = h?.x {
             //create a instance of dataStored and fetch data from coredata
-                    let context = AppDelegate.viewContext
+                let context = AppDelegate.viewContext
+                let alert = UIAlertController(title: "⚠️"+"Delete Data".localized, message: "Warning! Data cannot be recovered after delete.".localized, preferredStyle: .alert)
+
+                switch Settings.questionSet {
+                case "phq9":
                     let data = DataStored(context: context)
-                    let alert = UIAlertController(title: "⚠️"+"Delete Data".localized, message: "Warning! Data cannot be recoverd after delete.".localized, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch!, Int(xVal))
-                            self.viewWillAppear(true)
-                        } ))
-                        alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
-                        self.present(alert, animated: true, completion: nil)
+                    alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch!, Int(xVal))
+                        self.dataSetting()
+                    } ))
+                case "gad7":
+                    let data = DataStoredGad7(context: context)
+                    alert.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler:{(UIAlertAction) in data.deleteData(self.currentUser, self.numberOfFetch!, Int(xVal))
+                        self.dataSetting()} ))
+                default: break
+
+                }
+                
+                alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler:nil))
+                self.present(alert, animated: true, completion: nil)
                 
             }
     }
@@ -396,7 +366,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
         scoreArrayNum = Int(entry.x)
         scores = scoreArray[scoreArrayNum]
-        radarView.setRadarData(phqArray, scores, "PHQ-9")
+        radarView.setRadarData(radarArray, scores, Settings.questionSet)
         date = dateArray[scoreArrayNum]
         totalScore = totalScores[scoreArrayNum]
         dateLabel.text = "\(date)"+" Your Score:".localized+"\(totalScore)"
@@ -427,23 +397,6 @@ extension LineChartView {
         }
     }
     
-    func setColor(_ value: Int) -> UIColor{
-        if(value < 5){
-            return UIColor.green
-        }
-        else if(value < 10){
-            return UIColor.yellow
-        }
-        else if(value < 15){
-            return UIColor.orange
-        }
-        else if(value < 20){
-            return UIColor.red
-        }
-        else { //In case anything goes wrong
-            return UIColor.purple
-        }
-    }
 
     func setLineChartData(xValues: [String], yValues: [Int], label: String) {
         var dataEntries: [ChartDataEntry] = []
@@ -451,7 +404,7 @@ extension LineChartView {
         for i in 0..<yValues.count {
             let dataEntry = ChartDataEntry(x: Double(i), y: Double(yValues[i]))
             dataEntries.append(dataEntry)
-            colorArray.append(setColor(yValues[i]))
+            colorArray.append(Settings.setColor(yValues[i]))
 
         }
 
@@ -470,7 +423,7 @@ extension LineChartView {
         yAxis.granularityEnabled = true
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
-        yAxis.axisMaximum = 29
+        yAxis.axisMaximum = Double(QuestionBank.questionArray.count * 3 + 1)
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
         let format = NumberFormatter()
@@ -478,12 +431,12 @@ extension LineChartView {
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
         self.chartDescription?.text = ""
-        let entry0 = LegendEntry.init(label: "minimal", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .green)
-        let entry1 = LegendEntry.init(label: "mild", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .yellow)
-        let entry2 = LegendEntry.init(label: "moderate", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .orange)
-        let entry3 = LegendEntry.init(label: "moderately severe", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .red)
-        let entry4 = LegendEntry.init(label: "severe", form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .purple)
-        legend.setCustom(entries: [entry0,entry1,entry2,entry3,entry4])
+        var entries: [LegendEntry] = []
+        for index in QuestionBank.severityArray.indices {
+            let entry = LegendEntry.init(label: QuestionBank.severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
+            entries.append(entry)
+        }
+        legend.setCustom(entries: entries)
         self.data = chartData
     }
 }
@@ -507,31 +460,14 @@ extension BarChartView {
             self.labels = labels
         }
     }
-    func setColor(_ value: Int) -> UIColor{
 
-    if(value < 5){
-        return UIColor.green
-    }
-    else if(value < 10){
-        return UIColor.yellow
-    }
-    else if(value < 15){
-        return UIColor.orange
-    }
-    else if(value < 20){
-        return UIColor.red
-    }
-    else { //In case anything goes wrong
-        return UIColor.purple
-    }
-}
     func setBarChartData(xValues: [String], yValues: [Int], label: String) {
         var dataEntries: [BarChartDataEntry] = []
         var colorArray = [UIColor]()
         for i in 0..<yValues.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: Double(yValues[i]))
             dataEntries.append(dataEntry)
-            colorArray.append(setColor(yValues[i]))
+            colorArray.append(Settings.setColor(yValues[i]))
         }
 
         let chartDataSet = BarChartDataSet(values: dataEntries, label: label)
@@ -547,7 +483,7 @@ extension BarChartView {
         yAxis.granularityEnabled = true
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
-        yAxis.axisMaximum = 29
+        yAxis.axisMaximum = Double(QuestionBank.questionArray.count * 3 + 1)
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
         
@@ -555,13 +491,13 @@ extension BarChartView {
         format.numberStyle = .none
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
-        
-        let entry0 = LegendEntry.init(label: "minimal", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .green)
-        let entry1 = LegendEntry.init(label: "mild", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .yellow)
-        let entry2 = LegendEntry.init(label: "moderate", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .orange)
-        let entry3 = LegendEntry.init(label: "moderately severe", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .red)
-        let entry4 = LegendEntry.init(label: "severe", form: Legend.Form.default, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: .purple)
-        legend.setCustom(entries: [entry0,entry1,entry2,entry3,entry4])
+        var entries: [LegendEntry] = []
+        for index in QuestionBank.severityArray.indices {
+            let entry = LegendEntry.init(label: QuestionBank.severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
+            entries.append(entry)
+        }
+
+        legend.setCustom(entries: entries)
         legend.drawInside = true
         legend.verticalAlignment = .bottom
         legend.horizontalAlignment = .right
@@ -604,40 +540,23 @@ extension RadarChartView {
         }
     }
 
-    func setColor(_ value: Int) -> UIColor{
-        if(value < 5){
-            return UIColor.green
-        }
-        else if(value < 10){
-            return UIColor.yellow
-        }
-        else if(value < 15){
-            return UIColor.orange
-        }
-        else if(value < 20){
-            return UIColor.red
-        }
-        else { //In case anything goes wrong
-            return UIColor.purple
-        }
-    }
     
     func setRadarData(_ xValues: [String],_ yValues: [Int],_ label: String) {
 
         var dataEntries: [RadarChartDataEntry] = Array()
         var totalScore = 0
-        for i in 0...9 {
+        for i in 0...yValues.count - 1 {
             let dataEntry = RadarChartDataEntry(value: Double(yValues[i]))
             dataEntries.append(dataEntry)
         }
-        for i in 0...8 {
+        for i in 0...yValues.count - 2 {
             totalScore += yValues[i]
         }
         
         let chartDataSet = RadarChartDataSet(values: dataEntries, label: label)
         chartDataSet.colors = ChartColorTemplates.colorful()
         chartDataSet.drawFilledEnabled = true
-        chartDataSet.fillColor = setColor(totalScore)
+        chartDataSet.fillColor = Settings.setColor(totalScore)
         chartDataSet.drawValuesEnabled = false
         let chartData = RadarChartData(dataSet: chartDataSet)
 
@@ -713,4 +632,63 @@ extension ResultViewController : MenuActionDelegate {
     func reopenMenu(){
         performSegue(withIdentifier: "openMenu", sender: nil)
     }
+}
+
+extension ResultViewController {
+    func  saveCsv() {
+        let dateSave = Date()
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = formatter.string(from: dateSave)
+        var str = ""
+        print(totalScores.count)
+        
+        //load data to string
+        for i in 0..<totalScores.count {
+            let date = dateArray[i]
+            
+            str.append("name: \(currentUser),date:\(date)\n")
+            var n = 0
+            for score in scoreArray[i] {
+                str.append("question\(n+1),\(score)\n")
+                n = n + 1
+            }
+            str.append("total,\(totalScores[i])\n\n")
+        }
+        
+        let fileName = "\(dateString).csv"
+        let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+        //write data using string.write
+        
+        do {
+            try str.write(to: path!, atomically: true, encoding: String.Encoding.utf8)
+            let vc = UIActivityViewController(activityItems: [path!], applicationActivities: [])
+            vc.excludedActivityTypes = [
+                UIActivity.ActivityType.assignToContact,
+                UIActivity.ActivityType.saveToCameraRoll,
+                UIActivity.ActivityType.postToFlickr,
+                UIActivity.ActivityType.postToVimeo,
+                UIActivity.ActivityType.postToTencentWeibo,
+                UIActivity.ActivityType.postToTwitter,
+                UIActivity.ActivityType.postToFacebook,
+                UIActivity.ActivityType.openInIBooks
+            ]
+            present(vc, animated: true, completion: nil)
+            if let popOver = vc.popoverPresentationController {
+                popOver.sourceView = self.view
+                //popOver.sourceRect =
+                //popOver.barButtonItem
+            }
+        } catch {
+            print(error)
+            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+        }
+    }
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    
 }

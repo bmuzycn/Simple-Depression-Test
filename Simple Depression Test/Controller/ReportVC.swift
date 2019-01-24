@@ -34,9 +34,9 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
             
     }
     // show indicator
-    func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
-        loadSpinner.startAnimating()
-    }
+//    func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
+//        loadSpinner.startAnimating()
+//    }
     // hide indicator
     func webView(_ reportView: WKWebView, didFinish navigation: WKNavigation!) {
         loadSpinner.stopAnimating()
@@ -103,18 +103,21 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         reportView.heightAnchor.constraint(equalTo: webViewContainer.heightAnchor).isActive = true
         reportComposer = ReportComposer()
         htmlReport = reportComposer.renderReport(name: user, date: date, scores: scores, total: total, result: result)
-        
-        let path = Bundle.main.path(forResource: AppLanguage.currentAppleLanguageFull(), ofType: "lproj")
-        let url = URL(fileURLWithPath: path ?? Bundle.main.path(forResource: "Base", ofType: "lproj")!)
-        reportView.loadHTMLString(htmlReport, baseURL: url)
+        let path1 = Bundle.main.path(forResource: AppLanguage.currentAppleLanguageFull(), ofType: "lproj")
+        let path2 = Bundle.main.path(forResource: AppLanguage.currentAppleLanguage(), ofType: "lproj")
+        let path3 = Bundle.main.path(forResource: "Base", ofType: "lproj")
+        let url = URL(fileURLWithPath: path1 ?? path2 ?? path3!)
         reportView.navigationDelegate = self
+        reportView.loadHTMLString(htmlReport, baseURL: url)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadSpinner.style = .whiteLarge
         loadSpinner.color = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-        
+        loadSpinner.startAnimating()
+
         setBackGroundImage()
         receiveData()
         print("user:\(user)")
@@ -143,7 +146,6 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         self.view.addGestureRecognizer(swipeRight)
         
 
-//        reportView.uiDelegate = self
         
 
     }
@@ -155,9 +157,6 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         }
     }
 
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
 
     func clearArrays() {
         scores.removeAll()
@@ -269,12 +268,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
-    
-//    @IBAction func infoButton(_ sender: Any) {
-//        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.2 \n By Yu Zhang\n\n\nLast updated on 11/29/2018:\n- New button animation was added.\n- Swipe gestures were enabled.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
-//        infoNote.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//        present(infoNote, animated: true, completion: nil)
-//    }
+
 }
 
 extension ReportVC: ReportDelegate {

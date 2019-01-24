@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingViewController: UIViewController {
+class DisplaySettingViewController: UIViewController {
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var fontSize: UISlider!
     @IBOutlet weak var themesLabel: UILabel!

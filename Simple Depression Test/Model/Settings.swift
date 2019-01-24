@@ -20,4 +20,41 @@ class Settings {
     static var bgColorForTableView = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     static var colorForHeadView = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.9568627451, alpha: 1)
     static var bgImage = UIImage(named: "bgImage")
+    static var questionSet = "phq9"
+    
+    static func setColor(_ value: Int) -> UIColor{
+        switch Settings.questionSet {
+        case "phq9":
+            if(value < 5){
+                return UIColor.green
+            }
+            else if(value < 10){
+                return UIColor.yellow
+            }
+            else if(value < 15){
+                return UIColor.orange
+            }
+            else if(value < 20){
+                return UIColor.red
+            }
+            else {
+                return UIColor.purple
+            }
+        case "gad7":
+            if(value < 5){
+                return UIColor.green
+            }
+            else if(value < 10){
+                return UIColor.yellow
+            }
+            else if(value < 15){
+                return UIColor.orange
+            }
+            else {
+                return UIColor.red
+            }
+        default: break
+        }
+        return .clear
+    }
 }

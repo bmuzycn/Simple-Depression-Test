@@ -133,44 +133,89 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         expandableRecords.removeAll()
         groupRecords.removeAll()
         let context = AppDelegate.viewContext
-        let request = NSFetchRequest<DataStored>(entityName: "DataStored")
-        request.predicate = NSPredicate(format: "userName = %@", user)
-        do {
-            let data = try context.fetch(request)
-            for item in data{
-                resultArray.append(item.value(forKey: "result")! as! String)
-                let date = item.value(forKey: "dateTime") as! Date
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd"
-//                formatter.timeZone = TimeZone(abbreviation: "UTC")
-                let strDate = formatter.string(from: date)
-                dateArray.append(strDate)
-                let totalScore = item.value(forKey: "totalScore") as! Int
-                let record = Record(date: strDate, totalScore: totalScore, dateTime: date)
-                records.append(record)
-                scoresArray.append(item.value(forKey: "scores") as! [Int])
-                totalArray.append(item.value(forKey: "totalScore") as! Int)
+        switch Settings.questionSet {
+        case "phq9":
+            let request = NSFetchRequest<DataStored>(entityName: "DataStored")
+            request.predicate = NSPredicate(format: "userName = %@", user)
+
+            do {
+                let data = try context.fetch(request)
+                for item in data{
+                    resultArray.append(item.value(forKey: "result") as! String)
+                    let date = item.value(forKey: "dateTime") as! Date
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    let strDate = formatter.string(from: date)
+                    dateArray.append(strDate)
+                    let totalScore = item.value(forKey: "totalScore") as! Int
+                    let record = Record(date: strDate, totalScore: totalScore, dateTime: date)
+                    records.append(record)
+                    scoresArray.append(item.value(forKey: "scores") as! [Int])
+                    totalArray.append(item.value(forKey: "totalScore") as! Int)
                 }
-        }
-        catch let error as NSError {
-            // something went wrong, print the error.
-            print(error.description)
+            }
+            catch let error as NSError {
+                // something went wrong, print the error.
+                print(error.description)
+            }
+        case "gad7":
+            let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStoredGad7")
+            request.predicate = NSPredicate(format: "userName = %@", user)
+            do {
+                let data = try context.fetch(request)
+                for item in data{
+                    resultArray.append(item.value(forKey: "result") as! String)
+                    let date = item.value(forKey: "dateTime") as! Date
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    let strDate = formatter.string(from: date)
+                    dateArray.append(strDate)
+                    let totalScore = item.value(forKey: "totalScore") as! Int
+                    let record = Record(date: strDate, totalScore: totalScore, dateTime: date)
+                    records.append(record)
+                    scoresArray.append(item.value(forKey: "scores") as! [Int])
+                    totalArray.append(item.value(forKey: "totalScore") as! Int)
+                }
+            }
+            catch let error as NSError {
+                // something went wrong, print the error.
+                print(error.description)
+            }
+        default: break
         }
     }
     //delete data
     func deleteData(_ user: String, _ x: Int) {
         let context = AppDelegate.viewContext
-        let request = NSFetchRequest<DataStored>(entityName: "DataStored")
-        request.predicate = NSPredicate(format: "userName = %@", user)
-        do {
-            let data = try context.fetch(request)
+        switch Settings.questionSet {
+        case "phq9":
+            let request = NSFetchRequest<DataStored>(entityName: "DataStored")
+            request.predicate = NSPredicate(format: "userName = %@", user)
+            do {
+                let data = try context.fetch(request)
                 print("data\(x) will be deleted")
                 context.delete(data[x])
-            try context.save()
-            
-        } catch {
-            fatalError("Could not delete.\(error)")
+                try context.save()
+                
+            } catch {
+                fatalError("Could not delete.\(error)")
+            }
+        case "gad7":
+            let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStoredGad7")
+            request.predicate = NSPredicate(format: "userName = %@", user)
+            do {
+                let data = try context.fetch(request)
+                print("data\(x) will be deleted")
+                context.delete(data[x])
+                try context.save()
+                
+            } catch {
+                fatalError("Could not delete.\(error)")
+            }
+        default:
+            break
         }
+
     }
 
     // MARK: - Table view data source
@@ -331,7 +376,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier == "unwindToChartView" {
             let chartVC = segue.destination as! ResultViewController
             chartVC.isDataSentFromRecordsMenu = true
-            chartVC.radarView.setRadarData(chartVC.phqArray, scoresSelected, "PHQ-9")
+            chartVC.radarView.setRadarData(chartVC.radarArray, scoresSelected, "PHQ-9")
             chartVC.dateLabel.text = dateSelected + "\n" + " Your Score:".localized + String(totalScore)
             chartVC.date = dateSelected
             chartVC.result = resultSelected

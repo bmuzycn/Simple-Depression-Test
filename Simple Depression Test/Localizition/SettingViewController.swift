@@ -7,16 +7,17 @@
 //
 import UIKit
 
-class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UITableViewDataSource{
+class SettingViewController: MirroringViewController, UITableViewDelegate, UITableViewDataSource{
     let tableView: UITableView = {
         let tbView = UITableView(frame: UIScreen.main.bounds, style: .plain)
         return tbView
     }()
     
-    var languages = ["English".localized, "Simplified Chinese".localized, "Traditional Chinese".localized]
-    var shortLang = ["en", "zh-Hans", "zh-Hant"]
+    let screeners = ["PHQ-9", "GAD-7"]
+    var languages = ["English".localized, "Spanish".localized, "Simplified Chinese".localized, "Traditional Chinese".localized]
+    var shortLang = ["en", "es", "zh-Hans", "zh-Hant"]
     
-    let headerTitles = ["Preferred Language".localized, "Display Setting".localized, "More Information".localized]
+    let headerTitles = ["Preferred Language".localized, "Other Screeners".localized, "Display Setting".localized, "More Information".localized]
     var langSelected: String = {
         return AppLanguage.currentAppleLanguage()
     }()
@@ -57,13 +58,13 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         //setup tableView
         self.navigationItem.title = "Settings".localized
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.indicatorStyle = .black
-        view.backgroundColor = Settings.colorForHeadView
         view.setNeedsDisplay()
     }
     
@@ -75,16 +76,25 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setBackGroundImage()
-        tableView.backgroundColor = Settings.bgColorForTableView
+        view.backgroundColor = Settings.colorForHeadView
         langSelected = AppLanguage.currentAppleLanguageFull()
         for index in shortLang.indices {
-            if shortLang[index] == langSelected {
-                shortLang.remove(at: index)
-                shortLang.insert(langSelected, at: 0)
+            if  langSelected.contains(shortLang[index]) {
+                let currentLangCode = shortLang.remove(at: index)
+                shortLang.insert(currentLangCode, at: 0)
                 let languageSelected = languages.remove(at: index)
                 languages.insert(languageSelected, at: 0)
                 print(shortLang)
+                print(languages)
+                print(langSelected)
             }
+        }
+        switch Settings.questionSet {
+        case "phq9":
+            rowSelectedForScreener = 0
+        case "gad7":
+            rowSelectedForScreener = 1
+        default: break
         }
     }
     
@@ -105,7 +115,11 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
         return languages.count
-        } else {
+        } else if section == 1 {
+            return screeners.count
+        }
+        
+        else {
             return 1
         }
     }
@@ -120,8 +134,13 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
             cell.accessoryType = (indexPath.row == rowSelected) ? .checkmark : .none
         case 1:
             cell.accessoryType = .disclosureIndicator
-            cell.textLabel?.text = "Theme Customize".localized
+            cell.textLabel?.text = screeners[indexPath.row]
+            cell.textLabel?.textAlignment = .left
+            cell.accessoryType = (indexPath.row == rowSelectedForScreener) ? .checkmark : .none
         case 2:
+            cell.accessoryType = .disclosureIndicator
+            cell.textLabel?.text = "Theme Customize".localized
+        case 3:
             cell.accessoryType = .disclosureIndicator
             cell.textLabel?.text = "About this version".localized
         default: break
@@ -134,6 +153,7 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
     }
     
     var rowSelected = 0 //set default language as current show on the top
+    var rowSelectedForScreener = 0
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
@@ -147,13 +167,41 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         case 1:
-            performSegue(withIdentifier: "toSettingVC", sender: self)
+            rowSelectedForScreener = indexPath.row
+            switchScreener()
         case 2:
+            performSegue(withIdentifier: "toSettingVC", sender: self)
+        case 3:
             alert()
         default:
             break
         }
     }
+    
+    func switchScreener() {
+        let screener = screeners[rowSelectedForScreener]
+        switch screener {
+        case "PHQ-9":
+            Settings.questionSet = "phq9"
+            QuestionBank.questions = QuestionBank.phq9
+            QuestionBank.questionArray = QuestionBank.phqArray
+            QuestionBank.radarArray = QuestionBank.phqArrayForRadar
+            QuestionBank.severityArray = QuestionBank.severityPHQ9
+            QuestionBank.severityColors = QuestionBank.severityColorForPHQ9
+        case "GAD-7":
+            Settings.questionSet = "gad7"
+            QuestionBank.questions = QuestionBank.gad7
+            QuestionBank.questionArray = QuestionBank.gadArray
+            QuestionBank.radarArray = QuestionBank.gadArrayForRadar
+            QuestionBank.severityArray = QuestionBank.severityGAD7
+            QuestionBank.severityColors = QuestionBank.severityColorForGAD7
+
+        default:
+            break
+        }
+        tableView.reloadData()
+    }
+    
     func switchLang() {
         langSelected = shortLang[rowSelected]
         switch langSelected {
@@ -163,6 +211,8 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
                 AppLanguage.setAppleLAnguageTo(lang: "zh-Hans")
             case "zh-Hant":
                 AppLanguage.setAppleLAnguageTo(lang: "zh-Hant")
+            case "es":
+                AppLanguage.setAppleLAnguageTo(lang: "es")
             default:
                 print("language change failed")
         }
@@ -191,7 +241,7 @@ class LangSwitchViewController: MirroringViewController, UITableViewDelegate, UI
     }
     
     func alert() {
-        let infoNote = UIAlertController(title: "About Simple Depression Test", message:"Version 1.8 \n By Yu Zhang\n\n\nLast updated on 1/3/2019:\n- Multi-language selector without restart the app.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ", preferredStyle: UIAlertController.Style.alert)
+        let infoNote = UIAlertController(title: "About Simple Depression Test".localized, message:"Version 1.8 \n By Yu Zhang\n\n\nLast updated on 1/3/2019:\n- Multi-language selector without restart the app.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ".localized, preferredStyle: UIAlertController.Style.alert)
         infoNote.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(infoNote, animated: true, completion: nil)
     }
