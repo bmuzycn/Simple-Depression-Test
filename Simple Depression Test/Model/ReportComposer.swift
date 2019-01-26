@@ -8,7 +8,7 @@
 
 import UIKit
 class ReportComposer: NSObject {
-    
+    let fileName = Settings.reportFilename
     var pdfFilename: String!
 //    var name: String?
 //    var date: String?
@@ -30,7 +30,7 @@ class ReportComposer: NSObject {
         let path1 = AppLanguage.currentAppleLanguageFull() + ".lproj"
         let path2 = AppLanguage.currentAppleLanguage() + ".lproj"
         let path3 = "Base.lproj"
-        let reportTemplate = Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path1) ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path2)  ?? Bundle.main.path(forResource: "report", ofType: "html", inDirectory: path3)
+        let reportTemplate = Bundle.main.path(forResource: fileName, ofType: "html", inDirectory: path1) ?? Bundle.main.path(forResource: fileName, ofType: "html", inDirectory: path2)  ?? Bundle.main.path(forResource: fileName, ofType: "html", inDirectory: path3)
         do {
             var htmlStr = try String(contentsOfFile: reportTemplate!, encoding: String.Encoding.utf8)
             htmlStr = htmlStr.replacingOccurrences(of:nameRS, with: nameRS+" value = \"\(name)\"")

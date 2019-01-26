@@ -70,7 +70,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             numberOfFetch = numberOfFetch ?? 0
             data.fetchData(currentUser,numberOfFetch ?? 0)
             flag = data.flag
-            radarArray = QuestionBank.radarArray
+            radarArray = QuestionBank().radarArray
             if data.count == 0 {
                 dataClear()
                 
@@ -87,7 +87,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             numberOfFetch = numberOfFetch ?? 0
             data.fetchData(currentUser,numberOfFetch ?? 0)
             flag = data.flag
-            radarArray = QuestionBank.radarArray
+            radarArray = QuestionBank().radarArray
             if data.count == 0 {
                 dataClear()
                 
@@ -106,7 +106,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             scoreArrayNum = scoreArray.count - 1
             
             //set radar chart
-            if isDataSentFromRecordsMenu == false {
+            if isDataSentFromRecordsMenu == false && scoreArray.count > 0 {
                 dateLabel.text = " Your Score:".localized + String(totalScores[scoreArrayNum])
                 radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
             }
@@ -423,7 +423,7 @@ extension LineChartView {
         yAxis.granularityEnabled = true
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
-        yAxis.axisMaximum = Double(QuestionBank.questionArray.count * 3 + 1)
+        yAxis.axisMaximum = Double(QuestionBank().questionArray.count * 3 + 1)
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
         let format = NumberFormatter()
@@ -432,8 +432,8 @@ extension LineChartView {
         chartData.setValueFormatter(formatter)
         self.chartDescription?.text = ""
         var entries: [LegendEntry] = []
-        for index in QuestionBank.severityArray.indices {
-            let entry = LegendEntry.init(label: QuestionBank.severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
+        for index in QuestionBank().severityArray.indices {
+            let entry = LegendEntry.init(label: QuestionBank().severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
             entries.append(entry)
         }
         legend.setCustom(entries: entries)
@@ -483,7 +483,7 @@ extension BarChartView {
         yAxis.granularityEnabled = true
         yAxis.granularity = 1
         yAxis.axisMinimum = 0
-        yAxis.axisMaximum = Double(QuestionBank.questionArray.count * 3 + 1)
+        yAxis.axisMaximum = Double(QuestionBank().questionArray.count * 3 + 1)
         yAxis.valueFormatter = MyCustomAxisValueFormatter()
         self.rightAxis.enabled = false
         
@@ -492,8 +492,8 @@ extension BarChartView {
         let formatter = DefaultValueFormatter(formatter: format)
         chartData.setValueFormatter(formatter)
         var entries: [LegendEntry] = []
-        for index in QuestionBank.severityArray.indices {
-            let entry = LegendEntry.init(label: QuestionBank.severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
+        for index in QuestionBank().severityArray.indices {
+            let entry = LegendEntry.init(label: QuestionBank().severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
             entries.append(entry)
         }
 

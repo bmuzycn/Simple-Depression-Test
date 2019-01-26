@@ -27,6 +27,7 @@
 		E62E0DE821261B0100688DA8 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DE721261B0100688DA8 /* UserViewController.swift */; };
 		E62E0DF8212884E400688DA8 /* DataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0DF7212884E400688DA8 /* DataDelegate.swift */; };
 		E62E0E04212B64C100688DA8 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62E0E03212B64C100688DA8 /* ResultViewController.swift */; };
+		E634091D21FA1FEF00C11AC8 /* reportForGAD7.html in Resources */ = {isa = PBXBuildFile; fileRef = E634091F21FA1FEF00C11AC8 /* reportForGAD7.html */; };
 		E66A7727208C441D00DC86DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66A7726208C441D00DC86DB /* AppDelegate.swift */; };
 		E66A7729208C441D00DC86DB /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66A7728208C441D00DC86DB /* QuestionViewController.swift */; };
 		E66A772C208C441D00DC86DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66A772A208C441D00DC86DB /* Main.storyboard */; };
@@ -87,6 +88,13 @@
 		E62E0DF7212884E400688DA8 /* DataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDelegate.swift; sourceTree = "<group>"; };
 		E62E0E03212B64C100688DA8 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		E62E0E212130A80400688DA8 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../../../Downloads/IOS Development/Charts-3.1.1/Charts.xcodeproj"; sourceTree = "<group>"; };
+		E634091E21FA1FEF00C11AC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/reportForGAD7.html; sourceTree = "<group>"; };
+		E634092021FA1FFB00C11AC8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hans"; path = "zh-Hans.lproj/reportForGAD7.html"; sourceTree = "<group>"; };
+		E634092121FA1FFC00C11AC8 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hant"; path = "zh-Hant.lproj/reportForGAD7.html"; sourceTree = "<group>"; };
+		E634092221FA1FFE00C11AC8 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/reportForGAD7.html"; sourceTree = "<group>"; };
+		E634092321FA1FFE00C11AC8 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/reportForGAD7.html"; sourceTree = "<group>"; };
+		E634092421FA200000C11AC8 /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = zh; path = zh.lproj/reportForGAD7.html; sourceTree = "<group>"; };
+		E634092521FA200100C11AC8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = es; path = es.lproj/reportForGAD7.html; sourceTree = "<group>"; };
 		E66A7723208C441D00DC86DB /* Simple Depression Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Depression Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E66A7726208C441D00DC86DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E66A7728208C441D00DC86DB /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
@@ -244,8 +252,9 @@
 		E66A7725208C441D00DC86DB /* Simple Depression Test */ = {
 			isa = PBXGroup;
 			children = (
-				E608C96021E9655300E06312 /* Localizition */,
 				E6C856D42142BF2A00F95BE4 /* report.html */,
+				E634091F21FA1FEF00C11AC8 /* reportForGAD7.html */,
+				E608C96021E9655300E06312 /* Localizition */,
 				E62E0DE22125C30500688DA8 /* Controller */,
 				E62E0DE12125BEBC00688DA8 /* View */,
 				E62E0DB7211CEBD600688DA8 /* Model */,
@@ -387,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E66A7734208C442800DC86DB /* LaunchScreen.storyboard in Resources */,
+				E634091D21FA1FEF00C11AC8 /* reportForGAD7.html in Resources */,
 				E6B8F77721358671004A4AEF /* Localizable.strings in Resources */,
 				E66A7731208C442800DC86DB /* Assets.xcassets in Resources */,
 				E66A772C208C441D00DC86DB /* Main.storyboard in Resources */,
@@ -439,6 +449,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		E634091F21FA1FEF00C11AC8 /* reportForGAD7.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E634091E21FA1FEF00C11AC8 /* Base */,
+				E634092021FA1FFB00C11AC8 /* zh-Hans */,
+				E634092121FA1FFC00C11AC8 /* zh-Hant */,
+				E634092221FA1FFE00C11AC8 /* zh-Hans-CN */,
+				E634092321FA1FFE00C11AC8 /* zh-Hant-TW */,
+				E634092421FA200000C11AC8 /* zh */,
+				E634092521FA200100C11AC8 /* es */,
+			);
+			name = reportForGAD7.html;
+			path = ../../..;
+			sourceTree = "<group>";
+		};
 		E66A772A208C441D00DC86DB /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

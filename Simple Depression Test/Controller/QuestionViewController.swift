@@ -30,6 +30,11 @@ class QuestionViewController: UIViewController, DataDelegate {
     var questionSet = "phq9"
     var lastScores: [Int]?
     var lastTotal: Int?
+    var numberOfUnanswered = 0
+    let titleText = "Over the last 2 weeks, how often have you been bothered by any of the following problems?".localized
+    let buttonTitles = ["Not at all".localized, "Several days".localized, "More than half the days".localized, "Nearly every day".localized]
+    let buttonTitlesForLast = ["Not difficult at all".localized, "Somewhat difficult".localized, "Very difficult".localized, "Extremely difficult".localized]
+    var buttons: [UIButton] = []
 
     @IBOutlet weak var titleLabel: UITextView!
     @IBOutlet weak var questionLabel: UITextView!
@@ -87,9 +92,9 @@ class QuestionViewController: UIViewController, DataDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        questionArray = QuestionBank.questionArray
+        questionArray = QuestionBank().questionArray
         questionSet = Settings.questionSet
-        allquestions = QuestionBank.questions
+        allquestions = QuestionBank().questions
         let countOFQuestions = allquestions.count
         scores = Array(repeating: 0, count: countOFQuestions)
         isButtonPressed = Array(repeating: false, count: countOFQuestions)
@@ -99,7 +104,7 @@ class QuestionViewController: UIViewController, DataDelegate {
         userName.text = cUser
         setAppearance()
         startOver()
-        isFirstTimeUser = UserDefaults.standard.value(forKey: cUser)
+        isFirstTimeUser = UserDefaults.standard.value(forKey: cUser+Settings.questionSet)
         if isFirstTimeUser == nil {
             alertNote()
         } else {
@@ -115,6 +120,7 @@ class QuestionViewController: UIViewController, DataDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        buttons = [button1, button2, button3, button4]
         progressBar.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
         setQuestionNum()
         //add swipe gestures
@@ -132,12 +138,13 @@ class QuestionViewController: UIViewController, DataDelegate {
         let context = AppDelegate.viewContext
         let request: NSFetchRequest = DataStored.fetchRequest()
         request.predicate = NSPredicate(format: "userName = %@", cUser)
+        request.sortDescriptors = [NSSortDescriptor(key: "dateTime", ascending: false)]
         request.fetchLimit = 1
         do {
             let fetchResult = try context.fetch(request)
             if fetchResult.isEmpty == false {
-            lastScores = fetchResult[0].value(forKey: "scores") as? [Int]
-            lastTotal = fetchResult[0].value(forKey: "totalScore") as? Int
+                lastScores = fetchResult.last?.value(forKey: "scores") as? [Int]
+                lastTotal = fetchResult.last?.value(forKey: "totalScore") as? Int
             }
         } catch {
             print("there is a error: \(error)")
@@ -162,26 +169,23 @@ class QuestionViewController: UIViewController, DataDelegate {
 
     @IBAction func buttonPressed(_ sender: UIButton) {
         print("\(questionNum): \(sender.tag)")
+        self.isButtonPressed[questionNum] = true
+        self.scores[questionNum] = sender.tag
         UIView.performWithoutAnimation {
-            sender.setTitle(sender.currentTitle!+"⭕️".localized, for: .normal)
-        }
-        UIView.animate(withDuration: 0.1, delay: 0.3, options: .allowAnimatedContent, animations: {
+//            sender.setTitle(sender.currentTitle!+"⭕️".localized, for: .normal)
+            changeTitle()
             sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }
+        UIView.animate(withDuration: 0.2, delay: 0.1, options: .allowAnimatedContent, animations: {
+            sender.transform = CGAffineTransform.identity
             self.view.layoutIfNeeded()
         }) { finished in
-                sender.transform = CGAffineTransform.identity
-                self.scores[self.questionNum] = sender.tag
-                self.isButtonPressed[self.questionNum] = true
                 self.next()
             }
     }
     
     //assign the result based on scores
-    fileprivate func calculatePhq9() {
-        totalScore = 0
-        for i in 0...allquestions.count - 2 {
-            totalScore += scores[i]
-        }
+    fileprivate func calculateSeverityPHQ9() {
         switch totalScore  {
         case 0:
             severity = "no depression".localized
@@ -199,6 +203,21 @@ class QuestionViewController: UIViewController, DataDelegate {
         default:
             print("out of range error")
         }
+    }
+    
+    fileprivate func calculatePhq9() {
+        totalScore = 0
+        numberOfUnanswered = 0
+        for i in 0...allquestions.count - 2 {
+            totalScore += scores[i]
+        }
+        for index in 0...(allquestions.count - 2) {
+            let buttonPressed: Bool = isButtonPressed[index]
+            if buttonPressed == false {
+                numberOfUnanswered += 1
+            }
+        }
+        calculateSeverityPHQ9()
         var countDSM5 = 0
         var count = 0
         for i in 0...7 {
@@ -211,19 +230,18 @@ class QuestionViewController: UIViewController, DataDelegate {
                 countDSM5 += 1
             }
         }
-
         if scores[8] > 0 {
             count = count + 1
             countDSM5 += 1
         }
-        if countDSM5 > 4 && scores[9]>0 && (scores[0] == 3 || scores[1] == 3) {
-            result = "Major Depressive Disorder".localized + "(according to DSM-5)".localized
+        if countDSM5 > 4 && scores[9] > 0 && (scores[0] == 3 || scores[1] == 3) {
+            result = "Major Depressive Disorder".localized + "(* DSM-5)"
         }
-        else if count > 4 && scores[9]>0 && (scores[0] > 1 || scores[1] > 1) {
+        else if count > 4 && scores[9] > 0 && (scores[0] > 1 || scores[1] > 1) {
             result = "Major Depressive Disorder".localized + "(*)"
         }
-        else if count>1 && scores[9]>0 && count<5 && (scores[0] > 1 || scores[1] > 1) {
-            result = "other Depressive Disorder".localized
+        else if count > 1 && scores[9] > 0 && count < 5 && (scores[0] > 1 || scores[1] > 1) {
+            result = "Other Depressive Disorder".localized
         }
         else if scores[9]==0 && totalScore>0 {
             result = "depressive symptoms but have no effect on your daily life and normal functioning".localized
@@ -237,28 +255,34 @@ class QuestionViewController: UIViewController, DataDelegate {
             
         }
         if isFirstTimeUser == nil {
-            result = "Your probably have ".localized + result.localized + " with severity score of ".localized + "\(totalScore)/27 " + "as ".localized + severity + ".".localized
+            result = "Your probably have ".localized + result + ", " + " with severity score of ".localized + "\(totalScore)" + " as ".localized + severity + ".".localized
         } else {
-            result = "Your probably have ".localized + severity + " with severity score of ".localized + "\(totalScore)/27"
+            result = "Your score is ".localized + "\(totalScore)" + " as ".localized + severity
         }
         if totalScore >= 10 && (isFirstTimeUser == nil) {
             result = result + "\n" + "A full clinical assessment is recommended.".localized
         }
         
         if scores[8] > 0  && (isFirstTimeUser == nil) {
-            result = result + "\n" + "(For initial patient with suicide or self-injury risk, you need to see a doctor as soon as possible)".localized
+            result = result + "\n" + "(For newly detection with suicide or self-injury risk, you need to see a doctor as soon as possible)".localized
         }
         
         if let lastSuicideScore = lastScores?[8], scores[8] > lastSuicideScore {
             result = result + "\n" + "(The result indicates your suicide risk increased. Regardless of your total score, you should see a doctor as soon as possible)".localized
         }
+        
+
+        if numberOfUnanswered > 2 {
+            result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions which cause failed to calculate the total score. Please review and complete all of the items.".localized
+            totalScore = -1
+        }else if numberOfUnanswered > 0 {
+            totalScore = totalScore*9/(9 - numberOfUnanswered)
+            calculateSeverityPHQ9()
+            result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions. ".localized + "\n" + "Your prorated score is ".localized + "\(totalScore)" + " as ".localized + severity + "."
+        }
     }
     
-    fileprivate func calculateGad7() {
-        totalScore = 0
-        for i in 0...allquestions.count - 2 {
-            totalScore += scores[i]
-        }
+    fileprivate func calculateSerevityGAD7() {
         switch totalScore  {
         case 0...4:
             severity = "no anxiety".localized
@@ -271,14 +295,38 @@ class QuestionViewController: UIViewController, DataDelegate {
         default:
             print("out of range error")
         }
-        if totalScore > 7 && scores[7] > 0 {
-            result = "Your probably have generalized anxiety disorder".localized + "(*)" + " with severity score of ".localized + "\(totalScore)/21" + " as " + severity + ".".localized + "\n" + "To determine the presence and type of anxiety disorder, further assessment by a mental health professional is recommended.".localized
+    }
+    
+    fileprivate func calculateGad7() {
+        totalScore = 0
+        for i in 0...allquestions.count - 2 {
+            totalScore += scores[i]
         }
-        if totalScore > 9 && scores[7] > 0 {
-            result = "Your probably have generalized anxiety disorder".localized + " with severity as " + severity + ".".localized + "\n" + "To determine the presence and type of anxiety disorder, further assessment by a mental health professional is recommended.".localized
-        } else {
-            result = "You may experience ".localized + severity + ".".localized
-            
+        numberOfUnanswered = 0
+        for index in 0...(allquestions.count - 2) {
+            let buttonPressed: Bool = isButtonPressed[index]
+            if buttonPressed == false {
+                numberOfUnanswered += 1
+            }
+        }
+        calculateSerevityGAD7()
+        if isFirstTimeUser != nil {
+            result = "Your total score is ".localized + "\(totalScore)" + " as ".localized + severity + ".".localized
+        }
+        
+        else if totalScore > 7 && totalScore < 10 && scores[7] > 0 {
+            result = "Your probably have anxiety disorder".localized + "(*)" + ", " + " with severity score of ".localized + "\(totalScore)" + " as ".localized + severity + ".".localized + "\n" + "To determine the presence and type of anxiety disorder, further assessment by a mental health professional is recommended.".localized
+        }
+        else if totalScore > 9 && scores[7] > 0 {
+            result = "Your probably have anxiety disorder".localized + ", " + " with severity score of ".localized + "\(totalScore)" + " as ".localized  + severity + ".".localized + "\n" + "To determine the presence and type of anxiety disorder, further assessment by a mental health professional is recommended.".localized
+        }
+        else {
+            result = "Your total score is ".localized + "\(totalScore)" + " as ".localized + severity + ".".localized
+        }
+        if numberOfUnanswered > 0 {
+            totalScore = totalScore*7/(7 - numberOfUnanswered)
+            calculateSerevityGAD7()
+            result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions. ".localized + "\n" + "Your prorated score is ".localized + "\(totalScore)" + " as ".localized + severity + "."
         }
     }
     
@@ -303,17 +351,19 @@ class QuestionViewController: UIViewController, DataDelegate {
             questionNum += 1
             questionLabel.text = allquestions[questionNum]
             changeTitle()
-//            progressBar.progress += Float(1/allquestions.count)
             setQuestionNum()
         }
         else {
             progressUpdate()
             checkScores()
             let alert = UIAlertController(title: "Result".localized, message: result, preferredStyle: .alert)
+            if numberOfUnanswered == 0 {
             alert.addAction(UIAlertAction(title: "Restart".localized, style: .default, handler: { (UIAlertAction) in self.startOver()}))
             alert.addAction(UIAlertAction(title: "Save".localized, style: .default, handler: { (UIAlertAction) in
-                UserDefaults.standard.set(true, forKey: self.cUser)
                 self.goResultView()}))
+            }else {
+                alert.addAction(UIAlertAction(title: "Ok".localized, style: .default, handler: nil))
+            }
             present(alert,animated: true, completion: nil)
         }
     }
@@ -341,6 +391,7 @@ class QuestionViewController: UIViewController, DataDelegate {
     func startOver() {
         questionNum = 0
         totalScore = 0
+        numberOfUnanswered = 0
         lastTotal = nil
         lastScores = nil
         fetchLastData()
@@ -350,7 +401,21 @@ class QuestionViewController: UIViewController, DataDelegate {
         changeTitle()
         progressBar.progress = 0.0
         setQuestionNum()
-        titleLabel.text = "Over the last 2 weeks, how often have you been bothered by any of the following problems?".localized
+        titleLabel.text = titleText
+    }
+    
+    fileprivate func saveData() {
+        UserDefaults.standard.set(true, forKey: cUser+Settings.questionSet)
+        let context = AppDelegate.viewContext
+        switch Settings.questionSet {
+        case "phq9":
+            let saveData = DataStored(context: context)
+            saveData.saveData(totalScore, scores, result, cUser)
+        case "gad7":
+            let saveData = DataStoredGad7(context: context)
+            saveData.saveData(totalScore, scores, result, cUser)
+        default: break
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -360,16 +425,7 @@ class QuestionViewController: UIViewController, DataDelegate {
             let vc = segue.destination as? ResultViewController
             dataDelegate = vc
             dataDelegate?.passResult(user: cUser)
-            let context = AppDelegate.viewContext
-            switch Settings.questionSet {
-            case "phq9":
-                let saveData = DataStored(context: context)
-                saveData.saveData(totalScore, scores, result, cUser)
-            case "gad7":
-                let saveData = DataStoredGad7(context: context)
-                saveData.saveData(totalScore, scores, result, cUser)
-            default: break
-            }
+            saveData()
         }
     }
     func goResultView() {
@@ -387,7 +443,7 @@ class QuestionViewController: UIViewController, DataDelegate {
         default:
             break
         }
-        print("alert note!")
+        
         let note = UIAlertController(title: "Hi, ".localized+"\(cUser)"+" , Note!".localized, message: alertMessage, preferredStyle: .alert)
         note.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: nil))
         if presentedViewController == nil {
@@ -398,15 +454,19 @@ class QuestionViewController: UIViewController, DataDelegate {
     
     func changeTitle() {
         UIView.setAnimationsEnabled(false)
+        let buttonNum = scores[questionNum]
+
         if questionNum == allquestions.count - 1 {
-            button1.setTitle("Not difficult at all".localized,for:UIControl.State.normal)
-            button2.setTitle("Somewhat difficult".localized,for:UIControl.State.normal)
-            button3.setTitle("Very difficult".localized,for:UIControl.State.normal)
-            button4.setTitle("Extremely difficult".localized,for:UIControl.State.normal)
-            
+            for button in buttons {
+                button.setTitle(buttonTitlesForLast[button.tag],for:UIControl.State.normal)
+            }
+            //mark the button that already pressed
+            if isButtonPressed[questionNum] {
+                buttons[buttonNum].setTitle(buttonTitlesForLast[buttonNum] + "⭕️".localized, for: UIControl.State.normal)
+            }
             var strProblems = ""
             for n in 0...allquestions.count - 2 {
-                    if scores[n] > 0 {
+                if scores[n] > 0 {
                         strProblems += "\(questionArray[n]); "
                         titleLabel.text = strProblems
                     }
@@ -414,18 +474,17 @@ class QuestionViewController: UIViewController, DataDelegate {
         }
             
         else {
-            button1.setTitle("Not at all".localized,for:UIControl.State.normal)
-            button2.setTitle("Several days".localized,for:UIControl.State.normal)
-            button3.setTitle("More than half the days".localized,for:UIControl.State.normal)
-            button4.setTitle("Nearly every day".localized,for:UIControl.State.normal)
+            titleLabel.text = titleText
+            for button in buttons {
+                button.setTitle(buttonTitles[button.tag],for:UIControl.State.normal)
+            }
+            //mark the button that already pressed
+            if isButtonPressed[questionNum] {
+                buttons[buttonNum].setTitle(buttonTitles[buttonNum] + "⭕️".localized, for: UIControl.State.normal)
+            }
         }
 
-        //mark the button that already pressed
-        let buttonNum = scores[questionNum]
-        let buttons = [button1, button2, button3, button4]
-        if isButtonPressed[questionNum] {
-            buttons[buttonNum]?.setTitle((buttons[buttonNum]?.currentTitle)! + "⭕️".localized, for: UIControl.State.normal)
-        }
+
         UIView.setAnimationsEnabled(true)
 
     }
@@ -440,7 +499,5 @@ class QuestionViewController: UIViewController, DataDelegate {
     func setQuestionNum() {
         qNum.text = "question: ".localized + "\(questionNum + 1)/\(allquestions.count)"
     }
-    
-
 }
 

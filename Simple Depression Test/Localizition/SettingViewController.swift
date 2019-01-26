@@ -14,6 +14,7 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
     }()
     
     let screeners = ["PHQ-9", "GAD-7"]
+    let subTitleForScreeners = ["A 9-item Depression Scale".localized, "A 7-item Anxiety Scale".localized]
     var languages = ["English".localized, "Spanish".localized, "Simplified Chinese".localized, "Traditional Chinese".localized]
     var shortLang = ["en", "es", "zh-Hans", "zh-Hant"]
     
@@ -125,17 +126,18 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
         switch indexPath.section {
         case 0:
             cell.textLabel?.text = languages[indexPath.row]
             cell.textLabel?.textAlignment = .left
-            cell.accessoryType = .disclosureIndicator
             cell.accessoryType = (indexPath.row == rowSelected) ? .checkmark : .none
         case 1:
-            cell.accessoryType = .disclosureIndicator
+            cell.detailTextLabel?.isEnabled = true
             cell.textLabel?.text = screeners[indexPath.row]
             cell.textLabel?.textAlignment = .left
+            cell.detailTextLabel?.text = subTitleForScreeners[indexPath.row]
+            cell.detailTextLabel?.textAlignment = .left
             cell.accessoryType = (indexPath.row == rowSelectedForScreener) ? .checkmark : .none
         case 2:
             cell.accessoryType = .disclosureIndicator
@@ -168,7 +170,12 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
             present(alert, animated: true, completion: nil)
         case 1:
             rowSelectedForScreener = indexPath.row
-            switchScreener()
+            let alert = UIAlertController(title: "Switch to".localized + " \(screeners[indexPath.row])", message: "Do you want to continue?".localized, preferredStyle: UIAlertController.Style.actionSheet)
+            alert.addAction(UIAlertAction(title: "Ok".localized, style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
+                self.switchScreener()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertAction.Style.default, handler: nil))
+            present(alert, animated: true, completion: nil)
         case 2:
             performSegue(withIdentifier: "toSettingVC", sender: self)
         case 3:
@@ -183,18 +190,12 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
         switch screener {
         case "PHQ-9":
             Settings.questionSet = "phq9"
-            QuestionBank.questions = QuestionBank.phq9
-            QuestionBank.questionArray = QuestionBank.phqArray
-            QuestionBank.radarArray = QuestionBank.phqArrayForRadar
-            QuestionBank.severityArray = QuestionBank.severityPHQ9
             QuestionBank.severityColors = QuestionBank.severityColorForPHQ9
+            Settings.reportFilename = "report"
         case "GAD-7":
             Settings.questionSet = "gad7"
-            QuestionBank.questions = QuestionBank.gad7
-            QuestionBank.questionArray = QuestionBank.gadArray
-            QuestionBank.radarArray = QuestionBank.gadArrayForRadar
-            QuestionBank.severityArray = QuestionBank.severityGAD7
             QuestionBank.severityColors = QuestionBank.severityColorForGAD7
+            Settings.reportFilename = "reportForGAD7"
 
         default:
             break
@@ -241,8 +242,8 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
     }
     
     func alert() {
-        let infoNote = UIAlertController(title: "About Simple Depression Test".localized, message:"Version 1.8 \n By Yu Zhang\n\n\nLast updated on 1/3/2019:\n- Multi-language selector without restart the app.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: https://timyuzhang.com/ ".localized, preferredStyle: UIAlertController.Style.alert)
-        infoNote.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        let infoNote = UIAlertController(title: "About Simple Depression Test".localized, message:"Version 1.9 \n By Yu Zhang\n\n\nLast updated on 1/24/2019:\n- Add GAD-9 anxiety screening tool.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: \nhttps://timyuzhang.com/ ".localized, preferredStyle: UIAlertController.Style.alert)
+        infoNote.addAction(UIAlertAction(title: "Ok".localized, style: .default, handler: nil))
         present(infoNote, animated: true, completion: nil)
     }
 }

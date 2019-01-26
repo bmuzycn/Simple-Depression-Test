@@ -9,7 +9,7 @@
 import UIKit
 
 class Settings {
-    static var textFont = UIFont.preferredFont(forTextStyle: .body)
+    static var textFont = UIFont.preferredFont(forTextStyle: .headline)
     static var headFont = UIFont.preferredFont(forTextStyle: .headline)
     static var titleFont = UIFont.preferredFont(forTextStyle: .title1)
     @available(iOS 11.0, *)
@@ -21,6 +21,7 @@ class Settings {
     static var colorForHeadView = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.9568627451, alpha: 1)
     static var bgImage = UIImage(named: "bgImage")
     static var questionSet = "phq9"
+    static var reportFilename = "report"
     
     static func setColor(_ value: Int) -> UIColor{
         switch Settings.questionSet {

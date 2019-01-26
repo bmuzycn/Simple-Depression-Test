@@ -68,6 +68,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         view.backgroundColor = Settings.bgColorForTextField
         setBackGroundImage()
         dataUpdate()
+        userID.placeholder = "Enter a username".localized
     }
     
     func dataUpdate() {
@@ -151,7 +152,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
     @IBAction func newUserButton(_ sender: UIButton) {
         let alert = UIAlertController(title: "New User".localized, message: "Enter a name".localized, preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.placeholder = "Enter a username"
+            textField.placeholder = "Enter a username".localized
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (finished) in
             let textField = alert.textFields![0]// Force unwrapping because we know it exists.

@@ -266,20 +266,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         performSegue(withIdentifier: "unwindToChartView", sender: self)
 
 }
-    
-//    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-//        var index = indexPath.row
-//        for row in 0..<indexPath.section {
-//            index += expandableRecords[row].records.count
-//        }
-//        indexForFetch = index
-//        let indexSelected = dateArray.count - index - 1
-//        scoresSelected = scoresArray[indexSelected]
-//        totalScore = totalArray[indexSelected]
-//        dateSelected = dateArray[indexSelected]
-//        resultSelected = resultArray[indexSelected]
-//        performSegue(withIdentifier: "unwindToChartView", sender: self)
-//    }
 
     //method to delete a row
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

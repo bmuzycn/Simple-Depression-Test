@@ -34,9 +34,9 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
             
     }
     // show indicator
-//    func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
-//        loadSpinner.startAnimating()
-//    }
+    func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
+        loadSpinner.startAnimating()
+    }
     // hide indicator
     func webView(_ reportView: WKWebView, didFinish navigation: WKNavigation!) {
         loadSpinner.stopAnimating()
@@ -200,8 +200,13 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     }
     
     @IBAction func backButton(_ sender: UIBarButtonItem) {
-        FileManager.default.clearTmpDirectory()
-        performSegue(withIdentifier: "unwindToResultView", sender: self)
+        if reportView.canGoBack {
+            reportView.goBack()
+        }
+        else {
+            FileManager.default.clearTmpDirectory()
+            performSegue(withIdentifier: "unwindToResultView", sender: self)
+        }
     }
     @IBAction func saveToPDF(_ sender: Any) {
         reportComposer.createPDF(html: htmlReport, filename: "reportPHQ-9", formatter: reportView.viewPrintFormatter())

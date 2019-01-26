@@ -4,7 +4,7 @@
         <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="result" optional="YES" attributeType="String" customClassName="[String]" syncable="YES"/>
         <attribute name="scores" optional="YES" attributeType="Transformable" customClassName="[Int]" syncable="YES"/>
-        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" customClassName="Any" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="data" inverseEntity="User" syncable="YES"/>
     </entity>
@@ -12,7 +12,7 @@
         <attribute name="dateTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="result" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scores" optional="YES" attributeType="Transformable" customClassName="[Int]" syncable="YES"/>
-        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" customClassName="Any" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="dataGad7" inverseEntity="User" syncable="YES"/>
     </entity>
