@@ -274,7 +274,6 @@ class QuestionViewController: UIViewController, DataDelegate {
 
         if numberOfUnanswered > 2 {
             result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions which cause failed to calculate the total score. Please review and complete all of the items.".localized
-            totalScore = -1
         }else if numberOfUnanswered > 0 {
             totalScore = totalScore*9/(9 - numberOfUnanswered)
             calculateSeverityPHQ9()
@@ -323,10 +322,12 @@ class QuestionViewController: UIViewController, DataDelegate {
         else {
             result = "Your total score is ".localized + "\(totalScore)" + " as ".localized + severity + ".".localized
         }
-        if numberOfUnanswered > 0 {
+        if numberOfUnanswered > 0 && numberOfUnanswered < 3  {
             totalScore = totalScore*7/(7 - numberOfUnanswered)
             calculateSerevityGAD7()
             result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions. ".localized + "\n" + "Your prorated score is ".localized + "\(totalScore)" + " as ".localized + severity + "."
+        } else {
+            result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions which cause failed to calculate the total score. Please review and complete all of the items.".localized
         }
     }
     
