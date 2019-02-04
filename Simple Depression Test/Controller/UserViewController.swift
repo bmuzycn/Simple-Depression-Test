@@ -39,6 +39,8 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
+        
+        userID.clearButtonMode = .whileEditing
     }
     
     fileprivate func setBackGroundImage() {
@@ -153,6 +155,7 @@ class UserViewController: UIViewController, UITextFieldDelegate{
         let alert = UIAlertController(title: "New User".localized, message: "Enter a name".localized, preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.placeholder = "Enter a username".localized
+            textField.clearButtonMode = .whileEditing
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (finished) in
             let textField = alert.textFields![0]// Force unwrapping because we know it exists.

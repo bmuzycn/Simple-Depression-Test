@@ -21,6 +21,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     var result = ""
     var str = ""
     var user = ""
+    @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var loadSpinner: UIActivityIndicatorView!
     @IBOutlet weak var webViewContainer: UIView!
     var reportView: WKWebView!
@@ -28,19 +29,37 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     var reportComposer: ReportComposer!
     var htmlReport = ""
     
+    var progressLabel: UILabel = {
+        let label = UILabel(frame: CGRect(origin: .zero, size: CGSize(width: 20, height: 20)))
+        label.textColor = #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1)
+        return label
+    }()
+    
     @IBAction func unwindSegueToReport(unwindSegue: UIStoryboardSegue) {
         print("Welcome to report")
 
             
     }
-    // show indicator
+    // MARK: - show indicator
     func webView(_ reportView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
         loadSpinner.startAnimating()
+        progressLabel.isHidden = false
     }
     // hide indicator
     func webView(_ reportView: WKWebView, didFinish navigation: WKNavigation!) {
         loadSpinner.stopAnimating()
         loadSpinner.hidesWhenStopped = true
+        progressLabel.isHidden = true
+
+//        backButton.isEnabled = reportView.canGoBack
+    }
+    
+    //
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "estimatedProgress" {
+            print(Float(reportView.estimatedProgress))
+            progressLabel.text = String(Int(reportView.estimatedProgress * 100)) + "%"
+        }
     }
     
     func receiveData() {
@@ -58,10 +77,11 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
             } else {
                 chartVC.saveImage()
                 self.user = chartVC.currentUser
-                self.date = chartVC.dateArray[chartVC.scoreArrayNum]
-                self.scores = chartVC.scoreArray[chartVC.scoreArrayNum]
-                self.total = chartVC.totalScores[chartVC.scoreArrayNum]
-                self.result = chartVC.results[chartVC.scoreArrayNum]
+                let last = chartVC.dateArray.count - 1
+                self.date = chartVC.dateArray[chartVC.scoreArrayNum ?? last]
+                self.scores = chartVC.scoreArray[chartVC.scoreArrayNum ?? last]
+                self.total = chartVC.totalScores[chartVC.scoreArrayNum ?? last]
+                self.result = chartVC.results[chartVC.scoreArrayNum ?? last]
                 print("data passed from chartView to reportVC")
             }
         }
@@ -124,7 +144,9 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         print(date)
 
         setupReportView()
+        reportView.navigationDelegate = self
 
+        reportView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
 
     }
 
@@ -136,18 +158,23 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
         removeCache()
     }
     
+    override func loadView() {
+        super.loadView()
+            view.addSubview(progressLabel)
+            progressLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([progressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                                         progressLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40)])
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         //add swipe gesture
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.handleGesture(gesture:)))
         swipeRight.direction = .right
         self.view.addGestureRecognizer(swipeRight)
         
-
-        
-
     }
     
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
@@ -198,16 +225,16 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
             removeCache()
         }
     }
-    
+    // MARK: - navigation method enable back button
     @IBAction func backButton(_ sender: UIBarButtonItem) {
         if reportView.canGoBack {
             reportView.goBack()
         }
         else {
-            FileManager.default.clearTmpDirectory()
-            performSegue(withIdentifier: "unwindToResultView", sender: self)
+            reportView.loadHTMLString(htmlReport, baseURL: nil)
         }
     }
+    
     @IBAction func saveToPDF(_ sender: Any) {
         reportComposer.createPDF(html: htmlReport, filename: "reportPHQ-9", formatter: reportView.viewPrintFormatter())
         showOptionsAlert()

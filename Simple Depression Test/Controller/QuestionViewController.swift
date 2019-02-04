@@ -264,7 +264,7 @@ class QuestionViewController: UIViewController, DataDelegate {
         }
         
         if scores[8] > 0  && (isFirstTimeUser == nil) {
-            result = result + "\n" + "(For newly detection with suicide or self-injury risk, you need to see a doctor as soon as possible)".localized
+            result = result + "\n" + "(For newly detection of suicide or self-injury risk, you need to see a doctor as soon as possible)".localized
         }
         
         if let lastSuicideScore = lastScores?[8], scores[8] > lastSuicideScore {
@@ -326,7 +326,7 @@ class QuestionViewController: UIViewController, DataDelegate {
             totalScore = totalScore*7/(7 - numberOfUnanswered)
             calculateSerevityGAD7()
             result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions. ".localized + "\n" + "Your prorated score is ".localized + "\(totalScore)" + " as ".localized + severity + "."
-        } else {
+        } else if numberOfUnanswered > 2 {
             result = "You have ".localized + "\(numberOfUnanswered)" + " unanswered questions which cause failed to calculate the total score. Please review and complete all of the items.".localized
         }
     }

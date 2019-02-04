@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="localizable" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="r7H-rM-SDR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="r7H-rM-SDR">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -178,9 +178,15 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="WyC-ic-rLo"/>
                                 </constraints>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="r4N-3t-m1x">
+                                    <rect key="frame" x="0.0" y="0.0" width="278" height="56"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cell" textLabel="70V-Ce-tH8" detailTextLabel="Zfw-n4-CJv" style="IBUITableViewCellStyleValue1" id="zCm-2r-wNg">
-                                        <rect key="frame" x="0.0" y="28" width="278" height="44"/>
+                                        <rect key="frame" x="0.0" y="84" width="278" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zCm-2r-wNg" id="Htq-5Y-ddf">
                                             <rect key="frame" x="0.0" y="0.0" width="245" height="43.5"/>
@@ -284,6 +290,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="r4N-3t-m1x" id="30q-wl-KoC"/>
                         <outlet property="tbView" destination="fto-wR-7ps" id="OO4-PI-MUg"/>
                         <outlet property="titleBar" destination="ifm-Aj-Xd9" id="pAT-pu-aYG"/>
                         <segue destination="9q2-nD-Ylz" kind="unwind" identifier="unwindToChartView" unwindAction="unwindSegueToResultViewWithUnwindSegue:" id="CRX-HU-xvO"/>
@@ -822,7 +829,7 @@
                                 </variation>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hwu-zb-Vwv">
-                                <rect key="frame" x="20" y="468" width="162" height="61"/>
+                                <rect key="frame" x="20" y="419" width="162" height="61"/>
                                 <color key="backgroundColor" red="0.38823529411764707" green="0.85490196078431369" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="uwZ-qU-4up"/>
@@ -852,7 +859,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="BIR-nE-FLV">
-                                <rect key="frame" x="193" y="468" width="162" height="61"/>
+                                <rect key="frame" x="193" y="419" width="162" height="61"/>
                                 <color key="backgroundColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <size key="titleShadowOffset" width="0.5" height="0.5"/>
@@ -879,7 +886,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="2u5-8L-vDL">
-                                <rect key="frame" x="20" y="556" width="162" height="61"/>
+                                <rect key="frame" x="20" y="507" width="162" height="61"/>
                                 <color key="backgroundColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="3Gc-mg-aeT"/>
@@ -909,7 +916,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="8tz-Mc-7UT">
-                                <rect key="frame" x="193" y="556" width="162" height="61"/>
+                                <rect key="frame" x="193" y="507" width="162" height="61"/>
                                 <color key="backgroundColor" name="systemPurpleColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <size key="titleShadowOffset" width="0.5" height="0.5"/>
@@ -950,15 +957,20 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eU6-xA-tmc">
-                                <rect key="frame" x="20" y="637" width="335" height="10"/>
+                                <rect key="frame" x="20" y="588" width="335" height="10"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="CyQ-Bs-aMs"/>
                                 </constraints>
                                 <color key="progressTintColor" name="systemYellowColor" catalog="System" colorSpace="catalog"/>
                                 <color key="trackTintColor" name="selectedTextBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </progressView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" editable="NO" adjustsFontForContentSizeCategory="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o8T-iv-oaE">
-                                <rect key="frame" x="20" y="254.5" width="335" height="168.5"/>
+                                <rect key="frame" x="20" y="254.5" width="335" height="119.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="H8e-qF-Dz9"/>
@@ -1128,7 +1140,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-FI-1vA" userLabel="lrbuttons">
-                                <rect key="frame" x="137.5" y="583" width="100" height="30"/>
+                                <rect key="frame" x="137.5" y="534" width="100" height="30"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-nC-QJz" userLabel="last25">
                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -1147,7 +1159,7 @@
                                 </subviews>
                             </stackView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dqv-ER-SeV">
-                                <rect key="frame" x="110" y="621" width="155" height="29"/>
+                                <rect key="frame" x="110" y="572" width="155" height="29"/>
                                 <viewLayoutGuide key="safeArea" id="A8U-GM-uv7"/>
                                 <segments>
                                     <segment title="Bar Chart"/>
@@ -1158,7 +1170,7 @@
                                 </connections>
                             </segmentedControl>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lhm-C0-J0i" userLabel="numControl">
-                                <rect key="frame" x="261" y="593" width="94" height="67.5"/>
+                                <rect key="frame" x="261" y="544" width="94" height="67.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B0k-Mf-aYY">
                                         <rect key="frame" x="0.0" y="0.0" width="94" height="24"/>
@@ -1186,13 +1198,13 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="MAI-9o-0gf" userLabel="ContainerView">
-                                <rect key="frame" x="18" y="114" width="339" height="473"/>
+                                <rect key="frame" x="18" y="114" width="339" height="424"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="gZU-jx-e74" userLabel="RadarView" customClass="RadarChartView" customModule="Charts">
-                                        <rect key="frame" x="0.0" y="0.0" width="339" height="236"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="339" height="211.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="NjO-uW-faP">
-                                                <rect key="frame" x="106" y="206" width="127" height="30"/>
+                                                <rect key="frame" x="106" y="181.5" width="127" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xt8-2C-eaR">
                                                         <rect key="frame" x="0.0" y="0.0" width="53.5" height="30"/>
@@ -1219,14 +1231,14 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dbk-nn-cbE">
-                                        <rect key="frame" x="0.0" y="237" width="339" height="236"/>
+                                        <rect key="frame" x="0.0" y="212.5" width="339" height="211.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uw2-Ub-OyQ" userLabel="LineView" customClass="LineChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="0.0" width="339" height="236"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="339" height="211.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="uAJ-kf-tPh" userLabel="BarChartView" customClass="BarChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="0.0" width="339" height="236"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="339" height="211.5"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
@@ -1348,6 +1360,7 @@
                     <connections>
                         <outlet property="barView" destination="uAJ-kf-tPh" id="HhH-mq-GFj"/>
                         <outlet property="dateLabel" destination="QTG-VO-6z0" id="pT2-Ld-ASy"/>
+                        <outlet property="exportButton" destination="nSh-r5-spV" id="506-Ac-P9N"/>
                         <outlet property="last25" destination="YDb-nC-QJz" id="TOa-bq-wu6"/>
                         <outlet property="lineView" destination="uw2-Ub-OyQ" id="ExA-C5-QbE"/>
                         <outlet property="menuView" destination="qk5-Ab-1j3" id="OTp-lj-Hct"/>
@@ -1385,13 +1398,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lmz-U5-5T4">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
                                 <viewLayoutGuide key="safeArea" id="wc6-cU-qfb"/>
                                 <items>
                                     <navigationItem title="Report" id="X6E-rg-ld4">
                                         <barButtonItem key="leftBarButtonItem" title="&lt;Back" id="2Rb-64-2dy">
                                             <connections>
-                                                <segue destination="HWq-ax-WDv" kind="unwind" identifier="unwindToResultView" unwindAction="unwindSegueToResultViewWithUnwindSegue:" id="wYA-bc-dRC"/>
+                                                <action selector="backButton:" destination="nCM-ru-er2" id="3XP-KU-JIG"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="CAx-M0-QNG">
@@ -1403,7 +1416,7 @@
                                 </items>
                             </navigationBar>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dcN-8T-Jay">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="108" width="375" height="559"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="mKS-cM-Tff">
@@ -1426,12 +1439,14 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Report" image="report" landscapeImage="report" selectedImage="report" id="Cv4-Zf-PMS"/>
                     <connections>
+                        <outlet property="backButton" destination="2Rb-64-2dy" id="1F1-IO-PUX"/>
                         <outlet property="loadSpinner" destination="mKS-cM-Tff" id="DBa-8X-ON7"/>
                         <outlet property="webViewContainer" destination="dcN-8T-Jay" id="NqQ-uq-mT5"/>
+                        <segue destination="hfJ-Jg-ycC" kind="unwind" identifier="unwindToResultView" unwindAction="unwindSegueToResultViewWithUnwindSegue:" id="AgE-RE-ycO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cYw-c9-qkq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="HWq-ax-WDv" userLabel="Exit" sceneMemberID="exit"/>
+                <exit id="hfJ-Jg-ycC" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2769" y="18"/>
         </scene>
@@ -1506,8 +1521,8 @@
         <image name="settings" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="G2c-V5-ikA"/>
-        <segue reference="H9R-YK-Ueq"/>
-        <segue reference="AGb-ZI-Z8V"/>
+        <segue reference="OMp-gp-HFA"/>
+        <segue reference="bCE-9s-EjP"/>
+        <segue reference="Jtx-RO-ZxW"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -23,7 +23,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     var dateArray = [String]()
     var date = ""
     var scoreArray = [[Int]]() //for scores of each question
-    var scoreArrayNum = 0
+    var scoreArrayNum: Int?
     var numberOfFetch : Int?
     var flag = true //if the dataSet > fetchLimit
     var isDataSentFromRecordsMenu = false
@@ -43,6 +43,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     @IBOutlet weak var radarView: RadarChartView!
     @IBOutlet weak var barView: BarChartView!
     @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet weak var exportButton: UIButton!
     
     
     weak var reportDelegate: ReportDelegate?
@@ -67,7 +68,6 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         switch Settings.questionSet {
         case "phq9":
             let data = DataStored(context: context)
-            numberOfFetch = numberOfFetch ?? 0
             data.fetchData(currentUser,numberOfFetch ?? 0)
             flag = data.flag
             radarArray = QuestionBank().radarArray
@@ -75,16 +75,17 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                 dataClear()
                 
             }else {
-                
                 //set vars for receiving data
-                totalScores = data.totalArray
-                dateArray = data.dateArray
-                scoreArray = data.scoresArray
-                results = data.resultArray
+                if isDataSentFromRecordsMenu == false || numberOfFetch != nil {
+                    totalScores = data.totalArray
+                    dateArray = data.dateArray
+                    scoreArray = data.scoresArray
+                    results = data.resultArray
+                }
+
             }
         case "gad7":
             let data = DataStoredGad7(context: context)
-            numberOfFetch = numberOfFetch ?? 0
             data.fetchData(currentUser,numberOfFetch ?? 0)
             flag = data.flag
             radarArray = QuestionBank().radarArray
@@ -92,23 +93,22 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
                 dataClear()
                 
             }else {
-                
-                //set vars for receiving data
-                totalScores = data.totalArray
-                dateArray = data.dateArray
-                scoreArray = data.scoresArray
-                results = data.resultArray
+                if isDataSentFromRecordsMenu == false || numberOfFetch != nil {
+                    //set vars for receiving data
+                    totalScores = data.totalArray
+                    dateArray = data.dateArray
+                    scoreArray = data.scoresArray
+                    results = data.resultArray
+                }
             }
         default:
             break
         }
 
-            scoreArrayNum = scoreArray.count - 1
-            
             //set radar chart
-            if isDataSentFromRecordsMenu == false && scoreArray.count > 0 {
-                dateLabel.text = " Your Score:".localized + String(totalScores[scoreArrayNum])
-                radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
+            if isDataSentFromRecordsMenu == false && totalScores.count > 0 {
+                dateLabel.text = " Your Score:".localized + String(totalScores[totalScores.count - 1])
+                radarView.setRadarData(radarArray, scoreArray[totalScores.count - 1], Settings.questionSet)
             }
             //set bar chart
             barView.setBarChartData(xValues: dateArray, yValues: totalScores, label: "Scores Records")
@@ -131,7 +131,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
             //create a interactive chart delegate
             self.barView.delegate = self
             self.radarView.delegate = self
-            
+        
+        if numberOfFetch == nil {
+            numberOfFetch = 0
+        }
     }
     
     fileprivate func setBackGroundImage() {
@@ -168,9 +171,9 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+//        NotificationCenter.default.removeObserver(self)
         isDataSentFromRecordsMenu = false
-        
+        scoreArrayNum = nil
     }
     
     override func viewDidLoad() {
@@ -240,11 +243,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
     //Mark: buttons for radarchart
     @IBAction func prevButton(_ sender: UIButton) {
-        if scoreArrayNum > 0 && scoreArrayNum < dateArray.count{
-            scoreArrayNum -= 1
-            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
+        if scoreArrayNum! > 0 && scoreArrayNum! < dateArray.count{
+            scoreArrayNum! -= 1
+            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum!], Settings.questionSet)
             nextButton.isHidden = false
-            dateLabel.text = "\(dateArray[scoreArrayNum])" + " Score:" + "\(totalScores[scoreArrayNum])"
+            dateLabel.text = "\(dateArray[scoreArrayNum!])" + " Score:" + "\(totalScores[scoreArrayNum!])"
 
         }else{
             prevButton.isHidden = true
@@ -255,11 +258,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     
     @IBAction func nextButton(_ sender: UIButton) {
-        if scoreArrayNum < scoreArray.count - 1 {
-            scoreArrayNum += 1
-            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum], Settings.questionSet)
+        if scoreArrayNum! < scoreArray.count - 1 {
+            scoreArrayNum! += 1
+            radarView.setRadarData(radarArray, scoreArray[scoreArrayNum!], Settings.questionSet)
             prevButton.isHidden = false
-            dateLabel.text = "\(dateArray[scoreArrayNum]) Score:\(totalScores[scoreArrayNum])"
+            dateLabel.text = "\(dateArray[scoreArrayNum!]) Score:\(totalScores[scoreArrayNum!])"
         }
         else {
             nextButton.isHidden = true
@@ -271,10 +274,11 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     //buttons for barchart
     @IBAction func lastViewButton(_ sender: UIButton) {
         // if data.count < 25
+        
         if flag == false {
             last25.isHidden = true
             next25.isHidden = false
-        } else {
+        }else {
             numberOfFetch! += 1
             dataSetting()
             next25.isHidden = false
@@ -365,14 +369,14 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         print("chartValueSelected y=\(entry.y) x=\(entry.x)")
 
         scoreArrayNum = Int(entry.x)
-        scores = scoreArray[scoreArrayNum]
+        scores = scoreArray[scoreArrayNum!]
         radarView.setRadarData(radarArray, scores, Settings.questionSet)
-        date = dateArray[scoreArrayNum]
-        totalScore = totalScores[scoreArrayNum]
+        date = dateArray[scoreArrayNum!]
+        totalScore = totalScores[scoreArrayNum!]
         dateLabel.text = "\(date)"+" Your Score:".localized+"\(totalScore)"
         
         //add notificationCenter
-        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
+//        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
         saveImage()
     }
 }
@@ -493,7 +497,7 @@ extension BarChartView {
         chartData.setValueFormatter(formatter)
         var entries: [LegendEntry] = []
         for index in QuestionBank().severityArray.indices {
-            let entry = LegendEntry.init(label: QuestionBank().severityArray[index], form: Legend.Form.circle, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[index])
+            let entry = LegendEntry.init(label: QuestionBank().severityArray[QuestionBank().severityArray.count - index - 1], form: Legend.Form.square, formSize: 5, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: QuestionBank.severityColors[QuestionBank.severityColors.count - index - 1])
             entries.append(entry)
         }
 
@@ -677,6 +681,7 @@ extension ResultViewController {
             present(vc, animated: true, completion: nil)
             if let popOver = vc.popoverPresentationController {
                 popOver.sourceView = self.view
+                popOver.barButtonItem = navigationItem.rightBarButtonItem
                 //popOver.sourceRect =
                 //popOver.barButtonItem
             }

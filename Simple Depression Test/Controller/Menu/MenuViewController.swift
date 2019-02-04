@@ -19,7 +19,7 @@ struct Expandabe {
     var records: [Record]
 }
 
-class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     let fetchLimit = DataStored.fetchLimit
     var interactor:Interactor? = nil
@@ -28,12 +28,20 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     var resultArray = [String]()
     var dateArray = [String]()
     var totalArray = [Int]()
+    var scoresSearchArray = [[Int]]()
+    var resultSearchArray = [String]()
+    var dateSearchArray = [String]()
+    var totalSearchArray = [Int]()
+    
     var currentUser = ""
     
     var records = [Record]() //unsorted from fetch results
     var groupRecords = [String:[Record]]()
     var expandableRecords = [Expandabe]() //sorted results
+    var backupResultArray: [Expandabe] = []
 
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tbView: UITableView!
     @IBOutlet weak var titleBar: UINavigationBar!
     @IBAction func handleGesture(_ sender: UIScreenEdgePanGestureRecognizer) {
@@ -67,7 +75,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
     }
-    //Mark: sortting data method need to be improved
+    
+    // MARK: - prepare the menuVC
     fileprivate func sortData() {
         groupRecords = Dictionary(grouping: records) { (element) -> String in
             return element.date
@@ -80,7 +89,27 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             let recordForExpandable = Expandabe(isExpanded: false, records: values ?? [])
             expandableRecords.append(recordForExpandable)
         }
+        backupResultArray = expandableRecords
     }
+    
+    func setLabel() {
+        let title = "\(currentUser)"+"'s Records".localized
+        let leftBarButton = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(dismissMenu))
+        let rightBarButton = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(dismissMenu))
+        
+        titleBar.topItem?.setLeftBarButton(leftBarButton, animated: false)
+        titleBar.topItem?.setRightBarButton(rightBarButton, animated: false)
+    }
+    
+    @objc func dismissMenu() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -99,31 +128,75 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         tbView.delegate = self
         tbView.dataSource = self
+        searchBar.delegate = self
+        searchBar.backgroundImage = UIImage()
+        searchBar.tintColor = UIColor.clear
+        searchBar.backgroundColor = UIColor.clear
+        searchBar.placeholder = "YYYY-MM-DD"
         view.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
         tbView.backgroundColor = Settings.bgColorForMenuView
 
     }
     
-    func setLabel() {
-        let title = "\(currentUser)"+"'s Records".localized
-        let leftBarButton = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(dismissMenu))
-        let rightBarButton = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(dismissMenu))
-
-        titleBar.topItem?.setLeftBarButton(leftBarButton, animated: false)
-        titleBar.topItem?.setRightBarButton(rightBarButton, animated: false)
-    }
-
-    @objc func dismissMenu() {
-        dismiss(animated: true, completion: nil)
+    
+    // MARK: - searchBar delegete method
+    fileprivate func searchDate(_ searchBar: UISearchBar) {
+        dateSearchArray.removeAll()
+        totalSearchArray.removeAll()
+        scoresSearchArray.removeAll()
+        resultSearchArray.removeAll()
+        expandableRecords = backupResultArray
+        var searchArray: [Expandabe] = []
+        if let searchKey = searchBar.text, expandableRecords.isEmpty != true {
+            for item in expandableRecords {
+                if item.records.first!.date.containsIgnoringCase(find:searchKey) {
+                    searchArray.append(item)
+                }
+            }
+            for index in dateArray.indices {
+                if dateArray[index].containsIgnoringCase(find:searchKey){
+                    dateSearchArray.append(dateArray[index])
+                    totalSearchArray.append(totalArray[index])
+                    scoresSearchArray.append(scoresArray[index])
+                    resultSearchArray.append(resultArray[index])
+                }
+            }
+            expandableRecords = searchArray
+            tbView.reloadData()
+        }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchDate(searchBar)
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            expandableRecords = backupResultArray
+            dateSearchArray = dateArray
+            totalSearchArray = totalArray
+            scoresSearchArray = scoresArray
+            resultSearchArray = resultArray
+            tbView.reloadData()
+            searchBar.resignFirstResponder()
+        } else {
+            searchDate(searchBar)
+        }
+        
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        expandableRecords = backupResultArray
+        dateSearchArray = dateArray
+        totalSearchArray = totalArray
+        scoresSearchArray = scoresArray
+        resultSearchArray = resultArray
+        tbView.reloadData()
+    }
+    
 
 
-    //Mark: get the user's records
+    // MARK: -  get the user's records
     func fetchData(_ user: String) {
         records.removeAll()
         resultArray.removeAll()
@@ -183,6 +256,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         default: break
         }
+        dateSearchArray = dateArray
+        totalSearchArray = totalArray
+        scoresSearchArray = scoresArray
+        resultSearchArray = resultArray
     }
     //delete data
     func deleteData(_ user: String, _ x: Int) {
@@ -221,7 +298,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Table view data source
     
     func numberOfSections(in tableView: UITableView) -> Int {
-
         return expandableRecords.count
     }
     
@@ -257,12 +333,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         for row in 0..<indexPath.section {
             index += expandableRecords[row].records.count
         }
-        indexForFetch = index
-        let indexSelected = records.count - index - 1
-        scoresSelected = scoresArray[indexSelected]
-        totalScore = totalArray[indexSelected]
-        dateSelected = dateArray[indexSelected]
-        resultSelected = resultArray[indexSelected]
+        indexForFetch = index //selected row in table
+        let indexSelected = totalSearchArray.count - index - 1
+        scoresSelected = scoresSearchArray[indexSelected]
+        totalScore = totalSearchArray[indexSelected]
+        dateSelected = dateSearchArray[indexSelected]
+        resultSelected = resultSearchArray[indexSelected]
         performSegue(withIdentifier: "unwindToChartView", sender: self)
 
 }
@@ -361,16 +437,40 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Pass the selected object to the new view controller.
         if segue.identifier == "unwindToChartView" {
             let chartVC = segue.destination as! ResultViewController
+            if totalSearchArray.count > 0 && totalSearchArray.count < totalArray.count {
             chartVC.isDataSentFromRecordsMenu = true
-            chartVC.radarView.setRadarData(chartVC.radarArray, scoresSelected, "PHQ-9")
+            chartVC.radarView.setRadarData(chartVC.radarArray, scoresSelected, Settings.questionSet)
             chartVC.dateLabel.text = dateSelected + "\n" + " Your Score:".localized + String(totalScore)
+            chartVC.dateArray = dateSearchArray
+            chartVC.totalScores = totalSearchArray
+            chartVC.results = resultSearchArray
+            chartVC.scoreArray = scoresSearchArray
+            chartVC.numberOfFetch = nil
+                // for report use
             chartVC.date = dateSelected
             chartVC.result = resultSelected
             chartVC.scores = scoresSelected
             chartVC.totalScore = totalScore
-            chartVC.numberOfFetch = max(Int(floor(Float(indexForFetch/fetchLimit))) , 0)
-            let xValue = (records.count - fetchLimit*chartVC.numberOfFetch!) < fetchLimit ? Double(records.count - indexForFetch - 1) : Double(fetchLimit - (indexForFetch - fetchLimit*chartVC.numberOfFetch!) - 1)
+            chartVC.scoreArrayNum = totalSearchArray.count - indexForFetch - 1
+            let xValue = Double(totalSearchArray.count - indexForFetch - 1)
             chartVC.barView.highlightValue(x: xValue, dataSetIndex: 0, stackIndex: 0)
+            } else if totalSearchArray.count == totalArray.count {
+                chartVC.isDataSentFromRecordsMenu = true
+                let numberOfFetch = max(Int(floor(Float(indexForFetch/fetchLimit))) , 0)
+                chartVC.numberOfFetch = numberOfFetch
+                let xValue = (totalSearchArray.count - indexForFetch - 1) < totalSearchArray.count - fetchLimit*Int(totalSearchArray.count / fetchLimit) ? Double(totalSearchArray.count - indexForFetch - 1) : Double(fetchLimit - (indexForFetch - fetchLimit*numberOfFetch) - 1)
+                chartVC.scoreArrayNum = Int(xValue)
+                chartVC.barView.highlightValue(x: xValue, dataSetIndex: 0, stackIndex: 0)
+                chartVC.radarView.setRadarData(chartVC.radarArray, scoresSelected, Settings.questionSet)
+                chartVC.dateLabel.text = dateSelected + "\n" + " Your Score:".localized + String(totalScore)
+                chartVC.date = dateSelected
+                chartVC.result = resultSelected
+                chartVC.scores = scoresSelected
+                chartVC.totalScore = totalScore
+                
+            } else {
+                chartVC.isDataSentFromRecordsMenu = false
+            }
             
         }
     }

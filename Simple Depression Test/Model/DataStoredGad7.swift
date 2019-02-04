@@ -18,7 +18,6 @@ class DataStoredGad7: NSManagedObject {
     var flag = Bool() //to see if the data size >fetchLimit
     var userflag = false
     var count = Int()
-    static var fetchLimit = 15
     let context = AppDelegate.viewContext
 
     func saveData(_ totalScore: Int, _ scores: [Int],_ result: String,_ user: String){
@@ -64,18 +63,18 @@ class DataStoredGad7: NSManagedObject {
             let data = try context.fetch(request)
             self.count = data.count
             if self.count != 0 {
-                if data.count - DataStoredGad7.fetchLimit*n == 0 {
+                if data.count - DataStored.fetchLimit*n == 0 {
                     startNum = 0
-                    endNum = DataStoredGad7.fetchLimit - 1
+                    endNum = DataStored.fetchLimit - 1
                     flag = false
                 }
-                else if (data.count - DataStoredGad7.fetchLimit*n) > 0 && (data.count - DataStoredGad7.fetchLimit*n) <= DataStoredGad7.fetchLimit  {
+                else if (data.count - DataStored.fetchLimit*n) > 0 && (data.count - DataStored.fetchLimit*n) <= DataStored.fetchLimit  {
                     startNum = 0
-                    endNum = data.count - DataStoredGad7.fetchLimit*n - 1
+                    endNum = data.count - DataStored.fetchLimit*n - 1
                     flag = false
-                }else if (data.count - DataStoredGad7.fetchLimit*n) > DataStored.fetchLimit {
-                    startNum = data.count - DataStoredGad7.fetchLimit*(n+1)
-                    endNum = data.count - DataStoredGad7.fetchLimit*n - 1
+                }else if (data.count - DataStored.fetchLimit*n) > DataStored.fetchLimit {
+                    startNum = data.count - DataStored.fetchLimit*(n+1)
+                    endNum = data.count - DataStored.fetchLimit*n - 1
                     flag = true
                 }
                 else {
@@ -107,19 +106,19 @@ class DataStoredGad7: NSManagedObject {
     }
     
     func deleteData(_ user: String, _ n: Int, _ x: Int) {
-        let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStored")
+        let request = NSFetchRequest<DataStoredGad7>(entityName: "DataStoredGad7")
         request.predicate = NSPredicate(format: "userName = %@", user)
         do {
             let data = try context.fetch(request)
             if data.count == 0 {
                 self.count = 0
-            } else if data.count - DataStoredGad7.fetchLimit*n < DataStoredGad7.fetchLimit {
+            } else if data.count - DataStored.fetchLimit*n < DataStored.fetchLimit {
                 print("data\(x) will be deleted")
                 context.delete(data[x])
             }else {
-                print("data\(data.count-DataStoredGad7.fetchLimit*(n+1)+x) will be deleted")
+                print("data\(data.count-DataStored.fetchLimit*(n+1)+x) will be deleted")
                 
-                context.delete(data[data.count-DataStoredGad7.fetchLimit*(n+1)+x])
+                context.delete(data[data.count-DataStored.fetchLimit*(n+1)+x])
             }
             try context.save()
             

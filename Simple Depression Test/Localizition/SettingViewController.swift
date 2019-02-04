@@ -175,6 +175,8 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
                 self.switchScreener()
             }))
             alert.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertAction.Style.default, handler: nil))
+            alert.popoverPresentationController?.sourceView = view
+            alert.popoverPresentationController?.sourceRect = (tableView.cellForRow(at: indexPath)?.frame)!
             present(alert, animated: true, completion: nil)
         case 2:
             performSegue(withIdentifier: "toSettingVC", sender: self)
@@ -242,7 +244,7 @@ class SettingViewController: MirroringViewController, UITableViewDelegate, UITab
     }
     
     func alert() {
-        let infoNote = UIAlertController(title: "About Simple Depression Test".localized, message:"Version 1.9 \n By Yu Zhang\n\n\nLast updated on 1/24/2019:\n- Add GAD-9 anxiety screening tool.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: \nhttps://timyuzhang.com/ ".localized, preferredStyle: UIAlertController.Style.alert)
+        let infoNote = UIAlertController(title: "About Simple Depression Test".localized, message:"Version 1.11 \n By Yu Zhang\n\n\nLast updated on 1/31/2019:\n- Add GAD-9 anxiety screening tool.\n- Fixed some minor bugs.\n\nThanks to Daniel Cohen Gindi & Philipp Jahoda for their powerful CHARTS 3.0.\n\nFor more information: \nhttps://timyuzhang.com/ ".localized, preferredStyle: UIAlertController.Style.alert)
         infoNote.addAction(UIAlertAction(title: "Ok".localized, style: .default, handler: nil))
         present(infoNote, animated: true, completion: nil)
     }

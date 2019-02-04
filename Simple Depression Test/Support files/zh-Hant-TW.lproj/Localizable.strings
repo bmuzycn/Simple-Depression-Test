@@ -5,7 +5,7 @@
  Created by Yu Zhang on 8/28/18.
  Copyright © 2018 Yu Zhang. All rights reserved.
  */
-"Over the last 2 weeks, how often have you been bothered by any of the following problems?" = "在過去兩個星期，有多少時候您會被以下任何問題所困擾?";
+"Over the last 2 weeks, how often have you been bothered by any of the following problems?" = "在過去兩個星期，有多少時候您受到以下任何問題所困擾?";
 
 "Little interest or pleasure in doing things" = "做事時提不起勁或沒有樂趣";
 
@@ -157,7 +157,7 @@
 
 "Your result will be lost. Still want to quit?" = "您的結果將會丟失，仍然要退出嗎？";
 
-"Warning! Data cannot be recoverd after delete." = "警告！數據刪除後將無法恢復";
+"Warning! Data cannot be recovered after delete." = "警告！數據刪除後將無法恢復";
 
 "Hi!" = "嗨！";
 
@@ -243,7 +243,7 @@
 
 "(The result indicates your suicide risk increased. Regardless of your total score, you should see a doctor as soon as possible)" = "（結果表明您的自殺風險增加。無論您的總分如何，您都應該盡快去看醫生）";
 
-"(For newly detection with suicide or self-injury risk, you need to see a doctor as soon as possible)" = "（對於新發現的自殺或自傷風險，您需要盡快去看醫生）";
+"(For newly detection of suicide or self-injury risk, you need to see a doctor as soon as possible)" = "（對於新發現的自殺或自傷風險，您需要盡快去看醫生）";
 
 "A full clinical assessment is recommended." = "建議進行全面的臨床評估。";
 
