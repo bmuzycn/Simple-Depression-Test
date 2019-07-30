@@ -243,7 +243,10 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
 
     //Mark: buttons for radarchart
     @IBAction func prevButton(_ sender: UIButton) {
-        if scoreArrayNum! > 0 && scoreArrayNum! < dateArray.count{
+        if scoreArrayNum == nil {
+            scoreArrayNum = scoreArray.count - 1
+        }
+        if let num = scoreArrayNum, num > 0 && num < dateArray.count{
             scoreArrayNum! -= 1
             radarView.setRadarData(radarArray, scoreArray[scoreArrayNum!], Settings.questionSet)
             nextButton.isHidden = false
@@ -258,7 +261,7 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
     
     
     @IBAction func nextButton(_ sender: UIButton) {
-        if scoreArrayNum! < scoreArray.count - 1 {
+        if let num = scoreArrayNum, num < scoreArray.count - 1 {
             scoreArrayNum! += 1
             radarView.setRadarData(radarArray, scoreArray[scoreArrayNum!], Settings.questionSet)
             prevButton.isHidden = false
@@ -369,15 +372,19 @@ class ResultViewController: UIViewController, DataDelegate, ChartViewDelegate {
         print("chartValueSelected y=\(entry.y) x=\(entry.x)")
 
         scoreArrayNum = Int(entry.x)
-        scores = scoreArray[scoreArrayNum!]
-        radarView.setRadarData(radarArray, scores, Settings.questionSet)
-        date = dateArray[scoreArrayNum!]
-        totalScore = totalScores[scoreArrayNum!]
-        dateLabel.text = "\(date)"+" Your Score:".localized+"\(totalScore)"
+        if let num = scoreArrayNum {
+            scores = scoreArray[num]
+            radarView.setRadarData(radarArray, scores, Settings.questionSet)
+            date = dateArray[num]
+            totalScore = totalScores[num]
+            dateLabel.text = "\(date)"+" Your Score:".localized+"\(totalScore)"
+            saveImage()
+
+        }
+
         
         //add notificationCenter
 //        NotificationCenter.default.post(name: NSNotification.Name("passData"), object: self)
-        saveImage()
     }
 }
 
