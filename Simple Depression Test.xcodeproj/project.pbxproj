@@ -163,7 +163,6 @@
 				E608C96121E9659300E06312 /* AppLanguage.swift */,
 				E608C96321E965A700E06312 /* Localizer.swift */,
 				E608C96521E965BF00E06312 /* MirroringLabel.swift */,
-				E608C96721E96C8300E06312 /* SettingViewController.swift */,
 				E608C96921E9ACB700E06312 /* MirrorViewController.swift */,
 			);
 			path = Localizition;
@@ -180,9 +179,12 @@
 		E62E0DB7211CEBD600688DA8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E66A772D208C441D00DC86DB /* Simple_Depression_Test.xcdatamodeld */,
+				E66A7726208C441D00DC86DB /* AppDelegate.swift */,
+				E621EC2621B1953000725BAC /* SwipeSegue.swift */,
+				E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */,
 				E608C96B21ECE13600E06312 /* Settings.swift */,
 				E6C856D72142C2BA00F95BE4 /* ReportComposer.swift */,
-				E66A772D208C441D00DC86DB /* Simple_Depression_Test.xcdatamodeld */,
 				E62E0DBA211CEDE000688DA8 /* QuestionBank.swift */,
 				E62E0DF7212884E400688DA8 /* DataDelegate.swift */,
 				E62E0DE32125D14F00688DA8 /* User.swift */,
@@ -207,14 +209,12 @@
 		E62E0DE22125C30500688DA8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				E66A7726208C441D00DC86DB /* AppDelegate.swift */,
 				E62E0DE721261B0100688DA8 /* UserViewController.swift */,
 				E66A7728208C441D00DC86DB /* QuestionViewController.swift */,
 				E62E0E03212B64C100688DA8 /* ResultViewController.swift */,
 				E6C856D82142C2BA00F95BE4 /* ReportVC.swift */,
-				E6C856DE2146B09F00F95BE4 /* PrintPageRenderer.swift */,
-				E621EC2621B1953000725BAC /* SwipeSegue.swift */,
 				E608C96D21ED746100E06312 /* DisplaySettingViewController.swift */,
+				E608C96721E96C8300E06312 /* SettingViewController.swift */,
 				E6D83D4E21DFE8FD00DF39B2 /* Guide */,
 				E6FBB70821C618F500952C6E /* TabViewController.swift */,
 				E6D83D4C21DFE8B700DF39B2 /* Menu */,
