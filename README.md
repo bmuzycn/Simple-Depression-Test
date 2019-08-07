@@ -2,7 +2,7 @@
 This app provides some features to help people to detect and screen depressive disorder and anxiety disorder. 
 - Automatically showing the result by calculating the scores and differentiate between new user and follow-up user. 
 - Multi-user score management.
-- Store and review the test records under the same username from built-in CoreData database.
+- Store and review the test records under the specific username from built-in CoreData database.
 - Select and delete the user's record by tap and long tap gestures in the bar chart view.
 - Several charts can be selected to better tracking or showing the trending and subscores of each test.
 - Support in-app switching languages between English, Spanish and Chinese.
