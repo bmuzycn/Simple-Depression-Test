@@ -4,7 +4,7 @@ This app provides some features to help people to detect and screen depressive d
 - Multi-user score management.
 - Store and review the test records under the specific username from built-in CoreData database.
 - Select and delete the user's record by tap and long tap gestures in the bar chart view.
-- Visual result by charts to better tracking or showing the trending and subscores of each test.
+- Visual result by charts to better tracking or showing the trend and subscores of each test.
 - Support in-app multi-language switching between English, Spanish and Chinese.
 - Support PHQ-9 and GAD-7.
 - Wireless Print and Export PDF report.
