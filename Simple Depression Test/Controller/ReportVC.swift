@@ -29,7 +29,7 @@ class ReportVC: UIViewController, WKNavigationDelegate, MFMailComposeViewControl
     var reportComposer: ReportComposer!
     var htmlReport = ""
     
-    var progressLabel: UILabel = {
+    let progressLabel: UILabel = {
         let label = UILabel(frame: CGRect(origin: .zero, size: CGSize(width: 20, height: 20)))
         label.textColor = #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1)
         return label
